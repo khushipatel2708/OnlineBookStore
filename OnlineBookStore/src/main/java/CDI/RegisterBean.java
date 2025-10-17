@@ -24,37 +24,42 @@ public class RegisterBean {
     private String role; // "admin" or "user"
 
     public String register() {
+        FacesContext context = FacesContext.getCurrentInstance();
         try {
+            // --- FETCH GROUP FROM DATABASE ---
+            GroupMaster gm;
+            if ("admin".equalsIgnoreCase(role)) {
+                gm = userSessionBean.getGroupById(1); // fetch admin group
+            } else {
+                gm = userSessionBean.getGroupById(2); // fetch user group
+            }
+
+            // --- CREATE USER ---
             User user = new User();
             user.setFullname(fullname);
             user.setPhone(phone);
             user.setUsername(username);
             user.setEmail(email);
-            user.setPassword(password);
+            user.setPassword(password); // optionally hash password
             user.setStatus("Active");
-
-            GroupMaster gm = new GroupMaster();
-            if ("admin".equalsIgnoreCase(role))
-                gm.setGroupid(1); // assuming admin is ID 1
-            else
-                gm.setGroupid(2); // assuming user is ID 2
-
             user.setGroupid(gm);
 
             if (userSessionBean.register(user)) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Registration successful! Please login."));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Registration successful! Please login.", null));
                 return "login.xhtml?faces-redirect=true";
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error in registration."));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in registration.", null));
                 return null;
             }
+
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Registration failed: " + e.getMessage()));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registration failed: " + e.getMessage(), null));
+            e.printStackTrace();
             return null;
         }
     }
 
-    // Getters and Setters
+    // --- GETTERS & SETTERS ---
     public String getFullname() { return fullname; }
     public void setFullname(String fullname) { this.fullname = fullname; }
     public String getPhone() { return phone; }

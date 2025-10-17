@@ -1,7 +1,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Admin Page</title>
+</h:head>
 <h:body>
     <h2>Welcome Admin</h2>
+
+    <!-- Link to Book List page -->
+    <h:form>
+        <h:commandButton value="Go to Book Type List" action="bookList.xhtml?faces-redirect=true" />
+    </h:form>
+
+    <br/>
+
+    <!-- Logout Button -->
     <h:form>
         <h:commandButton value="Logout" action="#{loginBean.logout}" />
     </h:form>

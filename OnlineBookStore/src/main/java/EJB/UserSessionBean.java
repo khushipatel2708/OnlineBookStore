@@ -1,5 +1,6 @@
 package EJB;
 
+import Entity.GroupMaster;
 import Entity.User;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -9,7 +10,7 @@ import java.util.List;
 @Stateless
     public class UserSessionBean implements UserSessionBeanLocal {
 
-     @PersistenceContext(unitName = "my_pu")
+   @PersistenceContext(unitName = "my_pu")
     EntityManager em;
 
     @Override
@@ -18,6 +19,7 @@ import java.util.List;
             em.persist(user);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -33,16 +35,28 @@ import java.util.List;
 
     @Override
     public boolean isUsernameExists(String username) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return !em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
+                 .setParameter("username", username)
+                 .getResultList().isEmpty();
     }
 
     @Override
     public boolean isEmailExists(String email) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return !em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class)
+                 .setParameter("email", email)
+                 .getResultList().isEmpty();
     }
 
     @Override
     public boolean isPhoneExists(String phone) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return !em.createQuery("SELECT u FROM User u WHERE u.phone = :phone", User.class)
+                 .setParameter("phone", phone)
+                 .getResultList().isEmpty();
+    }
+
+    // --- FETCH GROUP ---
+    @Override
+    public GroupMaster getGroupById(int groupId) {
+        return em.find(GroupMaster.class, groupId);
     }
 }

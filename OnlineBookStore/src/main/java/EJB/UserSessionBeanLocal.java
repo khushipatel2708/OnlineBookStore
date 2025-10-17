@@ -1,5 +1,6 @@
 package EJB;
 
+import Entity.GroupMaster;
 import Entity.User;
 import jakarta.ejb.Local;
 
@@ -10,6 +11,7 @@ public interface UserSessionBeanLocal {
     boolean isUsernameExists(String username);
 boolean isEmailExists(String email);
 boolean isPhoneExists(String phone);
-
+ // NEW METHOD
+    GroupMaster getGroupById(int groupId);
 
 }
