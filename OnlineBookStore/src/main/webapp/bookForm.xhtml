@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Add/Edit Book</title>
+</h:head>
+<h:body>
+<h:form enctype="multipart/form-data">
+    <h2>#{bookBean.bookId > 0 ? 'Edit Book' : 'Add Book'}</h2>
+    <h:messages globalOnly="true" style="color:red;" />
+
+    <h:outputLabel value="Book Type:" />
+    <h:selectOneMenu value="#{bookBean.booktypeId}">
+        <f:selectItems value="#{bookBean.allBookTypes}" var="bt"
+                       itemValue="#{bt.id}" itemLabel="#{bt.type}" />
+    </h:selectOneMenu><br/><br/>
+
+    <h:outputLabel value="Book Name:" />
+    <h:inputText value="#{bookBean.bookname}" required="true"/><br/>
+
+    <h:outputLabel value="Author Name:" />
+    <h:inputText value="#{bookBean.authorname}" required="true"/><br/>
+
+    <h:outputLabel value="Price:" />
+    <h:inputText value="#{bookBean.price}" required="true"/><br/>
+
+    <h:outputLabel value="Available:" />
+    <h:selectBooleanCheckbox value="#{bookBean.available}" /><br/><br/>
+
+    <h:outputLabel value="Cover Photo:" /><br/>
+    <h:graphicImage value="file:///D:/Project/OnlineBookStore/OnlineBookStore/images/#{bookBean.coverPhotoName}" width="150" height="200" /><br/>
+    <h:inputFile value="#{bookBean.coverPhoto}" /><br/><br/>
+
+    <h:outputLabel value="Front Page Photo:" /><br/>
+    <h:graphicImage value="file:///D:/Project/OnlineBookStore/OnlineBookStore/images/#{bookBean.frontPhotoName}" width="150" height="200" /><br/>
+    <h:inputFile value="#{bookBean.frontPhoto}" /><br/><br/>
+
+    <h:outputLabel value="Last Page Photo:" /><br/>
+    <h:graphicImage value="file:///D:/Project/OnlineBookStore/OnlineBookStore/images/#{bookBean.lastPhotoName}" width="150" height="200" /><br/>
+    <h:inputFile value="#{bookBean.lastPhoto}" /><br/><br/>
+
+    <h:commandButton value="#{bookBean.bookId > 0 ? 'Update Book' : 'Save Book'}" action="#{bookBean.saveBook}" />
+</h:form>
+</h:body>
+</html>
