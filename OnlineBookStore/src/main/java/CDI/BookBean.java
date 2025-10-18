@@ -4,7 +4,7 @@ import EJB.BookSessionBeanLocal;
 import Entity.Book;
 import Entity.Booktype;
 import jakarta.ejb.EJB;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -12,10 +12,11 @@ import jakarta.servlet.http.Part;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.io.Serializable;
 import java.util.List;
 
 @Named(value = "bookBean")
-@RequestScoped
+@SessionScoped   // ✅ changed from RequestScoped to SessionScoped
 public class BookBean implements Serializable {
 
     @EJB
@@ -51,7 +52,7 @@ public class BookBean implements Serializable {
             Book book;
             if (bookId > 0) { // Edit mode
                 book = bookSessionBean.getBookById(bookId);
-                if(book == null) {
+                if (book == null) {
                     context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Book not found!", null));
                     return null;
                 }
@@ -65,7 +66,7 @@ public class BookBean implements Serializable {
             book.setPrice(price);
             book.setAvailable(available);
 
-            // Save uploaded images, keep old if not replaced
+            // Save uploaded images (keep old if not replaced)
             if (coverPhoto != null) book.setCover_photo(saveFile(coverPhoto));
             else if (bookId > 0) book.setCover_photo(coverPhotoName);
 
@@ -75,10 +76,13 @@ public class BookBean implements Serializable {
             if (lastPhoto != null) book.setLast_page_photo(saveFile(lastPhoto));
             else if (bookId > 0) book.setLast_page_photo(lastPhotoName);
 
-            if(bookId > 0) bookSessionBean.updateBook(book);
-            else bookSessionBean.addBook(book);
+            if (bookId > 0)
+                bookSessionBean.updateBook(book);
+            else
+                bookSessionBean.addBook(book);
 
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Book saved successfully!", null));
+
             clearFields();
             return "bookList.xhtml?faces-redirect=true";
 
@@ -97,26 +101,25 @@ public class BookBean implements Serializable {
     }
 
     // --- Load book for edit ---
-   // --- Load book for edit ---
-public String loadBook(int id) {
-    Book book = bookSessionBean.getBookById(id);
-    if (book != null) {
-        bookId = book.getId();
-        booktypeId = book.getBooktype().getId();
-        bookname = book.getBookname();
-        authorname = book.getAuthorname();
-        price = book.getPrice();
-        available = book.isAvailable();
+    public String loadBook(int id) {
+        Book book = bookSessionBean.getBookById(id);
+        if (book != null) {
+            bookId = book.getId();
+            booktypeId = book.getBooktype().getId();
+            bookname = book.getBookname();
+            authorname = book.getAuthorname();
+            price = book.getPrice();
+            available = book.isAvailable();
 
-        coverPhotoName = book.getCover_photo();
-        frontPhotoName = book.getFront_page_photo();
-        lastPhotoName = book.getLast_page_photo();
+            coverPhotoName = book.getCover_photo();
+            frontPhotoName = book.getFront_page_photo();
+            lastPhotoName = book.getLast_page_photo();
+        }
+        // ✅ Stay in same bean (data persists) and navigate to form
+        return "bookForm.xhtml?faces-redirect=true";
     }
-    // Navigate to form page
-    return "bookForm.xhtml?faces-redirect=true";
-}
 
-
+    // --- Save file method ---
     private String saveFile(Part filePart) throws IOException {
         String fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
         File file = new File(IMAGE_FOLDER, fileName);
@@ -128,6 +131,7 @@ public String loadBook(int id) {
 
     private void clearFields() {
         bookId = 0;
+        booktypeId = 0;
         bookname = authorname = null;
         price = 0.0;
         available = true;
@@ -148,6 +152,7 @@ public String loadBook(int id) {
     public void setPrice(double price) { this.price = price; }
     public boolean isAvailable() { return available; }
     public void setAvailable(boolean available) { this.available = available; }
+
     public Part getCoverPhoto() { return coverPhoto; }
     public void setCoverPhoto(Part coverPhoto) { this.coverPhoto = coverPhoto; }
     public Part getFrontPhoto() { return frontPhoto; }
