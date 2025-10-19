@@ -16,7 +16,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Named(value = "bookBean")
-@SessionScoped   // ✅ changed from RequestScoped to SessionScoped
+@SessionScoped
 public class BookBean implements Serializable {
 
     @EJB
@@ -84,7 +84,7 @@ public class BookBean implements Serializable {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Book saved successfully!", null));
 
             clearFields();
-            return "bookList.xhtml?faces-redirect=true";
+            return "bookList2.xhtml?faces-redirect=true";
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,7 +115,6 @@ public class BookBean implements Serializable {
             frontPhotoName = book.getFront_page_photo();
             lastPhotoName = book.getLast_page_photo();
         }
-        // ✅ Stay in same bean (data persists) and navigate to form
         return "bookForm.xhtml?faces-redirect=true";
     }
 
@@ -166,4 +165,17 @@ public class BookBean implements Serializable {
 
     public List<Book> getAllBooks() { return bookSessionBean.getAllBooks(); }
     public List<Booktype> getAllBookTypes() { return bookSessionBean.getAllBookTypes(); }
+
+    // --- Filter books by type ---
+    public List<Book> getBooksByType() {
+        if (booktypeId == 0 && !getAllBookTypes().isEmpty()) {
+            booktypeId = getAllBookTypes().get(0).getId(); // default first category
+        }
+        return bookSessionBean.getBooksByType(booktypeId);
+    }
+
+    // --- Change selected type ---
+    public void changeType(int typeId) {
+        this.booktypeId = typeId;
+    }
 }

@@ -3,6 +3,9 @@
 <h:body>
     <h2>Welcome User</h2>
     <h:form>
+         <h:commandButton value="Go to Book List" action="userBookList.xhtml?faces-redirect=true" />
+        <br/>
+        <br/>
         <h:commandButton value="Logout" action="#{loginBean.logout}" />
     </h:form>
 </h:body>

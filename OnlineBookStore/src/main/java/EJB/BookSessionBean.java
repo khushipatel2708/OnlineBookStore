@@ -45,4 +45,11 @@ public class BookSessionBean implements BookSessionBeanLocal {
     public List<Booktype> getAllBookTypes() {
         return em.createQuery("SELECT bt FROM Booktype bt", Booktype.class).getResultList();
     }
+    @Override
+public List<Book> getBooksByType(int typeId) {
+    return em.createQuery("SELECT b FROM Book b WHERE b.booktype.id = :typeId", Book.class)
+             .setParameter("typeId", typeId)
+             .getResultList();
+}
+
 }

@@ -22,4 +22,6 @@ public interface BookSessionBeanLocal {
     List<Book> getAllBooks();
     List<Booktype> getAllBookTypes();
 
+    public List<Book> getBooksByType(int typeId);
+
 }

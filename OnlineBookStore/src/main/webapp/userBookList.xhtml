@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>User Book List</title>
+    <style>
+        body { font-family: Arial; margin: 0; padding: 0; display: flex; height: 100vh; }
+        .sidebar { width: 20%; background-color: #f4f4f4; padding: 20px; border-right: 1px solid #ccc; }
+        .content { flex: 1; padding: 20px; }
+        .book { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; gap: 15px; background-color: #fff; }
+        .book img { width: 100px; height: 130px; border-radius: 5px; object-fit: cover; }
+        .book-info { display: flex; flex-direction: column; justify-content: center; }
+        .book-title { font-weight: bold; color: #333; }
+        .price { color: green; }
+    </style>
+</h:head>
+
+<h:body>
+    <h:form>
+        <div class="sidebar">
+            <h3>Book Categories</h3>
+            <ui:repeat value="#{bookBean.allBookTypes}" var="bt">
+                <h:commandLink value="#{bt.type}" 
+                               action="#{bookBean.changeType(bt.id)}"
+                               immediate="true">
+                    <f:ajax render="bookListPanel"/>
+                </h:commandLink><br/><br/>
+            </ui:repeat>
+        </div>
+
+        <div class="content" id="bookListPanel">
+            <h2>Books</h2>
+            <ui:repeat value="#{bookBean.booksByType}" var="book">
+                <div class="book">
+                    <img src="images/#{book.cover_photo}" alt="Cover"/>
+                    <div class="book-info">
+                        <span class="book-title">#{book.bookname}</span>
+                        <span>Author: #{book.authorname}</span>
+                        <span class="price">Price: ₹#{book.price}</span>
+                        <span>Available: <h:outputText value="#{book.available ? 'Yes' : 'No'}"/></span>
+                    </div>
+                </div>
+            </ui:repeat>
+
+            <h:panelGroup rendered="#{empty bookBean.booksByType}">
+                <p>No books available for this category.</p>
+            </h:panelGroup>
+        </div>
+    </h:form>
+</h:body>
+</html>
