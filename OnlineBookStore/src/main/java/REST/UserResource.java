@@ -70,20 +70,4 @@ public class UserResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
         }
     }
-    @GET
-@Path("/list")
-@Produces(MediaType.APPLICATION_JSON)
-public Response getAllUsers() {
-    try {
-        var users = userSessionBean.getAllUsers();
-        return Response.ok(users).build();
-    } catch (Exception e) {
-        e.printStackTrace();
-        Map<String, Object> error = new HashMap<>();
-        error.put("success", false);
-        error.put("error", e.getMessage());
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
-    }
-}
-
 }
