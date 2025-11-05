@@ -51,6 +51,7 @@
                                          disabled="#{!book.available}">
                             <f:ajax render="@form"/>
                         </h:commandButton>
+                        <h:commandButton value="Give Feedback" action="#{feedbackBean.openFeedbackForm(book.id)}"></h:commandButton>
                     </div>
                 </div>
             </ui:repeat>

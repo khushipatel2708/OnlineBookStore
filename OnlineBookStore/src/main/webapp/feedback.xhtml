@@ -1,0 +1,120 @@
+<!DOCTYPE html> 
+<html xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:h="http://xmlns.jcp.org/jsf/html" 
+xmlns:f="http://xmlns.jcp.org/jsf/core"> 
+<h:head> 
+<title>Give Feedback</title> 
+<style> 
+body { 
+font-family: Arial, sans-serif; 
+background: #f2f2f2; 
+padding: 30px; 
+} 
+.container { 
+width: 450px; 
+margin: 0 auto; 
+background: white; 
+border-radius: 10px; 
+box-shadow: 0 0 10px rgba(0,0,0,0.2); 
+padding: 25px; 
+} 
+h2 { 
+text-align: center; 
+color: #333; 
+} 
+.info { 
+text-align: center; 
+color: #666; 
+margin-bottom: 15px; 
+} 
+.star-rating { 
+display: flex; 
+justify-content: center; 
+font-size: 32px; 
+color: #ccc; 
+cursor: pointer; 
+margin: 10px 0 20px 0; 
+} 
+.star-rating .filled { 
+color: gold; 
+} 
+textarea { 
+width: 100%; 
+padding: 10px; 
+border-radius: 8px; 
+border: 1px solid #ccc; 
+resize: none; 
+font-size: 14px; 
+} 
+.btn-group { 
+display: flex; 
+justify-content: center; 
+gap: 10px; 
+margin-top: 15px; 
+} 
+.btn { 
+background-color: #007bff; 
+border: none; 
+color: white; 
+padding: 8px 15px; 
+border-radius: 6px; 
+cursor: pointer; 
+} 
+.btn.cancel { 
+background-color: #6c757d; 
+} 
+</style> 
+<script type="text/javascript"> 
+//<![CDATA[ 
+function selectStar(star) { 
+const stars = document.querySelectorAll(".star-rating span"); 
+stars.forEach((s, i) => { 
+if (i < star) { 
+s.classList.add("filled"); 
+} else { 
+s.classList.remove("filled"); 
+} 
+}); 
+document.getElementById("feedbackForm:ratingInput").value = star; 
+} 
+//]]> 
+</script> 
+</h:head> 
+<h:body> 
+<div class="container"> 
+<f:metadata> 
+<f:viewParam name="bookId" value="#{feedbackBean.bookId}" /> 
+<f:viewParam name="userId" value="#{feedbackBean.userId}" /> 
+<f:event type="preRenderView" listener="#{feedbackBean.onLoad}" /> 
+</f:metadata> 
+<h:form id="feedbackForm"> 
+<h2>⭐ Give Feedback</h2> 
+<div class="info"> 
+<p><b>Book ID:</b> #{feedbackBean.bookId}</p> 
+<p><b>User ID:</b> #{feedbackBean.userId}</p> 
+</div> 
+<!-- Star Rating --> 
+<div class="star-rating"> 
+<span onclick="selectStar(1)">&#9733;</span> 
+<span onclick="selectStar(2)">&#9733;</span> 
+<span onclick="selectStar(3)">&#9733;</span> 
+<span onclick="selectStar(4)">&#9733;</span> 
+<span onclick="selectStar(5)">&#9733;</span> 
+</div> 
+<!-- Hidden Rating Field --> 
+<h:inputHidden id="ratingInput" value="#{feedbackBean.feedback.rating}" required="true" 
+validatorMessage="Rating must be 1 to 5"> 
+<f:validateLongRange minimum="1" maximum="5" /> 
+</h:inputHidden> 
+<!-- Comments --> 
+<h:outputLabel value="Your Comments:" /><br/> 
+<h:inputTextarea value="#{feedbackBean.feedback.comments}" rows="4" cols="35" required="true" /> 
+<br/><br/> 
+<div class="btn-group"> 
+<h:commandButton value="Submit Feedback" action="#{feedbackBean.saveFeedback}" styleClass="btn" /> 
+<h:commandButton value="Cancel" action="userBookList.xhtml?faces-redirect=true" styleClass="btn cancel" /> 
+</div> 
+</h:form> 
+</div> 
+</h:body> 
+</html> 
