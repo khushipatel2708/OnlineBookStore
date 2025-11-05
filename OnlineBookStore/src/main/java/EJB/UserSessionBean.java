@@ -59,4 +59,57 @@ import java.util.List;
     public GroupMaster getGroupById(int groupId) {
         return em.find(GroupMaster.class, groupId);
     }
+
+     @Override
+    public boolean updateProfile(User user) {
+        try {
+            em.merge(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public User getUserById(int id) {
+        return em.find(User.class, id);
+    }
+    @Override
+public boolean changePassword(String username, String oldPassword, String newPassword) {
+    try {
+        User user = em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
+                      .setParameter("username", username)
+                      .getSingleResult();
+
+        if (user != null && user.getPassword().equals(oldPassword)) {
+            user.setPassword(newPassword);
+            em.merge(user);
+            return true;
+        } else {
+            return false;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+@Override
+public boolean resetPasswordByEmail(String email, String newPassword) {
+    try {
+        User user = em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class)
+                      .setParameter("email", email)
+                      .getSingleResult();
+
+        if (user != null) {
+            user.setPassword(newPassword);
+            em.merge(user);
+            return true;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
 }

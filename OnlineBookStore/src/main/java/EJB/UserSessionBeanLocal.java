@@ -13,5 +13,9 @@ boolean isEmailExists(String email);
 boolean isPhoneExists(String phone);
  // NEW METHOD
     GroupMaster getGroupById(int groupId);
-
+    
+    boolean updateProfile(User user);
+    User getUserById(int id);
+      boolean changePassword(String username, String oldPassword, String newPassword);
+        boolean resetPasswordByEmail(String email, String newPassword);
 }

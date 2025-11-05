@@ -30,7 +30,7 @@ public class LoginBean implements Serializable {
                 FacesContext.getCurrentInstance().getExternalContext()
                         .getSessionMap().put("user", loggedInUser);
 
-                // Get role name (make sure getGroupid().getGroupname() works)
+                // Get role name
                 String role = loggedInUser.getGroupid().getGroupname();
 
                 // Redirect based on role
@@ -66,28 +66,18 @@ public class LoginBean implements Serializable {
         return "/login.xhtml?faces-redirect=true";
     }
 
+    // ---------------- GO TO PROFILE -----------------
+    public String goToProfile() {
+        return "/profile.xhtml?faces-redirect=true";
+    }
+
     // ---------------- GETTERS & SETTERS -----------------
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public User getLoggedInUser() {
-        return loggedInUser;
-    }
-
-    public void setLoggedInUser(User loggedInUser) {
-        this.loggedInUser = loggedInUser;
-    }
+    public User getLoggedInUser() { return loggedInUser; }
+    public void setLoggedInUser(User loggedInUser) { this.loggedInUser = loggedInUser; }
 }
