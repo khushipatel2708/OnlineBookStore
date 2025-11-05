@@ -19,7 +19,7 @@
 </h:head>
 
 <h:body>
-    <h:form>
+    <h:form id="bookForm">
         <div class="sidebar">
             <h3>Book Categories</h3>
             <ui:repeat value="#{bookBean.allBookTypes}" var="bt">
@@ -33,6 +33,7 @@
 
         <div class="content" id="bookListPanel">
             <h2>Books</h2>
+
             <ui:repeat value="#{bookBean.booksByType}" var="book">
                 <div class="book">
                     <img src="images/#{book.cover_photo}" alt="Cover"/>
@@ -41,6 +42,10 @@
                         <span>Author: #{book.authorname}</span>
                         <span class="price">Price: ₹#{book.price}</span>
                         <span>Available: <h:outputText value="#{book.available ? 'Yes' : 'No'}"/></span>
+                        <h:commandButton value="Add to Cart" 
+                 action="#{cartBean.addToCart(book.id)}">
+    <f:ajax render="@form"/>
+</h:commandButton>
                     </div>
                 </div>
             </ui:repeat>
