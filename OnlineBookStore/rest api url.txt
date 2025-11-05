@@ -77,7 +77,45 @@ http://localhost:8080/OnlineBookStore/api/city/update/1
   "cityname": "navsari"
 }
 
+delete:-
+http://localhost:8080/OnlineBookStore/api/city/delete/4
 
 
+=================================================================================
+shipping:-
+
+get:-
+http://localhost:8080/OnlineBookStore/api/shipping/6
+
+post:-
+http://localhost:8080/OnlineBookStore/api/shipping/add
+{
+  "userid": 9,
+  "name": "khushi",
+  "phone": "9664830149",
+  "address1": "parvat patiya",
+  "address2": "surat",
+  "landmark": "gujarat",
+  "cityid": 4,
+  "pincode": "123456"
+}
+
+
+put:-
+http://localhost:8080/OnlineBookStore/api/shipping/update
+{
+  "id": 6,
+  "userid": 9,
+  "name": "khushi patel",
+  "phone": "9664830149",
+  "address1": "parvat patiya",
+  "address2": "surat",
+  "landmark": "gujarat",
+  "cityid": 4,
+  "pincode": "123456"
+}
+
+delete:-
+DELETE  http://localhost:8080/OnlineBookStore/api/shipping/delete/6
 
 
