@@ -1,0 +1,83 @@
+BookType:-
+
+get:- http://localhost:8080/OnlineBookStore/api/booktype/list
+
+GET  http://localhost:8080/OnlineBookStore/api/booktype/1
+
+POST  http://localhost:8080/OnlineBookStore/api/booktype/add
+	{
+  "type": "BCA",
+  "description": "BCA course books available"
+}
+
+PUT  http://localhost:8080/OnlineBookStore/api/booktype/update/1
+{
+  "type": "IT",
+  "description": "This is the updated IT section"
+}
+
+delete:- http://localhost:8080/OnlineBookStore/api/booktype/delete/1
+
+=================================================================================
+
+Book:-
+
+get:-
+http://localhost:8080/OnlineBookStore/api/book/list
+
+post:-
+http://localhost:8080/OnlineBookStore/api/book/add
+{
+  "bookname": "Python Programming",
+  "authorname": "Guido van Rossum",
+  "price": 350.00,
+  "available": true,
+  "booktype": { "id": 2 },
+  "cover_photo": "python.jpg",
+  "front_page_photo": "python_front.jpg",
+  "last_page_photo": "python_back.jpg"
+}
+
+put:-
+http://localhost:8080/OnlineBookStore/api/book/update/1
+{
+  "bookname": "Java Advanced",
+  "authorname": "James Gosling",
+  "price": 400.00,
+  "available": true,
+  "booktype": { "id": 1 },
+  "cover_photo": "java_advanced.jpg",
+  "front_page_photo": "java_front_new.jpg",
+  "last_page_photo": "java_back_new.jpg"
+}
+
+delete:-
+http://localhost:8080/OnlineBookStore/api/book/delete/1
+
+
+=================================================================================
+
+city:-
+
+get:-
+http://localhost:8080/OnlineBookStore/api/city/list
+
+Get city by ID:-
+http://localhost:8080/OnlineBookStore/api/city/1
+
+Post:-
+http://localhost:8080/OnlineBookStore/api/city/add
+{
+  "cityname": "Ahmedabad"
+}
+
+PUT:-
+http://localhost:8080/OnlineBookStore/api/city/update/1
+{
+  "cityname": "navsari"
+}
+
+
+
+
+
