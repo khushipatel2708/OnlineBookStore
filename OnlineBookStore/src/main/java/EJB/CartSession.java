@@ -49,4 +49,28 @@ public class CartSession implements CartSessionLocal {
                 .setParameter("uid", userId)
                 .getResultList();
     }
+    
+@Override
+public void removeFromCart(int cartId) {
+    Cart cart = em.find(Cart.class, cartId);
+    if (cart != null) {
+        em.remove(cart);
+    }
+}
+
+
+public void updateQuantity(int cartId, int change) {
+    Cart cart = em.find(Cart.class, cartId);
+    if (cart != null) {
+        int newQty = cart.getQuantity() + change;
+        if (newQty <= 0) {
+            em.remove(cart); // remove if quantity becomes 0
+        } else {
+            cart.setQuantity(newQty);
+            em.merge(cart);
+        }
+    }
+}
+
+
 }
