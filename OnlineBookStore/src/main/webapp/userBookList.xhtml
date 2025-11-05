@@ -41,11 +41,16 @@
                         <span class="book-title">#{book.bookname}</span>
                         <span>Author: #{book.authorname}</span>
                         <span class="price">Price: ₹#{book.price}</span>
-                        <span>Available: <h:outputText value="#{book.available ? 'Yes' : 'No'}"/></span>
-                        <h:commandButton value="Add to Cart" 
-                 action="#{cartBean.addToCart(book.id)}">
-    <f:ajax render="@form"/>
-</h:commandButton>
+                        <span>Available: 
+                            <h:outputText value="#{book.available ? 'Yes' : 'No'}"/>
+                        </span>
+
+                        <!-- Add to Cart button - disabled if book is not available -->
+                        <h:commandButton value="Add to Cart"
+                                         action="#{cartBean.addToCart(book.id)}"
+                                         disabled="#{!book.available}">
+                            <f:ajax render="@form"/>
+                        </h:commandButton>
                     </div>
                 </div>
             </ui:repeat>
