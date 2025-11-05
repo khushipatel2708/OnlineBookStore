@@ -22,6 +22,12 @@
         .qty-btn:hover { background-color: #0056b3; }
         .delete-btn { background-color: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
         .delete-btn:hover { background-color: #c9302c; }
+        
+        .qty-btn[disabled] {
+    background-color: #ccc !important;
+    cursor: not-allowed;
+}
+
     </style>
 </h:head>
 
@@ -42,17 +48,24 @@
 
             <!-- ✅ Quantity Column with + and - buttons -->
             <h:column>
-                <f:facet name="header">Quantity</f:facet>
-                <h:commandButton value="-" styleClass="qty-btn"
-                                 action="#{cartBean.decreaseQuantity(c.id)}">
-                    <f:ajax render="@form"/>
-                </h:commandButton>
-                <h:outputText value="#{c.quantity}" style="margin:0 10px;"/>
-                <h:commandButton value="+" styleClass="qty-btn"
-                                 action="#{cartBean.increaseQuantity(c.id)}">
-                    <f:ajax render="@form"/>
-                </h:commandButton>
-            </h:column>
+    <f:facet name="header">Quantity</f:facet>
+
+    <!-- Decrease Button -->
+    <h:commandButton value="-" styleClass="qty-btn"
+                     action="#{cartBean.decreaseQuantity(c.id)}"
+                     disabled="#{c.quantity le 1}">
+        <f:ajax render="@form"/>
+    </h:commandButton>
+
+    <!-- Display Quantity -->
+    <h:outputText value="#{c.quantity}" style="margin:0 10px;"/>
+
+    <!-- Increase Button -->
+    <h:commandButton value="+" styleClass="qty-btn"
+                     action="#{cartBean.increaseQuantity(c.id)}">
+        <f:ajax render="@form"/>
+    </h:commandButton>
+</h:column>
 
             <h:column>
                 <f:facet name="header">Total</f:facet>
