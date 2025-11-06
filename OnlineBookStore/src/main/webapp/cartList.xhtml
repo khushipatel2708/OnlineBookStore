@@ -3,6 +3,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
+
 <h:head>
     <title>My Cart</title>
     <style>
@@ -20,14 +21,27 @@
             font-weight: bold;
         }
         .qty-btn:hover { background-color: #0056b3; }
-        .delete-btn { background-color: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .delete-btn {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
         .delete-btn:hover { background-color: #c9302c; }
-        
-        .qty-btn[disabled] {
-    background-color: #ccc !important;
-    cursor: not-allowed;
-}
 
+        .qty-btn[disabled] {
+            background-color: #ccc !important;
+            cursor: not-allowed;
+        }
+
+        .charges {
+            width: 80%;
+            margin: 20px auto;
+            text-align: right;
+            font-weight: bold;
+        }
     </style>
 </h:head>
 
@@ -48,24 +62,24 @@
 
             <!-- ✅ Quantity Column with + and - buttons -->
             <h:column>
-    <f:facet name="header">Quantity</f:facet>
+                <f:facet name="header">Quantity</f:facet>
 
-    <!-- Decrease Button -->
-    <h:commandButton value="-" styleClass="qty-btn"
-                     action="#{cartBean.decreaseQuantity(c.id)}"
-                     disabled="#{c.quantity le 1}">
-        <f:ajax render="@form"/>
-    </h:commandButton>
+                <!-- Decrease Button -->
+                <h:commandButton value="-" styleClass="qty-btn"
+                                 action="#{cartBean.decreaseQuantity(c.id)}"
+                                 disabled="#{c.quantity le 1}">
+                    <f:ajax render="@form"/>
+                </h:commandButton>
 
-    <!-- Display Quantity -->
-    <h:outputText value="#{c.quantity}" style="margin:0 10px;"/>
+                <!-- Display Quantity -->
+                <h:outputText value="#{c.quantity}" style="margin:0 10px;"/>
 
-    <!-- Increase Button -->
-    <h:commandButton value="+" styleClass="qty-btn"
-                     action="#{cartBean.increaseQuantity(c.id)}">
-        <f:ajax render="@form"/>
-    </h:commandButton>
-</h:column>
+                <!-- Increase Button -->
+                <h:commandButton value="+" styleClass="qty-btn"
+                                 action="#{cartBean.increaseQuantity(c.id)}">
+                    <f:ajax render="@form"/>
+                </h:commandButton>
+            </h:column>
 
             <h:column>
                 <f:facet name="header">Total</f:facet>
@@ -81,13 +95,21 @@
             </h:column>
         </h:dataTable>
 
+        <!-- ✅ Show Totals -->
         <h:panelGroup rendered="#{not empty cartBean.cartItems}">
-            <h3 class="total">Grand Total: ₹#{cartBean.totalPrice}</h3>
+            <div class="charges">
+                <p>Subtotal: ₹#{cartBean.totalPrice}</p>
+                <p>Delivery Charge: ₹30</p>
+                <hr/>
+                <p>Grand Total: ₹#{cartBean.totalPrice + 30}</p>
+            </div>
         </h:panelGroup>
 
         <h:panelGroup rendered="#{empty cartBean.cartItems}">
             <p style="text-align:center;">Your cart is empty.</p>
         </h:panelGroup>
+
+        
     </h:form>
 </h:body>
 </html>
