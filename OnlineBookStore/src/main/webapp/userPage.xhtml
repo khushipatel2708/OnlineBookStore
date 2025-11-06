@@ -1,15 +1,26 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>User Dashboard</title>
+</h:head>
 <h:body>
     <h2>Welcome #{loginBean.loggedInUser.fullname}</h2>
+
     <h:form>
         <h:commandButton value="Go to Book List" action="userBookList.xhtml?faces-redirect=true" />
         <br/><br/>
+
         <h:commandButton value="Profile" action="#{loginBean.goToProfile}" />
-        <h:commandButton value="contactuse" action="#{contact.goToProfile}" />
-         <h:commandButton value="shipping" action="shippingList.xhtml?faces-redirect=true" />
+        <h:commandButton value="Contact Us" action="#{contact.goToProfile}" />
+        <h:commandButton value="Shipping" action="shippingList.xhtml?faces-redirect=true" />
+        
+
+        <!-- ✅ Add to Cart button -->
+        <h:commandButton value="Add to Cart" action="cartList.xhtml?faces-redirect=true" />
         <br/><br/>
-        <h:commandButton value="Logout" action="#{loginBean.logout}" />
+
+        <h:commandButton value="Logout" action="#{loginBean.logout}"  />
     </h:form>
 </h:body>
 </html>

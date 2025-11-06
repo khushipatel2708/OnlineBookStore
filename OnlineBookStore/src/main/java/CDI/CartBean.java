@@ -2,12 +2,14 @@ package CDI;
 
 import EJB.CartSessionLocal;
 import Entity.Cart;
+import Entity.User;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.inject.Named;
-import java.io.Serializable;
-import java.io.IOException;
 import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 @Named("cartBean")
@@ -17,14 +19,27 @@ public class CartBean implements Serializable {
     @EJB
     private CartSessionLocal cartSession;
 
-    private int loggedUserId = 1; // assume logged in user id
+    // ✅ Inject LoginBean to get logged-in user
+    @Inject
+    private LoginBean loginBean;
 
     public void addToCart(int bookId) {
-        cartSession.addToCart(loggedUserId, bookId);
+        User loggedUser = loginBean.getLoggedInUser();
+
+        if (loggedUser != null) {
+            int userId = loggedUser.getId();
+            cartSession.addToCart(userId, bookId);
+        } else {
+            System.out.println("⚠️ No user logged in!");
+        }
     }
 
     public List<Cart> getCartItems() {
-        return cartSession.getCartItems(loggedUserId);
+        User loggedUser = loginBean.getLoggedInUser();
+        if (loggedUser != null) {
+            return cartSession.getCartItems(loggedUser.getId());
+        }
+        return null;
     }
 
     public void removeFromCart(int cartId) {
