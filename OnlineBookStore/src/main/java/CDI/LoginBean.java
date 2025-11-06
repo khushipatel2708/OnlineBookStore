@@ -20,58 +20,50 @@ public class LoginBean implements Serializable {
     private String password;
     private User loggedInUser;
 
-    // ---------------- LOGIN METHOD -----------------
     public String login() {
         try {
             loggedInUser = userSessionBean.login(username, password);
 
-            if (loggedInUser != null) {
-                // Save user in session
+            if (loggedInUser != null && "Active".equalsIgnoreCase(loggedInUser.getStatus())) {
                 FacesContext.getCurrentInstance().getExternalContext()
                         .getSessionMap().put("user", loggedInUser);
 
-                // Get role name
                 String role = loggedInUser.getGroupid().getGroupname();
 
-                // Redirect based on role
                 if ("admin".equalsIgnoreCase(role)) {
                     return "/adminPage.xhtml?faces-redirect=true";
                 } else if ("user".equalsIgnoreCase(role)) {
                     return "/userPage.xhtml?faces-redirect=true";
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage("Unknown role: " + role));
+                            new FacesMessage(FacesMessage.SEVERITY_WARN, "Unauthorized Role", null));
                     return null;
                 }
 
             } else {
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Invalid username or password", null));
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid username or password", null));
                 return null;
             }
 
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Login error: " + e.getMessage(), null));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed: " + e.getMessage(), null));
             e.printStackTrace();
             return null;
         }
     }
 
-    // ---------------- LOGOUT METHOD -----------------
     public String logout() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return "/login.xhtml?faces-redirect=true";
     }
 
-    // ---------------- GO TO PROFILE -----------------
-    public String goToProfile() {
-        return "/profile.xhtml?faces-redirect=true";
+    public boolean isLoggedIn() {
+        return loggedInUser != null;
     }
 
-    // ---------------- GETTERS & SETTERS -----------------
+    // Getters & Setters
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
