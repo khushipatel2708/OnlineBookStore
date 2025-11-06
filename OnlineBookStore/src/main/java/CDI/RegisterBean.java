@@ -25,35 +25,61 @@ public class RegisterBean {
 
     public String register() {
         FacesContext context = FacesContext.getCurrentInstance();
+
         try {
-            // --- FETCH GROUP FROM DATABASE ---
-            GroupMaster gm;
-            if ("admin".equalsIgnoreCase(role)) {
-                gm = userSessionBean.getGroupById(1); // fetch admin group
-            } else {
-                gm = userSessionBean.getGroupById(2); // fetch user group
+            // ✅ Check if username already exists
+            if (userSessionBean.isUsernameExists(username)) {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Username already exists! Please choose another.", null));
+                return null;
             }
 
-            // --- CREATE USER ---
+            // ✅ Check if email already exists
+            if (userSessionBean.isEmailExists(email)) {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Email already exists! Please use another email.", null));
+                return null;
+            }
+
+            // ✅ Check if phone already exists
+            if (userSessionBean.isPhoneExists(phone)) {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Phone number already exists! Please use another phone.", null));
+                return null;
+            }
+
+            // ✅ Fetch group based on selected role
+            GroupMaster gm;
+            if ("admin".equalsIgnoreCase(role)) {
+                gm = userSessionBean.getGroupById(1); // admin
+            } else {
+                gm = userSessionBean.getGroupById(2); // user
+            }
+
+            // ✅ Create new user entity
             User user = new User();
             user.setFullname(fullname);
             user.setPhone(phone);
             user.setUsername(username);
             user.setEmail(email);
-            user.setPassword(password); // optionally hash password
+            user.setPassword(password);
             user.setStatus("Active");
             user.setGroupid(gm);
 
+            // ✅ Save user
             if (userSessionBean.register(user)) {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Registration successful! Please login.", null));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        "Registration successful! Please login.", null));
                 return "login.xhtml?faces-redirect=true";
             } else {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in registration.", null));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Error in registration. Please try again.", null));
                 return null;
             }
 
         } catch (Exception e) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registration failed: " + e.getMessage(), null));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Registration failed: " + e.getMessage(), null));
             e.printStackTrace();
             return null;
         }
@@ -62,14 +88,19 @@ public class RegisterBean {
     // --- GETTERS & SETTERS ---
     public String getFullname() { return fullname; }
     public void setFullname(String fullname) { this.fullname = fullname; }
+
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
+
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
 }
