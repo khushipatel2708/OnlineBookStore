@@ -6,6 +6,8 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
+import java.io.IOException;
+import jakarta.faces.context.FacesContext;
 import java.util.List;
 
 @Named("cartBean")
@@ -39,14 +41,19 @@ public class CartBean implements Serializable {
         }
         return total;
     }
-    
+
     public void increaseQuantity(int cartId) {
-    cartSession.updateQuantity(cartId, +1);
-}
+        cartSession.updateQuantity(cartId, +1);
+    }
 
-public void decreaseQuantity(int cartId) {
-    cartSession.updateQuantity(cartId, -1);
-}
+    public void decreaseQuantity(int cartId) {
+        cartSession.updateQuantity(cartId, -1);
+    }
 
-
+    // ✅ Redirect to payment.xhtml with total amount (including delivery)
+    public void goToPayment() throws IOException {
+        double grandTotal = getTotalPrice() + 30;
+        FacesContext.getCurrentInstance().getExternalContext().redirect(
+                "payment.xhtml?amount=" + grandTotal);
+    }
 }

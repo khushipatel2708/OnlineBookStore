@@ -30,18 +30,28 @@
             cursor: pointer;
         }
         .delete-btn:hover { background-color: #c9302c; }
-
         .qty-btn[disabled] {
             background-color: #ccc !important;
             cursor: not-allowed;
         }
-
         .charges {
             width: 80%;
             margin: 20px auto;
             text-align: right;
             font-weight: bold;
         }
+        .pay-btn {
+            display: block;
+            margin: 20px auto;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .pay-btn:hover { background-color: #218838; }
     </style>
 </h:head>
 
@@ -60,21 +70,16 @@
                 ₹#{c.book.price}
             </h:column>
 
-            <!-- ✅ Quantity Column with + and - buttons -->
             <h:column>
                 <f:facet name="header">Quantity</f:facet>
-
-                <!-- Decrease Button -->
                 <h:commandButton value="-" styleClass="qty-btn"
                                  action="#{cartBean.decreaseQuantity(c.id)}"
                                  disabled="#{c.quantity le 1}">
                     <f:ajax render="@form"/>
                 </h:commandButton>
 
-                <!-- Display Quantity -->
                 <h:outputText value="#{c.quantity}" style="margin:0 10px;"/>
 
-                <!-- Increase Button -->
                 <h:commandButton value="+" styleClass="qty-btn"
                                  action="#{cartBean.increaseQuantity(c.id)}">
                     <f:ajax render="@form"/>
@@ -103,13 +108,22 @@
                 <hr/>
                 <p>Grand Total: ₹#{cartBean.totalPrice + 30}</p>
             </div>
+
+            <!-- ✅ Online Payment Button -->
+<!--            <h:commandButton value="Proceed to Payment"
+                             styleClass="pay-btn"
+                             action="payment.xhtml?faces-redirect=true" />-->
+
+<h:commandButton value="Proceed to Payment"
+                 styleClass="pay-btn"
+                 action="#{cartBean.goToPayment}" />
+
         </h:panelGroup>
 
         <h:panelGroup rendered="#{empty cartBean.cartItems}">
             <p style="text-align:center;">Your cart is empty.</p>
         </h:panelGroup>
 
-        
     </h:form>
 </h:body>
 </html>
