@@ -35,19 +35,19 @@ public class FeedbackSessionBean implements FeedbackSessionBeanLocal {
 
     @Override
     public List<FeedBack> getAllFeedback() {
-        return em.createQuery("SELECT f FROM Feedback f", FeedBack.class).getResultList();
+        return em.createQuery("SELECT f FROM FeedBack f", FeedBack.class).getResultList();
     }
 
     @Override
     public List<FeedBack> getFeedbackByBook(int bookId) {
-        return em.createQuery("SELECT f FROM Feedback f WHERE f.book.id = :bid", FeedBack.class)
+        return em.createQuery("SELECT f FROM FeedBack f WHERE f.book.id = :bid", FeedBack.class)
                  .setParameter("bid", bookId)
                  .getResultList();
     }
 
     @Override
     public List<FeedBack> getFeedbackByUser(int userId) {
-        return em.createQuery("SELECT f FROM Feedback f WHERE f.user.id = :uid", FeedBack.class)
+        return em.createQuery("SELECT f FROM FeedBack f WHERE f.user.id = :uid", FeedBack.class)
                  .setParameter("uid", userId)
                  .getResultList();
     }
