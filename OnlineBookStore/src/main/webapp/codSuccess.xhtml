@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Order Confirmed</title>
+    <style>
+        .success-box {
+            text-align: center;
+            margin-top: 100px;
+            font-family: Arial, sans-serif;
+        }
+        .success-box h2 {
+            color: #28a745;
+        }
+        .success-box p {
+            font-size: 18px;
+        }
+        .back-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</h:head>
+<h:body>
+    <div class="success-box">
+        <h2>✅ Order Placed Successfully!</h2>
+        <p>Your order will be delivered soon.</p>
+        <p>Payment Method: <strong>Cash on Delivery</strong></p>
+        <p>Total Amount: ₹#{param.amount}</p>
+        <br/>
+        <a href="userPage.xhtml" class="back-btn">Back to Home</a>
+    </div>
+</h:body>
+</html>

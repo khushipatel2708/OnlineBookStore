@@ -19,10 +19,11 @@ public class CartBean implements Serializable {
     @EJB
     private CartSessionLocal cartSession;
 
-    // ✅ Inject LoginBean to get logged-in user
+    // ✅ Inject LoginBean to get the currently logged-in user
     @Inject
     private LoginBean loginBean;
 
+    // ✅ Add book to the cart for the logged-in user
     public void addToCart(int bookId) {
         User loggedUser = loginBean.getLoggedInUser();
 
@@ -34,6 +35,7 @@ public class CartBean implements Serializable {
         }
     }
 
+    // ✅ Get cart items for logged-in user
     public List<Cart> getCartItems() {
         User loggedUser = loginBean.getLoggedInUser();
         if (loggedUser != null) {
@@ -65,10 +67,25 @@ public class CartBean implements Serializable {
         cartSession.updateQuantity(cartId, -1);
     }
 
-    // ✅ Redirect to payment.xhtml with total amount (including delivery)
+    // ✅ Redirect to PayU payment page with total amount
     public void goToPayment() throws IOException {
         double grandTotal = getTotalPrice() + 30;
         FacesContext.getCurrentInstance().getExternalContext().redirect(
                 "payment.xhtml?amount=" + grandTotal);
+    }
+
+    // ✅ Handle Cash on Delivery option
+    public void cashOnDelivery() throws IOException {
+        double grandTotal = getTotalPrice() + 30;
+
+        User loggedUser = loginBean.getLoggedInUser();
+        if (loggedUser != null) {
+            int userId = loggedUser.getId();
+            // Optionally, save order in DB using your session bean
+            // cartSession.saveOrder(userId, grandTotal, "COD");
+        }
+
+        FacesContext.getCurrentInstance().getExternalContext().redirect(
+                "codSuccess.xhtml?amount=" + grandTotal);
     }
 }

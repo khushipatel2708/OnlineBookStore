@@ -52,6 +52,19 @@
             cursor: pointer;
         }
         .pay-btn:hover { background-color: #218838; }
+
+        .cod-btn {
+            display: block;
+            margin: 10px auto;
+            background-color: #ffc107;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .cod-btn:hover { background-color: #e0a800; }
     </style>
 </h:head>
 
@@ -100,7 +113,6 @@
             </h:column>
         </h:dataTable>
 
-        <!-- ✅ Show Totals -->
         <h:panelGroup rendered="#{not empty cartBean.cartItems}">
             <div class="charges">
                 <p>Subtotal: ₹#{cartBean.totalPrice}</p>
@@ -110,14 +122,14 @@
             </div>
 
             <!-- ✅ Online Payment Button -->
-<!--            <h:commandButton value="Proceed to Payment"
+            <h:commandButton value="Proceed to Online Payment"
                              styleClass="pay-btn"
-                             action="payment.xhtml?faces-redirect=true" />-->
+                             action="#{cartBean.goToPayment}" />
 
-<h:commandButton value="Proceed to Payment"
-                 styleClass="pay-btn"
-                 action="#{cartBean.goToPayment}" />
-
+            <!-- ✅ Cash on Delivery Button -->
+            <h:commandButton value="Cash on Delivery"
+                             styleClass="cod-btn"
+                             action="#{cartBean.cashOnDelivery}" />
         </h:panelGroup>
 
         <h:panelGroup rendered="#{empty cartBean.cartItems}">
