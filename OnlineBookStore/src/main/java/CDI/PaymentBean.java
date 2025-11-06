@@ -15,26 +15,24 @@ import java.util.Map;
 @Named("paymentBean")
 @RequestScoped
 public class PaymentBean {
-    private String firstname;
     private String email;
     private String phone;
     private String amount;
+
+    // Internally set (PayU requires firstname)
+    private final String firstname = "User";
 
     private final String key = "BIyoWM";
     private final String salt = "dj7zlIsUAs9YjjlJ8HCX3bVF6V4KtS9F";
     private final String payuURL = "https://test.payu.in/_payment";
 
     public PaymentBean() {
-        // ✅ Automatically get amount from query string
         Map<String, String> params = FacesContext.getCurrentInstance()
                 .getExternalContext().getRequestParameterMap();
         this.amount = formatAmount(params.get("amount"));
     }
 
     // Getters & Setters
-    public String getFirstname() { return firstname; }
-    public void setFirstname(String firstname) { this.firstname = firstname; }
-
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
@@ -44,13 +42,13 @@ public class PaymentBean {
     public String getAmount() { return amount; }
     public void setAmount(String amount) { this.amount = formatAmount(amount); }
 
-    // ✅ Always keep exactly one decimal digit (e.g., 10.0)
+    // ✅ Keep exactly one decimal digit (e.g., 10.0)
     private String formatAmount(String amt) {
         if (amt == null || amt.trim().isEmpty()) return "0.0";
         try {
             BigDecimal bd = new BigDecimal(amt.trim());
             bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-            return bd.toPlainString(); // ensures 10.0 instead of 1E+1
+            return bd.toPlainString();
         } catch (NumberFormatException e) {
             return "0.0";
         }

@@ -8,8 +8,7 @@
 <h:form>
     <h3>Online Payment (PayU Test)</h3>
 
-    <h:outputLabel value="First Name:" />
-    <h:inputText value="#{paymentBean.firstname}" /><br/><br/>
+    <!-- ❌ Removed First Name field -->
 
     <h:outputLabel value="Email:" />
     <h:inputText value="#{paymentBean.email}" /><br/><br/>
@@ -20,7 +19,7 @@
     <h:outputLabel value="Amount:" />
     <h:inputText value="#{paymentBean.amount}" /><br/><br/>
 
-    <h:commandButton value="Pay Now" action="#{paymentBean.makePayment}" />
+    <h:commandButton value="Pay Now" actionListener="#{paymentBean.makePayment}" />
 </h:form>
 </h:body>
 </html>
