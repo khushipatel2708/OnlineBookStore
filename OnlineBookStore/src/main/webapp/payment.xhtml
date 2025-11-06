@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Make Payment</title>
+</h:head>
+<h:body>
+<h:form>
+    <h3>Online Payment (PayU Test)</h3>
+
+    <h:outputLabel value="First Name:" />
+    <h:inputText value="#{paymentBean.firstname}" /><br/><br/>
+
+    <h:outputLabel value="Email:" />
+    <h:inputText value="#{paymentBean.email}" /><br/><br/>
+
+    <h:outputLabel value="Phone:" />
+    <h:inputText value="#{paymentBean.phone}" /><br/><br/>
+
+    <h:outputLabel value="Amount:" />
+    <h:inputText value="#{paymentBean.amount}" /><br/><br/>
+
+    <h:commandButton value="Pay Now" action="#{paymentBean.makePayment}" />
+</h:form>
+</h:body>
+</html>
