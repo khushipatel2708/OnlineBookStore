@@ -1,6 +1,6 @@
 package CDI;
 
-import EJB.CartSessionLocal;
+
 import Entity.Cart;
 import Entity.User;
 import jakarta.ejb.EJB;
@@ -12,12 +12,14 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
+import EJB.UserSessionBeanLocal;
+
 @Named("cartBean")
 @SessionScoped
 public class CartBean implements Serializable {
 
     @EJB
-    private CartSessionLocal cartSession;
+    private UserSessionBeanLocal cartSession;
 
     // ✅ Inject LoginBean to get the currently logged-in user
     @Inject

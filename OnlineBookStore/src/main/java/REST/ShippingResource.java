@@ -1,6 +1,6 @@
 package REST;
 
-import EJB.ShippingSessionBeanLocal;
+import EJB.UserSessionBeanLocal;
 import Entity.Shipping;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
@@ -13,7 +13,7 @@ import java.util.List;
 public class ShippingResource{
 
     @EJB
-    private ShippingSessionBeanLocal shippingBean;
+    private UserSessionBeanLocal shippingBean;
 
     // ✅ Add Shipping
     @POST

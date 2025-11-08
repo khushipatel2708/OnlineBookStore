@@ -1,6 +1,6 @@
 package REST;
 
-import EJB.CitySessionBeanLocal;
+import EJB.AdminSessionBeanLocal;
 import Entity.City;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
@@ -14,7 +14,7 @@ import java.util.List;
 public class CityResource {
 
     @EJB
-    private CitySessionBeanLocal citySessionBean;
+    private AdminSessionBeanLocal citySessionBean;
 
     // ✅ Get all cities
     @GET

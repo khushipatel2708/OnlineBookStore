@@ -1,6 +1,6 @@
 package REST;
 
-import EJB.BooktypeSessionBeanLocal;
+import EJB.AdminSessionBeanLocal;
 import Entity.Booktype;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
@@ -14,7 +14,7 @@ import java.util.List;
 public class BooktypeResource {
 
     @EJB
-    private BooktypeSessionBeanLocal booktypeBean;
+    private AdminSessionBeanLocal booktypeBean;
 
     // ✅ CREATE
     @POST

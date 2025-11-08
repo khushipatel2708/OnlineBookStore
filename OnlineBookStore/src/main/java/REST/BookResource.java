@@ -1,6 +1,6 @@
 package REST;
 
-import EJB.BookSessionBeanLocal;
+import EJB.AdminSessionBeanLocal;
 import Entity.Book;
 import Entity.Booktype;
 import jakarta.ejb.EJB;
@@ -15,7 +15,7 @@ import java.util.List;
 public class BookResource {
 
     @EJB
-    private BookSessionBeanLocal bookSessionBean;
+    private AdminSessionBeanLocal bookSessionBean;
 
     // ✅ Get all books
     @GET

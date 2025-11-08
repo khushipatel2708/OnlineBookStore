@@ -1,7 +1,7 @@
 package CDI;
 
-import EJB.ShippingSessionBeanLocal;
-import EJB.CitySessionBeanLocal;
+import EJB.AdminSessionBeanLocal;
+import EJB.UserSessionBeanLocal;
 import Entity.City;
 import Entity.Shipping;
 import Entity.User;
@@ -19,10 +19,10 @@ import jakarta.faces.context.FacesContext;
 public class ShippingBean implements Serializable {
 
     @EJB
-    private ShippingSessionBeanLocal shippingSessionBean;
+    private UserSessionBeanLocal shippingSessionBean;
 
     @EJB
-    private CitySessionBeanLocal citySessionBean;
+    private AdminSessionBeanLocal citySessionBean;
 
     @Inject
     private LoginBean loginBean;

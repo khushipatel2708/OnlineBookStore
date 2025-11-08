@@ -4,7 +4,7 @@
  */
 package CDI;
 
-import EJB.BooktypeSessionBeanLocal;
+import EJB.AdminSessionBeanLocal;
 import Entity.Booktype;
 import jakarta.ejb.EJB;
 import jakarta.inject.Named;
@@ -23,7 +23,7 @@ import java.util.List;
 public class BooktypeBean implements Serializable {
 
     @EJB
-    private BooktypeSessionBeanLocal booktypeEJB;
+    private AdminSessionBeanLocal booktypeEJB;
 
     private Booktype booktype = new Booktype(); // For form binding
     private List<Booktype> booktypeList;

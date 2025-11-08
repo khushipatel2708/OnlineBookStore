@@ -1,6 +1,6 @@
 package CDI;
 
-import EJB.FeedbackSessionBeanLocal;
+import EJB.UserSessionBeanLocal;
 import Entity.FeedBack;
 import Entity.Book;
 import Entity.User;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class FeedbackBean implements Serializable {
 
     @EJB
-    private FeedbackSessionBeanLocal feedbackSessionBean;
+    private UserSessionBeanLocal feedbackSessionBean;
 
     @Inject
     private LoginBean loginBean; // to get logged-in user

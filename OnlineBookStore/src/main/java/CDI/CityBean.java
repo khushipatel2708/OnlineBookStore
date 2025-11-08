@@ -1,6 +1,6 @@
 package CDI;
 
-import EJB.CitySessionBeanLocal;
+import EJB.AdminSessionBeanLocal;
 import Entity.City;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
@@ -13,7 +13,7 @@ import java.util.List;
 public class CityBean implements Serializable {
 
     @EJB
-    private CitySessionBeanLocal citySessionBean;
+    private AdminSessionBeanLocal citySessionBean;
 
     private int cityid;
     private String cityname;
