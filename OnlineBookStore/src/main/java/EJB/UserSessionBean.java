@@ -135,6 +135,11 @@ public class UserSessionBean implements UserSessionBeanLocal {
         return false;
     }
 
+    @Override
+    public List<User> getAllUsers() {
+        return em.createQuery("SELECT u FROM User u", User.class).getResultList();
+    }
+
     //shipping logic
     @Override
     public void addShipping(Shipping s) {
@@ -239,7 +244,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
     public Payment findById(int id) {
         return em.find(Payment.class, id);
     }
-    
+
     //FeedBack Logic
     @Override
     public void addFeedback(FeedBack f) {

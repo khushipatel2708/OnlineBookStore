@@ -1,3 +1,40 @@
+Register:-
+
+get:- http://localhost:8080/OnlineBookStore/api/user/list
+
+post:- http://localhost:8080/OnlineBookStore/api/user/register
+{
+  "groupId": 2,
+  "fullname": "KP00",
+  "email": "pkhush88@gmail.com",
+  "phone": "0123456789",
+  "username": "kp1",
+  "password": "123456",
+  "status": "Active"
+}
+
+Post:- http://localhost:8080/OnlineBookStore/api/user/login
+{
+  "username": "kp1",
+  "password": "123456"
+}
+
+POST :- http://localhost:8080/OnlineBookStore/api/user/resetPassword
+{ "username": "kp1", "oldPassword": "123456", "newPassword": "000000" }
+
+PUT:-
+http://localhost:8080/OnlineBookStore/api/user/update/{id}
+{
+  "groupId": 2,
+  "fullname": "KhushiP00",
+  "email": "pkhush88@gmail.com",
+  "phone": "0123456789",
+  "status": "Active"
+}
+
+GET:-http://localhost:8080/BookStore/api/user/5
+=================================================================================
+
 BookType:-
 
 get:- http://localhost:8080/OnlineBookStore/api/booktype/list

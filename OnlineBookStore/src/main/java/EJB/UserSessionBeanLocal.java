@@ -23,6 +23,7 @@ public interface UserSessionBeanLocal {
     User getUserById(int id);
     boolean changePassword(String username, String oldPassword, String newPassword);
     boolean resetPasswordByEmail(String email, String newPassword);
+    List<User> getAllUsers();
     
     //Shipping
     void addShipping(Shipping s);
