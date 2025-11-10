@@ -2,6 +2,7 @@ package REST;
 
 import EJB.AdminSessionBeanLocal;
 import Entity.Book;
+import Entity.Booktype;
 import Entity.City;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.DELETE;
@@ -19,13 +20,6 @@ public class Admin {
 
     @EJB
     private AdminSessionBeanLocal adminSessionBean;
-
-    @GET
-    @Path("books") // Final URL: http://localhost:8080/BookStore/resources/admin/books
-    @Produces(MediaType.APPLICATION_JSON)
-    public Collection<Book> getAllBooks() {
-        return adminSessionBean.getAllBook();
-    }
     
     @GET
     @Path("cities") // GET http://localhost:8080/BookStore/resources/admin/cities
@@ -61,5 +55,93 @@ public class Admin {
     @Path("cities/search/{name}") // GET http://localhost:8080/BookStore/resources/admin/cities/search/Surat
     public Collection<City> getCityByName(@PathParam("name") String name) {
         return adminSessionBean.findCityByName(name);
+    }
+    
+    // ==================== BOOKTYPE CRUD ====================
+    //get :- http://localhost:8080/BookStore/resources/admin/booktypes
+    @GET
+    @Path("booktypes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<Booktype> getAllBooktypes() {
+        return adminSessionBean.getAllBooktypes();
+    }
+
+    //get:- http://localhost:8080/BookStore/resources/admin/booktypes/1
+    @GET
+    @Path("booktypes/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Booktype getBooktypeById(@PathParam("id") Integer id) {
+        return adminSessionBean.getBooktypeById(id);
+    }
+
+    //Post :- http://localhost:8080/BookStore/resources/admin/booktypes
+    @POST
+    @Path("booktypes")
+    public void addBooktype(Booktype bt) {
+        adminSessionBean.addBooktype(bt.getType(), bt.getDescription());
+    }
+
+    //put:- http://localhost:8080/BookStore/resources/admin/booktypes/1
+    @PUT
+    @Path("booktypes/{id}")
+    public void updateBooktype(@PathParam("id") Integer id, Booktype bt) {
+        adminSessionBean.updateBooktype(id, bt.getType(), bt.getDescription());
+    }
+
+    //delete :- http://localhost:8080/BookStore/resources/admin/booktypes/1
+    @DELETE
+    @Path("booktypes/{id}")
+    public void deleteBooktype(@PathParam("id") Integer id) {
+        adminSessionBean.deleteBooktype(id);
+    }
+
+    // ==================== BOOK CRUD ====================
+
+    //get:-http://localhost:8080/BookStore/webresources/admin/books
+    @GET
+    @Path("books")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<Book> getAllBooks() {
+        return adminSessionBean.getAllBooks();
+    }
+
+    //get:-http://localhost:8080/BookStore/webresources/admin/books/1
+    @GET
+    @Path("books/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Book getBookById(@PathParam("id") Integer id) {
+        return adminSessionBean.findBookById(id);
+    }
+
+    //post:-http://localhost:8080/BookStore/webresources/admin/books
+    @POST
+    @Path("books")
+    public void addBook(Book book) {
+        adminSessionBean.addBook(
+            book.getBookname(),
+            book.getAuthorname(),
+            book.getPrice().doubleValue(),
+            book.getBooktypeId().getId()
+        );
+    }
+
+    //put:-http://localhost:8080/BookStore/webresources/admin/books/1
+    @PUT
+    @Path("books/{id}")
+    public void updateBook(@PathParam("id") Integer id, Book book) {
+        adminSessionBean.updateBook(
+            id,
+            book.getBookname(),
+            book.getAuthorname(),
+            book.getPrice().doubleValue(),
+            book.getBooktypeId().getId()
+        );
+    }
+
+    //delete:-http://localhost:8080/BookStore/webresources/admin/books/1
+    @DELETE
+    @Path("books/{id}")
+    public void deleteBook(@PathParam("id") Integer id) {
+        adminSessionBean.deleteBook(id);
     }
 }

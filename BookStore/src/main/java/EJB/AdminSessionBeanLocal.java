@@ -5,6 +5,7 @@
 package EJB;
 
 import Entity.Book;
+import Entity.Booktype;
 import Entity.City;
 import jakarta.ejb.Local;
 import java.util.Collection;
@@ -15,8 +16,23 @@ import java.util.Collection;
  */
 @Local
 public interface AdminSessionBeanLocal {
-    Collection<Book> getAllBook();
+     // ---------- Book Type----------
+
+    Collection<Booktype> getAllBooktypes();
+    Booktype getBooktypeById(Integer id);
+    void addBooktype(String type, String description);
+    void updateBooktype(Integer id, String type, String description);
+    void deleteBooktype(Integer id);
+    Booktype findBooktypeById(Integer id);
+
+    // ---------- Book ----------
+    Collection<Book> getAllBooks();
+    void addBook(String name, String author, Double price, Integer booktypeId);
+    void updateBook(Integer id, String name, String author, Double price, Integer booktypeId);
+    void deleteBook(Integer id);
+    Book findBookById(Integer id);
     
+    //-------------city------------
     Collection<City> getAllCities();
     void addCity(String name);
     void updateCity(Integer id, String name);
