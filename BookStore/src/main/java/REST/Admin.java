@@ -97,7 +97,7 @@ public class Admin {
 
     // ==================== BOOK CRUD ====================
 
-    //get:-http://localhost:8080/BookStore/webresources/admin/books
+    //get:-http://localhost:8080/BookStore/resources/admin/books
     @GET
     @Path("books")
     @Produces(MediaType.APPLICATION_JSON)
@@ -105,7 +105,7 @@ public class Admin {
         return adminSessionBean.getAllBooks();
     }
 
-    //get:-http://localhost:8080/BookStore/webresources/admin/books/1
+    //get:-http://localhost:8080/BookStore/resources/admin/books/1
     @GET
     @Path("books/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -113,7 +113,7 @@ public class Admin {
         return adminSessionBean.findBookById(id);
     }
 
-    //post:-http://localhost:8080/BookStore/webresources/admin/books
+    //post:-http://localhost:8080/BookStore/resources/admin/books
     @POST
     @Path("books")
     public void addBook(Book book) {
@@ -125,7 +125,7 @@ public class Admin {
         );
     }
 
-    //put:-http://localhost:8080/BookStore/webresources/admin/books/1
+    //put:-http://localhost:8080/BookStore/resources/admin/books/1
     @PUT
     @Path("books/{id}")
     public void updateBook(@PathParam("id") Integer id, Book book) {
@@ -138,7 +138,7 @@ public class Admin {
         );
     }
 
-    //delete:-http://localhost:8080/BookStore/webresources/admin/books/1
+    //delete:-http://localhost:8080/BookStore/resources/admin/books/1
     @DELETE
     @Path("books/{id}")
     public void deleteBook(@PathParam("id") Integer id) {
