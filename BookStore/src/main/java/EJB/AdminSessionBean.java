@@ -8,6 +8,7 @@ import Entity.Book;
 import Entity.Booktype;
 import Entity.City;
 import Entity.GroupMaster;
+import Entity.User;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,9 +20,59 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
 
     @PersistenceContext(unitName = "my_pu")
     EntityManager em;
-    
-      // ---------- BOOKTYPE CRUD ----------
+    //===============User=====================
 
+    @Override
+    public Collection<User> getAllUsers() {
+        return em.createNamedQuery("User.findAll", User.class).getResultList();
+    }
+
+    @Override
+    public User findUserById(Integer id) {
+        return em.find(User.class, id);
+    }
+
+    @Override
+    public void addUser(String fullname, String phone, String username, String email, String password, String status, Integer groupId) {
+        GroupMaster group = em.find(GroupMaster.class, groupId);
+        if (group != null) {
+            User u = new User();
+            u.setFullname(fullname);
+            u.setPhone(phone);
+            u.setUsername(username);
+            u.setEmail(email);
+            u.setPassword(password);
+            u.setStatus(status != null ? status : "Active");
+            u.setGroupid(group);
+            em.persist(u);
+        }
+    }
+
+    @Override
+    public void updateUser(Integer id, String fullname, String phone, String username, String email, String password, String status, Integer groupId) {
+        User u = em.find(User.class, id);
+        if (u != null) {
+            GroupMaster group = em.find(GroupMaster.class, groupId);
+            u.setFullname(fullname);
+            u.setPhone(phone);
+            u.setUsername(username);
+            u.setEmail(email);
+            u.setPassword(password);
+            u.setStatus(status);
+            u.setGroupid(group);
+            em.merge(u);
+        }
+    }
+
+    @Override
+    public void deleteUser(Integer id) {
+        User u = em.find(User.class, id);
+        if (u != null) {
+            em.remove(u);
+        }
+    }
+
+    // ---------- BOOKTYPE CRUD ----------
     @Override
     public Collection<Booktype> getAllBooktypes() {
         return em.createNamedQuery("Booktype.findAll").getResultList();
@@ -57,12 +108,13 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             em.remove(bt);
         }
     }
+
     @Override
     public Booktype findBooktypeById(Integer id) {
         return em.find(Booktype.class, id);
     }
-    
-     // ---------- BOOK CRUD ----------
+
+    // ---------- BOOK CRUD ----------
     @Override
     public Collection<Book> getAllBooks() {
         return em.createNamedQuery("Book.findAll").getResultList();
@@ -107,7 +159,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
     public Book findBookById(Integer id) {
         return em.find(Book.class, id);
     }
-    
+
     //--------city---------------------
     @Override
     public Collection<City> getAllCities() {
@@ -146,11 +198,11 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
     @Override
     public Collection<City> findCityByName(String name) {
         return em.createNamedQuery("City.findByName")
-                 .setParameter("name", name)
-                 .getResultList();
+                .setParameter("name", name)
+                .getResultList();
     }
-    
-     @Override
+
+    @Override
     public void addGroup(String groupname, String username) {
         GroupMaster g = new GroupMaster();
         g.setGroupname(groupname);
@@ -184,15 +236,14 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
     @Override
     public Collection<GroupMaster> findGroupByName(String groupname) {
         return em.createNamedQuery("GroupMaster.findByGroupname", GroupMaster.class)
-                 .setParameter("groupname", groupname)
-                 .getResultList();
+                .setParameter("groupname", groupname)
+                .getResultList();
     }
 
     @Override
     public Collection<GroupMaster> getAllGroups() {
         return em.createNamedQuery("GroupMaster.findAll", GroupMaster.class)
-                 .getResultList();
+                .getResultList();
     }
-    
-    
+
 }

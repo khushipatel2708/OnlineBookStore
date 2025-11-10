@@ -8,6 +8,7 @@ import Entity.Book;
 import Entity.Booktype;
 import Entity.City;
 import Entity.GroupMaster;
+import Entity.User;
 import jakarta.ejb.Local;
 import java.util.Collection;
 
@@ -17,22 +18,29 @@ import java.util.Collection;
  */
 @Local
 public interface AdminSessionBeanLocal {
-     // ---------- Book Type----------
 
+    // ---------- USER ----------
+    Collection<User> getAllUsers();
+    User findUserById(Integer id);
+    void addUser(String fullname, String phone, String username, String email, String password, String status, Integer groupId);
+    void updateUser(Integer id, String fullname, String phone, String username, String email, String password, String status, Integer groupId);
+    void deleteUser(Integer id);
+
+    // ---------- Book Type----------
     Collection<Booktype> getAllBooktypes();
     Booktype getBooktypeById(Integer id);
     void addBooktype(String type, String description);
     void updateBooktype(Integer id, String type, String description);
     void deleteBooktype(Integer id);
     Booktype findBooktypeById(Integer id);
-
+    
     // ---------- Book ----------
     Collection<Book> getAllBooks();
     void addBook(String name, String author, Double price, Integer booktypeId);
     void updateBook(Integer id, String name, String author, Double price, Integer booktypeId);
     void deleteBook(Integer id);
     Book findBookById(Integer id);
-    
+
     //-------------city------------
     Collection<City> getAllCities();
     void addCity(String name);
@@ -40,7 +48,7 @@ public interface AdminSessionBeanLocal {
     void removeCity(Integer id);
     City findCityById(Integer id);
     Collection<City> findCityByName(String name);
-    
+
     //--------------Group Master-----------------
     void addGroup(String groupname, String username);
     void updateGroup(Integer id, String groupname, String username);

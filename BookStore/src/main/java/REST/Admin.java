@@ -5,6 +5,7 @@ import Entity.Book;
 import Entity.Booktype;
 import Entity.City;
 import Entity.GroupMaster;
+import Entity.User;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -21,7 +22,70 @@ public class Admin {
 
     @EJB
     private AdminSessionBeanLocal adminSessionBean;
-    
+
+  
+    // ==================== USER CRUD ====================
+// GET all users
+// URL: http://localhost:8080/BookStore/resources/admin/users
+    @GET
+    @Path("users")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<User> getAllUsers() {
+        return adminSessionBean.getAllUsers();
+    }
+
+// GET single user by ID
+// URL: http://localhost:8080/BookStore/resources/admin/users/1
+    @GET
+    @Path("users/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User getUserById(@PathParam("id") Integer id) {
+        return adminSessionBean.findUserById(id);
+    }
+
+// POST (Add new user)
+// URL: http://localhost:8080/BookStore/resources/admin/users
+    @POST
+    @Path("users")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void addUser(User user) {
+        adminSessionBean.addUser(
+                user.getFullname(),
+                user.getPhone(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getStatus(),
+                user.getGroupid().getGroupid()
+        );
+    }
+
+// PUT (Update user)
+// URL: http://localhost:8080/BookStore/resources/admin/users/1
+    @PUT
+    @Path("users/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void updateUser(@PathParam("id") Integer id, User user) {
+        adminSessionBean.updateUser(
+                id,
+                user.getFullname(),
+                user.getPhone(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getStatus(),
+                user.getGroupid().getGroupid()
+        );
+    }
+
+// DELETE user by ID
+// URL: http://localhost:8080/BookStore/resources/admin/users/1
+    @DELETE
+    @Path("users/{id}")
+    public void deleteUser(@PathParam("id") Integer id) {
+        adminSessionBean.deleteUser(id);
+    }
+
     @GET
     @Path("cities") // GET http://localhost:8080/BookStore/resources/admin/cities
     public Collection<City> getAllCities() {
@@ -57,7 +121,7 @@ public class Admin {
     public Collection<City> getCityByName(@PathParam("name") String name) {
         return adminSessionBean.findCityByName(name);
     }
-    
+
     // ==================== BOOKTYPE CRUD ====================
     //get :- http://localhost:8080/BookStore/resources/admin/booktypes
     @GET
@@ -97,7 +161,6 @@ public class Admin {
     }
 
     // ==================== BOOK CRUD ====================
-
     //get:-http://localhost:8080/BookStore/resources/admin/books
     @GET
     @Path("books")
@@ -145,9 +208,9 @@ public class Admin {
     public void deleteBook(@PathParam("id") Integer id) {
         adminSessionBean.deleteBook(id);
     }
-    
+
     //--------------Group Master-------------------
-     @GET
+    @GET
     @Path("groups") // GET http://localhost:8080/BookStore/resources/admin/groups
     public Collection<GroupMaster> getAllGroups() {
         return adminSessionBean.getAllGroups();
