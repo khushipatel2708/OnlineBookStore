@@ -4,7 +4,9 @@
  */
 package EJB;
 
+import Entity.Shipping;
 import jakarta.ejb.Local;
+import java.util.Collection;
 
 /**
  *
@@ -12,5 +14,17 @@ import jakarta.ejb.Local;
  */
 @Local
 public interface UserSessionBeanLocal {
+    
+     // --- Shipping CRUD methods ---
+    Collection<Shipping> getAllShippings();
+    Shipping getShippingById(Integer id);
+    void addShipping(Integer userId, Integer cityId, String name, String phone, String address1, String address2, String landmark, String pincode);
+    void updateShipping(Integer id, Integer userId, Integer cityId, String name, String phone, String address1, String address2, String landmark, String pincode);
+    void removeShipping(Integer id);
+
+    // --- Filters ---
+    Collection<Shipping> getShippingByCity(Integer cityId);
+    Collection<Shipping> getShippingByPincode(String pincode);
+    Collection<Shipping> getShippingByUser(Integer userId);
     
 }
