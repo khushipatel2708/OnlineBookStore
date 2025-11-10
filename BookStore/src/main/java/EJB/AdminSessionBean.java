@@ -7,6 +7,7 @@ package EJB;
 import Entity.Book;
 import Entity.Booktype;
 import Entity.City;
+import Entity.GroupMaster;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -148,5 +149,50 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
                  .setParameter("name", name)
                  .getResultList();
     }
+    
+     @Override
+    public void addGroup(String groupname, String username) {
+        GroupMaster g = new GroupMaster();
+        g.setGroupname(groupname);
+        g.setUsername(username);
+        em.persist(g);
+    }
+
+    @Override
+    public void updateGroup(Integer id, String groupname, String username) {
+        GroupMaster g = em.find(GroupMaster.class, id);
+        if (g != null) {
+            g.setGroupname(groupname);
+            g.setUsername(username);
+            em.merge(g);
+        }
+    }
+
+    @Override
+    public void removeGroup(Integer id) {
+        GroupMaster g = em.find(GroupMaster.class, id);
+        if (g != null) {
+            em.remove(g);
+        }
+    }
+
+    @Override
+    public GroupMaster findGroupById(Integer id) {
+        return em.find(GroupMaster.class, id);
+    }
+
+    @Override
+    public Collection<GroupMaster> findGroupByName(String groupname) {
+        return em.createNamedQuery("GroupMaster.findByGroupname", GroupMaster.class)
+                 .setParameter("groupname", groupname)
+                 .getResultList();
+    }
+
+    @Override
+    public Collection<GroupMaster> getAllGroups() {
+        return em.createNamedQuery("GroupMaster.findAll", GroupMaster.class)
+                 .getResultList();
+    }
+    
     
 }

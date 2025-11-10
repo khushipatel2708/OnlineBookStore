@@ -7,6 +7,7 @@ package EJB;
 import Entity.Book;
 import Entity.Booktype;
 import Entity.City;
+import Entity.GroupMaster;
 import jakarta.ejb.Local;
 import java.util.Collection;
 
@@ -39,4 +40,12 @@ public interface AdminSessionBeanLocal {
     void removeCity(Integer id);
     City findCityById(Integer id);
     Collection<City> findCityByName(String name);
+    
+    //--------------Group Master-----------------
+    void addGroup(String groupname, String username);
+    void updateGroup(Integer id, String groupname, String username);
+    void removeGroup(Integer id);
+    GroupMaster findGroupById(Integer id);
+    Collection<GroupMaster> findGroupByName(String groupname);
+    Collection<GroupMaster> getAllGroups();
 }

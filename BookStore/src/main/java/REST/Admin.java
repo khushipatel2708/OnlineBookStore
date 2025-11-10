@@ -4,6 +4,7 @@ import EJB.AdminSessionBeanLocal;
 import Entity.Book;
 import Entity.Booktype;
 import Entity.City;
+import Entity.GroupMaster;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -143,5 +144,42 @@ public class Admin {
     @Path("books/{id}")
     public void deleteBook(@PathParam("id") Integer id) {
         adminSessionBean.deleteBook(id);
+    }
+    
+    //--------------Group Master-------------------
+     @GET
+    @Path("groups") // GET http://localhost:8080/BookStore/resources/admin/groups
+    public Collection<GroupMaster> getAllGroups() {
+        return adminSessionBean.getAllGroups();
+    }
+
+    @GET
+    @Path("groups/{id}") // GET http://localhost:8080/BookStore/resources/admin/groups/1
+    public GroupMaster getGroupById(@PathParam("id") Integer id) {
+        return adminSessionBean.findGroupById(id);
+    }
+
+    @GET
+    @Path("groups/search/{name}") // GET http://localhost:8080/BookStore/resources/admin/groups/search/Admins
+    public Collection<GroupMaster> getGroupByName(@PathParam("name") String name) {
+        return adminSessionBean.findGroupByName(name);
+    }
+
+    @POST
+    @Path("groups") // POST http://localhost:8080/BookStore/resources/admin/groups
+    public void addGroup(GroupMaster group) {
+        adminSessionBean.addGroup(group.getGroupname(), group.getUsername());
+    }
+
+    @PUT
+    @Path("groups/{id}") // PUT http://localhost:8080/BookStore/resources/admin/groups/1
+    public void updateGroup(@PathParam("id") Integer id, GroupMaster group) {
+        adminSessionBean.updateGroup(id, group.getGroupname(), group.getUsername());
+    }
+
+    @DELETE
+    @Path("groups/{id}") // DELETE http://localhost:8080/BookStore/resources/admin/groups/1
+    public void removeGroup(@PathParam("id") Integer id) {
+        adminSessionBean.removeGroup(id);
     }
 }
