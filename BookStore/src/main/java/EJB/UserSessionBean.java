@@ -4,6 +4,8 @@
  */
 package EJB;
 
+import Entity.Book;
+import Entity.Cart;
 import Entity.City;
 import Entity.Shipping;
 import Entity.User;
@@ -74,15 +76,6 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
     }
 
-    // ✅ Delete shipping
-    @Override
-    public void removeShipping(Integer id) {
-        Shipping s = em.find(Shipping.class, id);
-        if (s != null) {
-            em.remove(s);
-        }
-    }
-
     // ✅ Get shippings by City
     @Override
     public Collection<Shipping> getShippingByCity(Integer cityId) {
@@ -106,4 +99,74 @@ public class UserSessionBean implements UserSessionBeanLocal {
                 .setParameter("userId", userId)
                 .getResultList();
     }
+    
+     // ✅ Delete shipping
+    @Override
+    public void removeShipping(Integer id) {
+        Shipping s = em.find(Shipping.class, id);
+        if (s != null) {
+            em.remove(s);
+        }
+    }
+    
+    
+    // ================= CART OPERATIONS ==================
+
+    @Override
+    public void addToCart(Integer userId, Integer bookId, Integer quantity) {
+        User user = em.find(User.class, userId);
+        Book book = em.find(Book.class, bookId);
+
+        if (user != null && book != null) {
+            // Check if the item already exists in the cart
+            Cart existingCart = null;
+            try {
+                existingCart = em.createQuery(
+                        "SELECT c FROM Cart c WHERE c.userId.id = :userId AND c.bookId.id = :bookId", Cart.class)
+                        .setParameter("userId", userId)
+                        .setParameter("bookId", bookId)
+                        .getSingleResult();
+            } catch (Exception e) {
+                // no existing item found
+            }
+
+            if (existingCart != null) {
+                // update quantity
+                existingCart.setQuantity(existingCart.getQuantity() + quantity);
+                em.merge(existingCart);
+            } else {
+                // create new cart entry
+                Cart c = new Cart();
+                c.setUserId(user);
+                c.setBookId(book);
+                c.setQuantity(quantity);
+                em.persist(c);
+            }
+        }
+    }
+
+    @Override
+    public Collection<Cart> getCartByUser(Integer userId) {
+        return em.createQuery("SELECT c FROM Cart c WHERE c.userId.id = :userId", Cart.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
+
+    @Override
+    public void updateCartQuantity(Integer cartId, Integer quantity) {
+        Cart c = em.find(Cart.class, cartId);
+        if (c != null && quantity > 0) {
+            c.setQuantity(quantity);
+            em.merge(c);
+        }
+    }
+
+    @Override
+    public void deleteCartItem(Integer cartId) {
+        Cart c = em.find(Cart.class, cartId);
+        if (c != null) {
+            em.remove(c);
+        }
+    }
+
 }

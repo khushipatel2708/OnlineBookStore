@@ -60,4 +60,7 @@ public interface AdminSessionBeanLocal {
     GroupMaster findGroupById(Integer id);
     Collection<GroupMaster> findGroupByName(String groupname);
     Collection<GroupMaster> getAllGroups();
+    
+//    void deleteShipping(Integer id);
+
 }

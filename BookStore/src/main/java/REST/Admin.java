@@ -253,4 +253,11 @@ public class Admin {
     public void removeGroup(@PathParam("id") Integer id) {
         adminSessionBean.removeGroup(id);
     }
+    
+//    @DELETE
+//    @Path("shippings/{id}") // DELETE http://localhost:8080/BookStore/resources/admin/shippings/5
+//    public void deleteShipping(@PathParam("id") Integer id) {
+//        adminSessionBean.deleteShipping(id);
+//    }
+
 }

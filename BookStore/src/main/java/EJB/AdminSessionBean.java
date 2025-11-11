@@ -8,6 +8,7 @@ import Entity.Book;
 import Entity.Booktype;
 import Entity.City;
 import Entity.GroupMaster;
+import Entity.Shipping;
 import Entity.User;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -254,5 +255,14 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         return em.createNamedQuery("GroupMaster.findAll", GroupMaster.class)
                 .getResultList();
     }
+    // ✅ Admin can delete any shipping address
+//    @Override
+//    public void deleteShipping(Integer id) {
+//        Shipping s = em.find(Shipping.class, id);
+//        if (s != null) {
+//            em.remove(s);
+//        }
+//    }
+
 
 }

@@ -65,7 +65,6 @@ public class User {
             s.getPincode()
         );
     }
-
     // ✅ DELETE shipping
     // URL: http://localhost:8080/BookStore/resources/user/shipping/delete/{id}
     @DELETE
@@ -73,4 +72,57 @@ public class User {
     public void deleteShipping(@PathParam("id") int id) {
         userSessionBean.removeShipping(id);
     }
+    
+    // ====================== CART MANAGEMENT =======================
+
+    // ✅ ADD TO CART
+    // URL: http://localhost:8080/BookStore/resources/user/cart/add
+    // METHOD: POST
+    // BODY:
+    // {
+    //   "userId": {"id": 1},
+    //   "bookId": {"id": 3},
+    //   "quantity": 2
+    // }
+    @POST
+    @Path("cart/add")
+    public void addToCart(Entity.Cart cart) {
+        userSessionBean.addToCart(
+            cart.getUserId().getId(),
+            cart.getBookId().getId(),
+            cart.getQuantity()
+        );
+    }
+
+    // ✅ GET ALL CART ITEMS FOR USER
+    // URL: http://localhost:8080/BookStore/resources/user/cart/{userId}
+    // METHOD: GET
+    @GET
+    @Path("cart/{userId}")
+    public Collection<Entity.Cart> getCartByUser(@PathParam("userId") Integer userId) {
+        return userSessionBean.getCartByUser(userId);
+    }
+
+    // ✅ UPDATE CART QUANTITY
+    // URL: http://localhost:8080/BookStore/resources/user/cart/update/{cartId}
+    // METHOD: PUT
+    // BODY:
+    // {
+    //   "quantity": 3
+    // }
+    @PUT
+    @Path("cart/update/{cartId}")
+    public void updateCartQuantity(@PathParam("cartId") Integer cartId, Entity.Cart cart) {
+        userSessionBean.updateCartQuantity(cartId, cart.getQuantity());
+    }
+
+    // ✅ DELETE CART ITEM
+    // URL: http://localhost:8080/BookStore/resources/user/cart/delete/{cartId}
+    // METHOD: DELETE
+    @DELETE
+    @Path("cart/delete/{cartId}")
+    public void deleteCartItem(@PathParam("cartId") Integer cartId) {
+        userSessionBean.deleteCartItem(cartId);
+    }
+
 }
