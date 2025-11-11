@@ -36,8 +36,12 @@ public interface AdminSessionBeanLocal {
     
     // ---------- Book ----------
     Collection<Book> getAllBooks();
-    void addBook(String name, String author, Double price, Integer booktypeId);
-    void updateBook(Integer id, String name, String author, Double price, Integer booktypeId);
+    void addBook(String bookname, String authorname, Double price, Integer booktypeId,
+             String coverPhoto, String frontPagePhoto, String lastPagePhoto);
+
+    void updateBook(Integer id, String bookname, String authorname, Double price, Integer booktypeId,
+                String coverPhoto, String frontPagePhoto, String lastPagePhoto);
+
     void deleteBook(Integer id);
     Book findBookById(Integer id);
 

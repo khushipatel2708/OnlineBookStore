@@ -21,8 +21,7 @@ public interface UserSessionBeanLocal {
     void addShipping(Integer userId, Integer cityId, String name, String phone, String address1, String address2, String landmark, String pincode);
     void updateShipping(Integer id, Integer userId, Integer cityId, String name, String phone, String address1, String address2, String landmark, String pincode);
     void removeShipping(Integer id);
-
-    // --- Filters ---
+    // --- shipping Filters ---
     Collection<Shipping> getShippingByCity(Integer cityId);
     Collection<Shipping> getShippingByPincode(String pincode);
     Collection<Shipping> getShippingByUser(Integer userId);

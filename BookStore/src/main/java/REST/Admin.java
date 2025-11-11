@@ -177,28 +177,36 @@ public class Admin {
         return adminSessionBean.findBookById(id);
     }
 
-    //post:-http://localhost:8080/BookStore/resources/admin/books
+   // POST: http://localhost:8080/BookStore/resources/admin/books
     @POST
     @Path("books")
+    @Produces(MediaType.APPLICATION_JSON)
     public void addBook(Book book) {
         adminSessionBean.addBook(
             book.getBookname(),
             book.getAuthorname(),
             book.getPrice().doubleValue(),
-            book.getBooktypeId().getId()
+            book.getBooktypeId().getId(),
+            book.getCoverPhoto(),
+            book.getFrontPagePhoto(),
+            book.getLastPagePhoto()
         );
     }
 
-    //put:-http://localhost:8080/BookStore/resources/admin/books/1
+    // PUT: http://localhost:8080/BookStore/resources/admin/books/1
     @PUT
     @Path("books/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     public void updateBook(@PathParam("id") Integer id, Book book) {
         adminSessionBean.updateBook(
             id,
             book.getBookname(),
             book.getAuthorname(),
             book.getPrice().doubleValue(),
-            book.getBooktypeId().getId()
+            book.getBooktypeId().getId(),
+            book.getCoverPhoto(),
+            book.getFrontPagePhoto(),
+            book.getLastPagePhoto()
         );
     }
 
