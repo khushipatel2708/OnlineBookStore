@@ -72,6 +72,17 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             em.remove(u);
         }
     }
+    @Override
+    public User findUserByUsername(String username) {
+        try {
+            return em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
+                     .setParameter("username", username)
+                     .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
     // ---------- BOOKTYPE CRUD ----------
     @Override
