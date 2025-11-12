@@ -6,7 +6,6 @@
 package auth;
 
 //import beans.LoginBean;
-
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
 import java.io.Serializable;
@@ -25,12 +24,11 @@ import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import static jwtrest.Constants.AUTHORIZATION_HEADER;
+import static jwtrest.Constants.BEARER;
 import jwtrest.JWTCredential;
 import jwtrest.TokenProvider;
 import Auth.KeepRecord;
-import static jwtrest.Constants.AUTHORIZATION_HEADER;
-import static jwtrest.Constants.BEARER;
-
 
 /**
  *
