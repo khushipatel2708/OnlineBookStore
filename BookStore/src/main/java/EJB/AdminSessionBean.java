@@ -121,11 +121,6 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
     }
 
-    @Override
-    public Booktype findBooktypeById(Integer id) {
-        return em.find(Booktype.class, id);
-    }
-
     // ---------- BOOK CRUD ----------
     @Override
     public Collection<Book> getAllBooks() {

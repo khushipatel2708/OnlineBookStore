@@ -29,6 +29,7 @@ import static jwtrest.Constants.BEARER;
 import jwtrest.JWTCredential;
 import jwtrest.TokenProvider;
 import Auth.KeepRecord;
+import java.util.Set;
 
 /**
  *
@@ -161,20 +162,34 @@ AuthenticationStatus status;
      * @return the AuthenticationStatus to notify the container
      */
     private AuthenticationStatus createToken(CredentialValidationResult result, HttpMessageContext context) {
-        if (!isRememberMe(context)) {
-            // if (true) {
-             String jwt = tokenProvider.createToken(result.getCallerPrincipal().getName(), result.getCallerGroups(), false);
-            //context.getRequest().getSession().setAttribute("token", jwt);
-            keepRecord.setToken(jwt);
-            context.getResponse().addHeader(AUTHORIZATION_HEADER, BEARER + jwt);
-            System.out.println("Token Value"+ jwt);
-        
-           
-        }
-        System.out.println("JWTAuthenticationMechanism - Token Created");
-        
-        return context.notifyContainerAboutLogin(result.getCallerPrincipal(), result.getCallerGroups());
-    }
+       try {
+           boolean rememberMe = isRememberMe(context);
+           String username = result.getCallerPrincipal().getName();
+
+           // Get single role (for JWT claim)
+           String role = result.getCallerGroups().stream().findFirst().orElse("ROLE_USER");
+
+           // ✅ Call the new method (no password, safe)
+           String jwt = tokenProvider.createTokenWithClaims(username, "N/A", role, rememberMe);
+
+           System.out.println("JWTAuthenticationMechanism - Token Created for user: " + username);
+           System.out.println("Token Value: " + jwt);
+
+           if (keepRecord != null) {
+               keepRecord.setToken(jwt);
+           }
+
+           context.getResponse().addHeader(AUTHORIZATION_HEADER, BEARER + jwt);
+
+           return context.notifyContainerAboutLogin(result.getCallerPrincipal(), result.getCallerGroups());
+
+       } catch (Exception e) {
+           e.printStackTrace();
+           System.err.println("Error while creating JWT: " + e.getMessage());
+           return context.responseUnauthorized();
+       }
+}
+
 
     /**
      * To extract the JWT from Authorization HTTP header

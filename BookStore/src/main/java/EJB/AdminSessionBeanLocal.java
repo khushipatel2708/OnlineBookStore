@@ -34,7 +34,6 @@ public interface AdminSessionBeanLocal {
     void addBooktype(String type, String description);
     void updateBooktype(Integer id, String type, String description);
     void deleteBooktype(Integer id);
-    Booktype findBooktypeById(Integer id);
     
     // ---------- Book ----------
     Collection<Book> getAllBooks();

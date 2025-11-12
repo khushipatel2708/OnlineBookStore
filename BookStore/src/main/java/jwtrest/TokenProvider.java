@@ -110,19 +110,22 @@ catch(Exception ex)
         this.tokenValidityForRememberMe = TimeUnit.SECONDS.toMillis(REMEMBERME_VALIDITY_SECONDS);   //24 hours
     }
 
-    public String createToken(String username, Set<String> authorities, Boolean rememberMe) {
-        long now = (new Date()).getTime();
-        long validity = rememberMe ? tokenValidityForRememberMe : tokenValidity;
-        System.out.println("TokenProvider - In create Token");
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuer("localhost")
-                .claim(AUTHORITIES_KEY, authorities.stream().collect(joining(",")))
-              //  .signWith(SignatureAlgorithm.HS512, secretKey)
-                .signWith(SignatureAlgorithm.RS256, myprivateKey)
-                .setExpiration(new Date(now + validity))
-                .compact();
-    }
+    public String createTokenWithClaims(String username, String password, String role, Boolean rememberMe) {
+    long now = (new Date()).getTime();
+    long validity = rememberMe ? tokenValidityForRememberMe : tokenValidity;
+
+    // Create token with extra claims
+    return Jwts.builder()
+            .setSubject(username)
+            .setIssuer("localhost")
+            .claim("username", username)
+            .claim("password", password)  // ⚠️ only for testing – not secure in production!
+            .claim("role", role)
+            .signWith(SignatureAlgorithm.RS256, myprivateKey)
+            .setExpiration(new Date(now + validity))
+            .compact();
+}
+
 
     public JWTCredential getCredential(String token) {
         Claims claims = Jwts.parser()

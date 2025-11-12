@@ -7,7 +7,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import jwtrest.TokenProvider;
-import java.util.Set;
 
 @Path("/auth")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -15,40 +14,48 @@ import java.util.Set;
 public class AuthResource {
 
     @EJB
-    private AdminSessionBeanLocal adminSessionBean;  // ✅ Use your existing EJB
+    private AdminSessionBeanLocal adminSessionBean;
 
     @Inject
     private TokenProvider tokenProvider;
 
-    // ✅ Class for JSON input
     public static class LoginRequest {
         public String username;
         public String password;
     }
 
-    //post :- http://localhost:8080/BookStore/resources/auth/login
-    //{"username": "khushi","password": "123456"}
     @POST
     @Path("/login")
     public Response login(LoginRequest request) {
-        // 1️⃣ Find user by username
         User user = adminSessionBean.findUserByUsername(request.username);
 
-        // 2️⃣ Validate password
         if (user != null && user.getPassword().equals(request.password)) {
-            // 3️⃣ Create JWT token with user role
-            Set<String> roles = Set.of("ROLE_USER"); // or use user.getGroupid().getGroupname()
-            String token = tokenProvider.createToken(request.username, roles, false);
+            // ✅ Get role from GroupMaster table
+            String role = (user.getGroupid() != null)
+                    ? user.getGroupid().getGroupname()
+                    : "ROLE_USER";
 
-            // 4️⃣ Return response
-            return Response.ok("{\"token\": \"" + token + "\"}")
+            // ✅ Create token with username, password, and role
+            String token = tokenProvider.createTokenWithClaims(
+                    user.getUsername(),
+                    user.getPassword(),
+                    role,
+                    false
+            );
+
+            // ✅ Return token + role + username in response
+            String jsonResponse = String.format(
+                    "{\"token\":\"%s\", \"username\":\"%s\", \"role\":\"%s\"}",
+                    token, user.getUsername(), role
+            );
+
+            return Response.ok(jsonResponse)
                     .header("Authorization", "Bearer " + token)
                     .build();
         }
 
-        // 5️⃣ Invalid credentials
         return Response.status(Response.Status.UNAUTHORIZED)
-                .entity("{\"error\": \"Invalid username or password\"}")
+                .entity("{\"error\":\"Invalid username or password\"}")
                 .build();
     }
 }
