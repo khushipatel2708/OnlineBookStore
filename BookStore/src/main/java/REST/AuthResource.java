@@ -30,12 +30,10 @@ public class AuthResource {
         User user = adminSessionBean.findUserByUsername(request.username);
 
         if (user != null && user.getPassword().equals(request.password)) {
-            // ✅ Get role from GroupMaster table
             String role = (user.getGroupid() != null)
                     ? user.getGroupid().getGroupname()
                     : "ROLE_USER";
 
-            // ✅ Create token with username, password, and role
             String token = tokenProvider.createTokenWithClaims(
                     user.getUsername(),
                     user.getPassword(),
@@ -43,7 +41,6 @@ public class AuthResource {
                     false
             );
 
-            // ✅ Return token + role + username in response
             String jsonResponse = String.format(
                     "{\"token\":\"%s\", \"username\":\"%s\", \"role\":\"%s\"}",
                     token, user.getUsername(), role

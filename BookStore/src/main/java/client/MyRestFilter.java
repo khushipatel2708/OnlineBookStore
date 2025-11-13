@@ -11,7 +11,6 @@ package client;
  *
  * @author root
  */
-import Auth.KeepRecord;
 import java.io.IOException;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.client.ClientRequestContext;
@@ -21,6 +20,7 @@ import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.ext.Provider;
 import jwtrest.TokenProvider;
+import Auth.KeepRecord;
 
 
 /**
@@ -36,7 +36,6 @@ import jwtrest.TokenProvider;
 @PreMatching
 public class MyRestFilter implements ClientRequestFilter {
     public static String mytoken;
-    //@Inject TokenProvider verifier;
     @Inject KeepRecord keepRecord;
     
     public MyRestFilter(String token) {      
@@ -44,16 +43,15 @@ public class MyRestFilter implements ClientRequestFilter {
      }
  
     @Override
-     public void filter(ClientRequestContext rq) throws IOException {
+     public void filter(ClientRequestContext requestContext) throws IOException {
       //  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
       
-      //rq.getProperty(mytoken)
              System.out.println(" In form Auth Client Filter "+ mytoken);
       
-          // rq.getHeaders().add(.header("Cookie", "JSESSIONID=" + ));  
-           rq.getHeaders().add(HttpHeaders.AUTHORIZATION,"Bearer "+ mytoken);
+       
+           requestContext.getHeaders().add(HttpHeaders.AUTHORIZATION,"Bearer "+ mytoken);
       
-      System.out.println(" After cookie header Auth Client Filter "+ mytoken);
+     // System.out.println(" After cookie header Auth Client Filter "+ mytoken);
    
     }
 

@@ -1,6 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/WebServices/JerseyClient.java to edit this template
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package client;
 
@@ -9,10 +10,10 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.WebTarget;
 
 /**
- * Jersey REST client generated for REST resource:JakartaEE8Resource [rest]<br>
+ * Jersey REST client generated for REST resource:SecureResource [secure]<br>
  * USAGE:
  * <pre>
- *        HelloClient client = new HelloClient();
+ *        SecureClient client = new SecureClient();
  *        Object response = client.XXX(...);
  *        // do whatever with response
  *        client.close();
@@ -20,27 +21,21 @@ import jakarta.ws.rs.client.WebTarget;
  *
  * @author root
  */
-public class HelloClient {
+public class SecureClient {
 
     private WebTarget webTarget;
     private Client client;
     private static final String BASE_URI = "https://localhost:8181/BookStore/resources";
-    private String sessionid;
-    public HelloClient(String token) {
+
+    public SecureClient(String token) {
         client = jakarta.ws.rs.client.ClientBuilder.newClient();
-        this.sessionid=sessionid;
-        
         client.register(new MyRestFilter(token));
-        webTarget = client.target(BASE_URI).path("rest");
-        
+        webTarget = client.target(BASE_URI).path("secure");
 //                .queryParam("username", username)
-//                .queryParam("password",password);
-                
-                
-        
+//                .queryParam("password", password);
     }
 
-    static {
+     static {
         //for localhost testing only
         javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
                 new javax.net.ssl.HostnameVerifier() {
@@ -55,9 +50,10 @@ public class HelloClient {
         });
     }
     
+    
     public String sayHello() throws ClientErrorException {
         WebTarget resource = webTarget;
-        return resource.request(jakarta.ws.rs.core.MediaType.TEXT_HTML).get(String.class);
+        return resource.request(jakarta.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
     public void close() {

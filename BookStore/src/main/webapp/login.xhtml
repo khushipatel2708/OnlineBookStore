@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html">
+
+<h:head>
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        table {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.2);
+        }
+        .error { color: red; font-weight: bold; }
+        .success { color: green; font-weight: bold; }
+    </style>
+</h:head>
+
+<h:body>
+    <h:form>
+        <table>
+            <tr>
+                <td>Username:</td>
+                <td><h:inputText value="#{loginBean.username}" required="true" /></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><h:inputSecret value="#{loginBean.password}" required="true" /></td>
+            </tr>
+            <tr>
+                <td><h:commandButton value="Login" action="#{loginBean.login}" /></td>
+                <td><h:commandButton value="Reset" type="reset" /></td>
+            </tr>
+        </table>
+
+        <br/>
+        <h:outputText value="#{loginBean.errorStatus}" styleClass="error" rendered="#{not empty loginBean.errorStatus}" />
+        <h:outputText value="#{loginBean.message}" styleClass="success" rendered="#{not empty loginBean.message}" />
+    </h:form>
+</h:body>
+</html>
