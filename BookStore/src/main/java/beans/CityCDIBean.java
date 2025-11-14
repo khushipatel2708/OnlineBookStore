@@ -5,62 +5,53 @@ import Entity.City;
 import jakarta.inject.Named;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ejb.EJB;
+import jakarta.faces.view.ViewScoped;
+import java.io.Serializable;
 import java.util.Collection;
 
 @Named("cityBean")
-@RequestScoped
-public class CityCDIBean {
+@ViewScoped
+public class CityCDIBean implements Serializable {
 
     @EJB
     AdminSessionBeanLocal admin;
 
     private Integer id;
     private String name;
+    private City selectedCity;
 
-    private City selectedCity;   // ✅ REQUIRED
+    public City getSelectedCity() { return selectedCity; }
+    public void setSelectedCity(City selectedCity) { this.selectedCity = selectedCity; }
 
-    public City getSelectedCity() {
-        return selectedCity;
-    }
-
-    public void setSelectedCity(City selectedCity) {
-        this.selectedCity = selectedCity;
-    }
-
-    // ----- Get all cities -----
     public Collection<City> getAllCities() {
         return admin.getAllCities();
     }
 
-    // ----- Save / Update -----
     public String saveCity() {
-        if (selectedCity == null) {   // ADD NEW
+        if (selectedCity == null) {      // ADD
             admin.addCity(name);
-        } else {                      // UPDATE
+        } else {                         // UPDATE
             admin.updateCity(selectedCity.getId(), name);
         }
         clearForm();
         return "city.xhtml?faces-redirect=true";
     }
 
-    // ----- Edit -----
-    public String editCity(City c) {
-        selectedCity = c;
-        name = c.getName();
-        return null;
+    public void editCity(City c) {
+        this.selectedCity = c;
+        this.name = c.getName();
     }
 
-    // ----- Delete -----
-    public String deleteCity(Integer id) {
+    public void deleteCity(Integer id) {
         admin.removeCity(id);
-        return "city.xhtml?faces-redirect=true";
     }
 
-    // ----- Clear form -----
     public void clearForm() {
         selectedCity = null;
         name = "";
     }
+
+    // Getters/Setters...
 
     // ----- Getters/Setters -----
     public Integer getId() { return id; }
