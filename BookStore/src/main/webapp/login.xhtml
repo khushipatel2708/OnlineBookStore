@@ -27,6 +27,7 @@
 </h:head>
 
 <h:body>
+
     <h:form>
         <table>
             <tr>
@@ -41,11 +42,22 @@
                 <td><h:commandButton value="Login" action="#{loginBean.login}" /></td>
                 <td><h:commandButton value="Reset" type="reset" /></td>
             </tr>
+            
+            <tr>
+    <td colspan="2" style="text-align:center;">
+        <h:outputLink value="RegUser.xhtml">New User? Register Here</h:outputLink>
+    </td>
+</tr>
+            
         </table>
 
-        <br/>
+
+
+        <br/><br/>
+
         <h:outputText value="#{loginBean.errorStatus}" styleClass="error" rendered="#{not empty loginBean.errorStatus}" />
         <h:outputText value="#{loginBean.message}" styleClass="success" rendered="#{not empty loginBean.message}" />
     </h:form>
+
 </h:body>
 </html>

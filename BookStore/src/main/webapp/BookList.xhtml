@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:body>
+
+<h:form>
+
+    <h2>Book List</h2>
+
+    <!-- ADD NEW BOOK BUTTON -->
+    <h:commandButton value="Add New Book"
+                     action="#{bookBean.goToAddPage}" />
+    <br/><br/>
+
+    <!-- BOOK TABLE -->
+    <h:dataTable value="#{bookBean.allBooks}" var="b"
+                 border="1" cellpadding="10">
+
+        <h:column>
+            <f:facet name="header">ID</f:facet>
+            #{b.id}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Book Name</f:facet>
+            #{b.bookname}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Author</f:facet>
+            #{b.authorname}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Price</f:facet>
+            ₹ #{b.price}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Book Type</f:facet>
+            #{b.booktypeId.type}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Cover</f:facet>
+<!--            <h:graphicImage value="/images/#{b.coverPhoto}" width="80"/>-->
+            <h:graphicImage value="/images/#{b.coverPhoto}" width="80" />
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Actions</f:facet>
+
+            <!-- EDIT -->
+            <h:commandButton value="Edit"
+                             action="#{bookBean.editBook(b.id)}"
+                             style="margin-right:10px"/>
+
+            <!-- DELETE -->
+            <h:commandButton value="Delete"
+                             action="#{bookBean.deleteBook(b.id)}"
+                             onclick="return confirm('Are you sure?')"/>
+        </h:column>
+
+    </h:dataTable>
+
+</h:form>
+
+</h:body>
+</html>

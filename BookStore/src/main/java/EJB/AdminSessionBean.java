@@ -191,6 +191,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
     public Collection<City> getAllCities() {
         return em.createNamedQuery("City.findAll").getResultList();
     }
+    
 
     @PermitAll
     @Override
@@ -268,15 +269,19 @@ public Collection<City> findCityByName(String name) {
 
     @Override
     public Booktype getBooktypeById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return em.find(Booktype.class, id);
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    @Override
-    public Book findBookById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+//    @Override
+//    public Book findBookById(Integer id) {
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//    }
 
- 
+ @Override
+public Book findBookById(Integer id) {
+    return em.find(Book.class, id);
+}
 
    @Override
 public GroupMaster findGroupById(Integer id) {

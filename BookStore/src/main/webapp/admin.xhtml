@@ -9,14 +9,42 @@
 </h:head>
 
 <h:body>
+
     <h2>Welcome, Admin!</h2>
 
+    <!-- TOKEN DISPLAY -->
     <h:panelGroup rendered="#{not empty loginBean.token}">
         <b style="color:green;">Token:</b>
         <h:outputText value="#{loginBean.token}" style="color:green" />
     </h:panelGroup>
 
     <br/><br/>
+
+    <!-- NAVIGATION BUTTONS -->
+    <h:form>
+
+        <h:commandButton value="City"
+                         action="city.xhtml?faces-redirect=true"
+                         style="margin-right: 10px;" />
+
+        <h:commandButton value="Book Type"
+                         action="Booktype.xhtml?faces-redirect=true"
+                         style="margin-right: 10px;" />
+
+        <h:commandButton value="Add Book"
+                         action="bookForm.xhtml?faces-redirect=true"
+                         style="margin-right: 10px;" />
+
+        <h:commandButton value="Book List"
+                         action="BookList.xhtml?faces-redirect=true"
+                         style="margin-right: 10px;" />
+
+    </h:form>
+
+    <br/><br/>
+    
+    <!-- LOGOUT -->
     <h:commandLink value="Logout" action="#{loginBean.logout}" />
+
 </h:body>
 </html>

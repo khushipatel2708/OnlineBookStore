@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:body>
+
+    <!-- ROLE CHECK -->
+    <h:panelGroup rendered="#{not booktypeBean.admin}">
+        <h2 style="color:red;">Access Denied!</h2>
+        <p>Only Admin can manage Book Types.</p>
+        <h:link value="Go Back" outcome="index.xhtml" />
+    </h:panelGroup>
+
+    <!-- ADMIN ONLY -->
+    <h:panelGroup rendered="#{booktypeBean.admin}">
+        <h2>Book Type Management</h2>
+
+        <!-- ADD / EDIT FORM -->
+        <h:form>
+            <h:panelGroup rendered="#{not booktypeBean.editMode}">
+                <h3>Add Book Type</h3>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{booktypeBean.editMode}">
+                <h3>Edit Book Type (ID: #{booktypeBean.id})</h3>
+            </h:panelGroup>
+
+            <h:outputLabel value="Type: " />
+            <h:inputText value="#{booktypeBean.type}" required="true" />
+
+            <br/><br/>
+
+            <h:outputLabel value="Description: " />
+            <h:inputText value="#{booktypeBean.description}" />
+
+            <br/><br/>
+
+            <h:panelGroup rendered="#{not booktypeBean.editMode}">
+                <h:commandButton value="Add Book Type" action="#{booktypeBean.addBooktype}" />
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{booktypeBean.editMode}">
+                <h:commandButton value="Update Book Type" action="#{booktypeBean.updateBooktype}" />
+                &#160;
+                <h:commandButton value="Cancel" action="#{booktypeBean.cancelEdit}" />
+            </h:panelGroup>
+        </h:form>
+
+        <hr/>
+
+        <!-- BOOKTYPE TABLE -->
+        <h:form>
+            <h:dataTable value="#{booktypeBean.allBooktypes}" var="bt" border="1">
+
+                <h:column>
+                    <f:facet name="header">ID</f:facet>
+                    #{bt.id}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Type</f:facet>
+                    #{bt.type}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Description</f:facet>
+                    #{bt.description}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
+
+                    <h:commandLink value="Edit"
+                                   action="#{booktypeBean.editBooktype(bt.id)}" />
+
+                    &#160; | &#160;
+
+                    <h:commandLink value="Delete"
+                                   action="#{booktypeBean.deleteBooktype(bt.id)}"
+                                   onclick="return confirm('Delete?');" />
+                </h:column>
+
+            </h:dataTable>
+        </h:form>
+
+    </h:panelGroup>
+
+</h:body>
+</html>
