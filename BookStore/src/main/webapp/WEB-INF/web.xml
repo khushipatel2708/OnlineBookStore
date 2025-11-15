@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-   version="6.0">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
     <context-param>
         <param-name>jakarta.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
@@ -21,12 +21,19 @@
             30
         </session-timeout>
     </session-config>
-   <welcome-file-list>
+    <welcome-file-list>
         <welcome-file>login.jsf</welcome-file>
     </welcome-file-list>
-    
+    <security-role>
+        <role-name>Admin</role-name>
+    </security-role>
 
-     <security-constraint>
+    <security-role>
+        <role-name>User</role-name>
+    </security-role>
+
+
+    <!--     <security-constraint>
         <display-name>Constraint2</display-name>
         <web-resource-collection>
             <web-resource-name>all</web-resource-name>
@@ -37,8 +44,18 @@
             <description/>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
-    </security-constraint>
+    </security-constraint>-->
  
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Admin Pages</web-resource-name>
+            <url-pattern>/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
     <error-page>
         <error-code>403</error-code>
         <location>/Forbidden.jsf</location>

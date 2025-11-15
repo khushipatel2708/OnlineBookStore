@@ -33,7 +33,7 @@ public class LoginBean implements Serializable {
             if (user != null && user.getPassword().equals(password)) {
                 role = (user.getGroupid() != null)
                         ? user.getGroupid().getGroupname()
-                        : "USER";
+                        : "User";
 
                 // ✅ Generate token
                 token = tokenProvider.createTokenWithClaims(
@@ -49,9 +49,9 @@ public class LoginBean implements Serializable {
                 errorStatus = "";
 
                 // ✅ Redirect based on role
-                if (role.equalsIgnoreCase("ADMIN")) {
+                if (role.equalsIgnoreCase("Admin")) {
                     return "admin.xhtml";
-                } else if (role.equalsIgnoreCase("USER")) {
+                } else if (role.equalsIgnoreCase("User")) {
                     return "user.xhtml";
                 } else {
                     return "login.xhtml";

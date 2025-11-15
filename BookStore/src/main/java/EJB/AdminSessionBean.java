@@ -10,6 +10,9 @@ import Entity.City;
 import Entity.GroupMaster;
 import Entity.Shipping;
 import Entity.User;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,22 +20,27 @@ import java.math.BigDecimal;
 import java.util.Collection;
 
 @Stateless
+@DeclareRoles({"Admin","User"})
 public class AdminSessionBean implements AdminSessionBeanLocal {
 
     @PersistenceContext(unitName = "my_pu")
     EntityManager em;
+
     //===============User=====================
 
+    @PermitAll
     @Override
     public Collection<User> getAllUsers() {
         return em.createNamedQuery("User.findAll", User.class).getResultList();
     }
 
+    @PermitAll
     @Override
     public User findUserById(Integer id) {
         return em.find(User.class, id);
     }
 
+    @PermitAll
     @Override
     public void addUser(String fullname, String phone, String username, String email, String password, String status, Integer groupId) {
         GroupMaster group = em.find(GroupMaster.class, groupId);
@@ -49,6 +57,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
     }
 
+    @PermitAll
     @Override
     public void updateUser(Integer id, String fullname, String phone, String username, String email, String password, String status, Integer groupId) {
         User u = em.find(User.class, id);
@@ -65,6 +74,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
     }
 
+    @PermitAll
     @Override
     public void deleteUser(Integer id) {
         User u = em.find(User.class, id);
@@ -72,29 +82,28 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             em.remove(u);
         }
     }
+
+    @PermitAll
     @Override
     public User findUserByUsername(String username) {
         try {
             return em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
-                     .setParameter("username", username)
-                     .getSingleResult();
+                   .setParameter("username", username)
+                   .getSingleResult();
         } catch (Exception e) {
             return null;
         }
     }
 
+    // ---------- BOOKTYPE, BOOK, CITY, GROUP : all @PermitAll ----------
 
-    // ---------- BOOKTYPE CRUD ----------
+    @PermitAll
     @Override
     public Collection<Booktype> getAllBooktypes() {
         return em.createNamedQuery("Booktype.findAll").getResultList();
     }
 
-    @Override
-    public Booktype getBooktypeById(Integer id) {
-        return em.find(Booktype.class, id);
-    }
-
+    @PermitAll
     @Override
     public void addBooktype(String type, String description) {
         Booktype bt = new Booktype();
@@ -103,6 +112,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         em.persist(bt);
     }
 
+    @PermitAll
     @Override
     public void updateBooktype(Integer id, String type, String description) {
         Booktype bt = em.find(Booktype.class, id);
@@ -113,6 +123,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
     }
 
+    @PermitAll
     @Override
     public void deleteBooktype(Integer id) {
         Booktype bt = em.find(Booktype.class, id);
@@ -121,15 +132,17 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
     }
 
-    // ---------- BOOK CRUD ----------
+    @PermitAll
     @Override
     public Collection<Book> getAllBooks() {
         return em.createNamedQuery("Book.findAll").getResultList();
     }
 
+    @PermitAll
     @Override
     public void addBook(String bookname, String authorname, Double price, Integer booktypeId,
                         String coverPhoto, String frontPagePhoto, String lastPagePhoto) {
+
         Booktype bt = em.find(Booktype.class, booktypeId);
         if (bt != null) {
             Book b = new Book();
@@ -145,9 +158,11 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
     }
 
+    @PermitAll
     @Override
     public void updateBook(Integer id, String bookname, String authorname, Double price, Integer booktypeId,
-                           String coverPhoto, String frontPagePhoto, String lastPagePhoto) {
+                        String coverPhoto, String frontPagePhoto, String lastPagePhoto) {
+
         Book b = em.find(Book.class, id);
         if (b != null) {
             Booktype bt = em.find(Booktype.class, booktypeId);
@@ -162,7 +177,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
     }
 
-
+    @PermitAll
     @Override
     public void deleteBook(Integer id) {
         Book b = em.find(Book.class, id);
@@ -171,17 +186,13 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
     }
 
-    @Override
-    public Book findBookById(Integer id) {
-        return em.find(Book.class, id);
-    }
-
-    //--------city---------------------
+    @PermitAll
     @Override
     public Collection<City> getAllCities() {
         return em.createNamedQuery("City.findAll").getResultList();
     }
 
+    @PermitAll
     @Override
     public void addCity(String name) {
         City city = new City();
@@ -189,6 +200,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         em.persist(city);
     }
 
+    @PermitAll
     @Override
     public void updateCity(Integer id, String name) {
         City city = em.find(City.class, id);
@@ -198,6 +210,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
     }
 
+    @PermitAll
     @Override
     public void removeCity(Integer id) {
         City city = em.find(City.class, id);
@@ -205,19 +218,20 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             em.remove(city);
         }
     }
+    @PermitAll
+      @Override
+public City findCityById(Integer id) {
+    return em.find(City.class, id);
+}
+@PermitAll
+@Override
+public Collection<City> findCityByName(String name) {
+    return em.createQuery("SELECT c FROM City c WHERE c.name = :name", City.class)
+             .setParameter("name", name)
+             .getResultList();
+}
 
-    @Override
-    public City findCityById(Integer id) {
-        return em.find(City.class, id);
-    }
-
-    @Override
-    public Collection<City> findCityByName(String name) {
-        return em.createNamedQuery("City.findByName")
-                .setParameter("name", name)
-                .getResultList();
-    }
-
+    @PermitAll
     @Override
     public void addGroup(String groupname, String username) {
         GroupMaster g = new GroupMaster();
@@ -226,6 +240,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         em.persist(g);
     }
 
+    @PermitAll
     @Override
     public void updateGroup(Integer id, String groupname, String username) {
         GroupMaster g = em.find(GroupMaster.class, id);
@@ -236,6 +251,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
     }
 
+    @PermitAll
     @Override
     public void removeGroup(Integer id) {
         GroupMaster g = em.find(GroupMaster.class, id);
@@ -244,31 +260,34 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
     }
 
-    @Override
-    public GroupMaster findGroupById(Integer id) {
-        return em.find(GroupMaster.class, id);
-    }
-
-    @Override
-    public Collection<GroupMaster> findGroupByName(String groupname) {
-        return em.createNamedQuery("GroupMaster.findByGroupname", GroupMaster.class)
-                .setParameter("groupname", groupname)
-                .getResultList();
-    }
-
+    @PermitAll
     @Override
     public Collection<GroupMaster> getAllGroups() {
-        return em.createNamedQuery("GroupMaster.findAll", GroupMaster.class)
-                .getResultList();
+        return em.createNamedQuery("GroupMaster.findAll").getResultList();
     }
-    // ✅ Admin can delete any shipping address
-//    @Override
-//    public void deleteShipping(Integer id) {
-//        Shipping s = em.find(Shipping.class, id);
-//        if (s != null) {
-//            em.remove(s);
-//        }
-//    }
 
+    @Override
+    public Booktype getBooktypeById(Integer id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Book findBookById(Integer id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+ 
+
+   @Override
+public GroupMaster findGroupById(Integer id) {
+    return em.find(GroupMaster.class, id);
+}
+
+@Override
+public Collection<GroupMaster> findGroupByName(String groupname) {
+    return em.createQuery("SELECT g FROM GroupMaster g WHERE g.groupname = :groupname", GroupMaster.class)
+             .setParameter("groupname", groupname)
+             .getResultList();
+}
 
 }

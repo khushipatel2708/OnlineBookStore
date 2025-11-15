@@ -1,58 +1,78 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-<h:head>
-    <title>City Management</title>
-</h:head>
-
 <h:body>
 
-    <h1>City Management</h1>
+    <!-- ROLE CHECK -->
+    <h:panelGroup rendered="#{not cityBean.admin}">
+        <h2 style="color:red;">Access Denied!</h2>
+        <p>Only Admin can manage cities.</p>
+        <h:link value="Go Back" outcome="index.xhtml" />
+    </h:panelGroup>
 
-    <!-- FORM FOR ADD/EDIT -->
-    <h:form>
-        <h:panelGrid columns="2">
+    <!-- ADMIN ONLY -->
+    <h:panelGroup rendered="#{cityBean.admin}">
+        <h2>City Management</h2>
 
-            <h:outputLabel value="City Name:" />
+        <!-- ADD / EDIT FORM -->
+        <h:form>
+            <h:panelGroup rendered="#{not cityBean.editMode}">
+                <h3>Add City</h3>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{cityBean.editMode}">
+                <h3>Edit City (ID: #{cityBean.id})</h3>
+            </h:panelGroup>
+
+            <h:outputLabel value="City Name: " />
             <h:inputText value="#{cityBean.name}" required="true" />
 
-            <h:commandButton value="#{cityBean.selectedCity == null ? 'Add City' : 'Update City'}"
-                             action="#{cityBean.saveCity}" />
+            <h:panelGroup rendered="#{not cityBean.editMode}">
+                <h:commandButton value="Add City" action="#{cityBean.addCity}" />
+            </h:panelGroup>
 
-            <h:commandButton value="Clear" action="#{cityBean.clearForm}" />
-        </h:panelGrid>
-    </h:form>
+            <h:panelGroup rendered="#{cityBean.editMode}">
+                <h:commandButton value="Update City" action="#{cityBean.updateCity}" />
+                &#160;
+                <h:commandButton value="Cancel" action="#{cityBean.cancelEdit}" />
+            </h:panelGroup>
+        </h:form>
 
-    <hr/>
+        <hr/>
 
-    <!-- TABLE LIST -->
-    <h:form>
-        <h:dataTable value="#{cityBean.allCities}" var="c" border="1">
+        <!-- TABLE MUST BE INSIDE FORM -->
+        <h:form>
+            <h:dataTable value="#{cityBean.allCities}" var="c" border="1">
 
-            <h:column>
-                <f:facet name="header">ID</f:facet>
-                #{c.id}
-            </h:column>
+                <h:column>
+                    <f:facet name="header">ID</f:facet>
+                    #{c.id}
+                </h:column>
 
-            <h:column>
-                <f:facet name="header">Name</f:facet>
-                #{c.name}
-            </h:column>
+                <h:column>
+                    <f:facet name="header">City Name</f:facet>
+                    #{c.name}
+                </h:column>
 
-            <h:column>
-                <f:facet name="header">Action</f:facet>
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
 
-                <h:commandButton value="Edit"
-                                 action="#{cityBean.editCity(c)}" />
+                    <h:commandLink value="Edit"
+                                   action="#{cityBean.editCity(c.id)}" />
 
-                <h:commandButton value="Delete"
-                                 action="#{cityBean.deleteCity(c.id)}"
-                                 onclick="return confirm('Are you sure?')" />
-            </h:column>
+                    &#160; | &#160;
 
-        </h:dataTable>
-    </h:form>
-    <a href="../java/beans/CityCDIBean.java"></a>
+                    <h:commandLink value="Delete"
+                                   action="#{cityBean.deleteCity(c.id)}"
+                                   onclick="return confirm('Delete?');" />
+                </h:column>
+
+            </h:dataTable>
+        </h:form>
+
+    </h:panelGroup>
+
 </h:body>
 </html>

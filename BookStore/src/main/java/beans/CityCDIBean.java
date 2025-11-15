@@ -2,61 +2,81 @@ package beans;
 
 import EJB.AdminSessionBeanLocal;
 import Entity.City;
-import jakarta.inject.Named;
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.ejb.EJB;
-import jakarta.faces.view.ViewScoped;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.Collection;
 
 @Named("cityBean")
-@ViewScoped
+@SessionScoped   // <-- important: CRUD must stay in same page
 public class CityCDIBean implements Serializable {
 
     @EJB
-    AdminSessionBeanLocal admin;
+    private AdminSessionBeanLocal admin;
+
+    @Inject
+    private LoginBean loginBean;
 
     private Integer id;
     private String name;
-    private City selectedCity;
+    private boolean editMode = false;
 
-    public City getSelectedCity() { return selectedCity; }
-    public void setSelectedCity(City selectedCity) { this.selectedCity = selectedCity; }
+    // CHECK ROLE
+    public boolean isAdmin() {
+        return "Admin".equalsIgnoreCase(loginBean.getRole());
+    }
 
+    // FETCH ALL CITIES
     public Collection<City> getAllCities() {
+        if (!isAdmin()) return null;
         return admin.getAllCities();
     }
 
-    public String saveCity() {
-        if (selectedCity == null) {      // ADD
-            admin.addCity(name);
-        } else {                         // UPDATE
-            admin.updateCity(selectedCity.getId(), name);
-        }
-        clearForm();
-        return "city.xhtml?faces-redirect=true";
+    // ADD CITY
+    public String addCity() {
+        admin.addCity(name);
+        name = "";
+        return null;
     }
 
-    public void editCity(City c) {
-        this.selectedCity = c;
+    // LOAD CITY (EDIT MODE)
+    public String editCity(Integer cityId) {
+        City c = admin.findCityById(cityId);
+        this.id = c.getId();
         this.name = c.getName();
+        this.editMode = true;
+        return null;   // stay same page
     }
 
-    public void deleteCity(Integer id) {
-        admin.removeCity(id);
+    // UPDATE CITY
+    public String updateCity() {
+        admin.updateCity(id, name);
+        editMode = false;
+        name = "";
+        return null;
     }
 
-    public void clearForm() {
-        selectedCity = null;
+    // CANCEL
+    public void cancelEdit() {
+        editMode = false;
         name = "";
     }
 
-    // Getters/Setters...
+    // DELETE CITY
+    public String deleteCity(Integer cityId) {
+        admin.removeCity(cityId);
+        return null;
+    }
 
-    // ----- Getters/Setters -----
+    // GETTERS + SETTERS
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public boolean isEditMode() { return editMode; }
+    public void setEditMode(boolean editMode) { this.editMode = editMode; }
 }
