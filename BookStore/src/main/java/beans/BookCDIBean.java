@@ -5,6 +5,7 @@ import Entity.Book;
 import Entity.Booktype;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.Part;
@@ -69,29 +70,33 @@ public class BookCDIBean implements Serializable {
 
     // ================== SAVE FILE ====================
     private String saveFile(Part file) {
-
-        if (file == null || file.getSubmittedFileName() == null) {
-            return null; // no new image uploaded
-        }
-
-        try {
-            String fileName = System.currentTimeMillis() + "_" + file.getSubmittedFileName();
-            String uploadPath = "D:\\project3\\OnlineBookStore\\BookStore\\src\\main\\webapp\\uiImages\\";
-
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdirs();
-
-            Files.copy(file.getInputStream(),
-                    new File(uploadPath + fileName).toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
-
-            return fileName;
-
-        } catch (Exception e) {
-            System.out.println("File Upload Error: " + e.getMessage());
-            return null;
-        }
+    if (file == null || file.getSubmittedFileName() == null) {
+        return null;
     }
+
+    try {
+        String fileName = System.currentTimeMillis() + "_" + file.getSubmittedFileName();
+
+        // Get real deployment path
+        String deploymentPath = 
+            FacesContext.getCurrentInstance()
+                        .getExternalContext()
+                        .getRealPath("/uiImages/");
+
+        File uploadDir = new File(deploymentPath);
+        if (!uploadDir.exists()) uploadDir.mkdirs();
+
+        Files.copy(file.getInputStream(),
+                new File(uploadDir, fileName).toPath(),
+                StandardCopyOption.REPLACE_EXISTING);
+
+        return fileName;
+
+    } catch (Exception e) {
+        System.out.println("File Upload Error: " + e.getMessage());
+        return null;
+    }
+}
 
     // ================== ADD PAGE REDIRECT ==================
     public String goToAddPage() {
