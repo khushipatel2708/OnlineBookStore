@@ -8,6 +8,25 @@
 <h:form>
 
     <h2>Book List</h2>
+    <br/><!-- comment -->
+        
+        <h:panelGrid columns="6" cellpadding="5">
+
+    <h:outputLabel value="Book Name:" />
+    <h:inputText value="#{bookBean.searchBookname}" />
+
+    <h:outputLabel value="Author:" />
+    <h:inputText value="#{bookBean.searchAuthor}" />
+
+    <h:outputLabel value="Book Type:" />
+    <h:inputText value="#{bookBean.searchBooktype}" />
+
+    <h:commandButton value="Search" action="#{bookBean.searchBooks}" />
+    <h:commandButton value="Clear" action="#{bookBean.clearSearch}" />
+</h:panelGrid>
+
+<br/>
+
 
     <!-- ADD NEW BOOK BUTTON -->
     <h:commandButton value="Add New Book"
