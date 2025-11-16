@@ -126,29 +126,31 @@ public class BookCDIBean implements Serializable {
     }
 
     // ================== EDIT BOOK ==================
-    public String editBook(Integer bookId) {
+   public String editBook(Integer bookId) {
 
-        Book b = admin.findBookById(bookId);
+    Book b = admin.findBookById(bookId);
 
-        id = b.getId();
-        bookname = b.getBookname();
-        authorname = b.getAuthorname();
-        price = b.getPrice().doubleValue();
-        booktypeId = b.getBooktypeId().getId();
+    id = b.getId();
+    bookname = b.getBookname();
+    authorname = b.getAuthorname();
+    price = b.getPrice().doubleValue();
+    booktypeId = b.getBooktypeId().getId();
 
-        // Clear old images ► user uploads new ones if they want
-        coverPreview = null;
-        frontPreview = null;
-        lastPreview = null;
+    // Load old images for preview
+    coverPreview = (b.getCoverPhoto() != null) ? "/uiImages/" + b.getCoverPhoto() : null;
+    frontPreview = (b.getFrontPagePhoto() != null) ? "/uiImages/" + b.getFrontPagePhoto() : null;
+    lastPreview = (b.getLastPagePhoto() != null) ? "/uiImages/" + b.getLastPagePhoto() : null;
 
-        coverPhoto = null;
-        frontPagePhoto = null;
-        lastPagePhoto = null;
+    // No new file uploaded yet
+    coverPhoto = null;
+    frontPagePhoto = null;
+    lastPagePhoto = null;
 
-        editMode = true;
+    editMode = true;
 
-        return "bookForm.xhtml?faces-redirect=true";
-    }
+    return "bookForm.xhtml?faces-redirect=true";
+}
+
 
     // ================== ADD BOOK ==================
     public String addBook() {
