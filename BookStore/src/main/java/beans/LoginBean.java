@@ -27,49 +27,46 @@ public class LoginBean implements Serializable {
     private String token;
     private String role;
 
-    public String login() {
-        try {
-            User user = adminSessionBean.findUserByUsername(username);
+  public String login() {
+    try {
+        User user = adminSessionBean.findUserByUsername(username);
 
-            if (user != null && user.getPassword().equals(password)) {
-                role = (user.getGroupid() != null)
-                        ? user.getGroupid().getGroupname()
-                        : "User";
+        if (user != null && user.getPassword().equals(password)) {
 
-                // ✅ Generate token
-                token = tokenProvider.createTokenWithClaims(
-                        user.getUsername(),
-                        user.getPassword(),
-                        role,
-                        false
-                );
+            role = (user.getGroupid() != null)
+                    ? user.getGroupid().getGroupname()
+                    : "User";
 
-                System.out.println("Generated Token: " + token);
+            token = tokenProvider.createTokenWithClaims(
+                    user.getUsername(),
+                    user.getPassword(),
+                    role,
+                    false
+            );
 
-                message = "Login successful! Welcome, " + user.getFullname();
-                errorStatus = "";
+            message = "Login successful! Welcome, " + user.getFullname();
+            errorStatus = "";
 
-                // ✅ Redirect based on role
-                if (role.equalsIgnoreCase("Admin")) {
-                    return "admin.xhtml";
-                } else if (role.equalsIgnoreCase("User")) {
-                    return "user.xhtml";
-                } else {
-                    return "login.xhtml";
-                }
-
+            if (role.equalsIgnoreCase("Admin")) {
+                return "admin.xhtml?faces-redirect=true";
+            } else if (role.equalsIgnoreCase("User")) {
+                return "user.xhtml?faces-redirect=true";
             } else {
-                errorStatus = "Invalid username or password!";
-                message = "";
-                return null;
+                return "login.xhtml?faces-redirect=true";
             }
 
-        } catch (Exception e) {
-            errorStatus = "Error during login: " + e.getMessage();
-            e.printStackTrace();
+        } else {
+            errorStatus = "Invalid username or password!";
+            message = "";
             return null;
         }
+
+    } catch (Exception e) {
+        errorStatus = "Error during login: " + e.getMessage();
+        e.printStackTrace();
+        return null;
     }
+}
 
     public String logout() {
     username = null;
