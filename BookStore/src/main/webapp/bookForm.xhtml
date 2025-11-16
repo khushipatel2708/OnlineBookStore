@@ -2,12 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-
 <h:body>
 
 <h:form enctype="multipart/form-data">
 
-    <!-- TITLE -->
     <h:panelGroup rendered="#{not bookBean.editMode}">
         <h2>Add Book</h2>
     </h:panelGroup>
@@ -16,26 +14,18 @@
         <h2>Edit Book (ID: #{bookBean.id})</h2>
     </h:panelGroup>
 
-
-    <!-- BOOK NAME -->
     <h:outputLabel value="Book Name:"/>
     <h:inputText value="#{bookBean.bookname}" required="true"/>
     <br/><br/>
 
-
-    <!-- AUTHOR -->
     <h:outputLabel value="Author:"/>
     <h:inputText value="#{bookBean.authorname}" required="true"/>
     <br/><br/>
 
-
-    <!-- PRICE -->
     <h:outputLabel value="Price:"/>
     <h:inputText value="#{bookBean.price}" required="true"/>
     <br/><br/>
 
-
-    <!-- BOOK TYPE -->
     <h:outputLabel value="Book Type:"/>
     <h:selectOneMenu value="#{bookBean.booktypeId}">
         <f:selectItems value="#{bookBean.allBooktypes}" var="bt"
@@ -43,64 +33,58 @@
     </h:selectOneMenu>
     <br/><br/>
 
-
-    <!-- COVER PHOTO -->
+    <!-- COVER -->
     <h3>Cover Photo</h3>
     <h:inputFile value="#{bookBean.coverPhoto}">
-        <f:ajax listener="#{bookBean.setCoverPhoto(bookBean.coverPhoto)}"
-                render="coverPreviewPanel" />
+        <f:ajax event="change" listener="#{bookBean.setCoverPhoto(bookBean.coverPhoto)}"
+                render="coverPreviewPanel"/>
     </h:inputFile>
 
     <h:panelGroup id="coverPreviewPanel">
         <h:panelGroup rendered="#{not empty bookBean.coverPreview}">
-            <h:graphicImage value="#{bookBean.coverPreview}" width="150" />
+            <h:graphicImage value="#{bookBean.coverPreview}" width="150"/>
         </h:panelGroup>
     </h:panelGroup>
 
     <br/><br/>
 
-
-    <!-- FRONT PAGE PHOTO -->
+    <!-- FRONT -->
     <h3>Front Page Photo</h3>
     <h:inputFile value="#{bookBean.frontPagePhoto}">
-        <f:ajax listener="#{bookBean.setFrontPagePhoto(bookBean.frontPagePhoto)}"
-                render="frontPreviewPanel" />
+        <f:ajax event="change" listener="#{bookBean.setFrontPagePhoto(bookBean.frontPagePhoto)}"
+                render="frontPreviewPanel"/>
     </h:inputFile>
 
     <h:panelGroup id="frontPreviewPanel">
         <h:panelGroup rendered="#{not empty bookBean.frontPreview}">
-            <h:graphicImage value="#{bookBean.frontPreview}" width="150" />
+            <h:graphicImage value="#{bookBean.frontPreview}" width="150"/>
         </h:panelGroup>
     </h:panelGroup>
 
     <br/><br/>
 
-
-    <!-- LAST PAGE PHOTO -->
+    <!-- LAST -->
     <h3>Last Page Photo</h3>
     <h:inputFile value="#{bookBean.lastPagePhoto}">
-        <f:ajax listener="#{bookBean.setLastPagePhoto(bookBean.lastPagePhoto)}"
-                render="lastPreviewPanel" />
+        <f:ajax event="change" listener="#{bookBean.setLastPagePhoto(bookBean.lastPagePhoto)}"
+                render="lastPreviewPanel"/>
     </h:inputFile>
 
     <h:panelGroup id="lastPreviewPanel">
         <h:panelGroup rendered="#{not empty bookBean.lastPreview}">
-            <h:graphicImage value="#{bookBean.lastPreview}" width="150" />
+            <h:graphicImage value="#{bookBean.lastPreview}" width="150"/>
         </h:panelGroup>
     </h:panelGroup>
 
     <br/><br/>
 
-
-    <!-- BUTTONS -->
     <h:panelGroup rendered="#{not bookBean.editMode}">
-        <h:commandButton value="Add Book" action="#{bookBean.addBook}" />
-        <!--<h:commandButton value="Back to List" action="BookList.xhtml?faces-redirect=true" />-->
+        <h:commandButton value="Add Book" action="#{bookBean.addBook}"/>
     </h:panelGroup>
 
     <h:panelGroup rendered="#{bookBean.editMode}">
-        <h:commandButton value="Update Book" action="#{bookBean.updateBook}" />
-        <h:commandButton value="Cancel" action="#{bookBean.cancelEdit}" />
+        <h:commandButton value="Update Book" action="#{bookBean.updateBook}"/>
+        <h:commandButton value="Cancel" action="#{bookBean.cancelEdit}"/>
     </h:panelGroup>
 
 </h:form>
