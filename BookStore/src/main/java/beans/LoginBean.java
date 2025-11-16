@@ -4,6 +4,7 @@ import Entity.User;
 import EJB.AdminSessionBeanLocal;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -71,12 +72,18 @@ public class LoginBean implements Serializable {
     }
 
     public String logout() {
-        username = null;
-        password = null;
-        token = null;
-        message = "You have been logged out successfully.";
-        return "login.xhtml?faces-redirect=true";
-    }
+    username = null;
+    password = null;
+    token = null;
+    role = null;
+    message = null;
+    errorStatus = null;
+
+    FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+
+    return "login.xhtml?faces-redirect=true";  // Correct navigation rule
+}
+
 
     // Getters & Setters
     public String getUsername() { return username; }
