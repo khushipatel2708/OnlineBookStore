@@ -4,6 +4,15 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:body>
 
+    <!-- =============== ACCESS CONTROL =============== -->
+    <h:panelGroup rendered="#{not bookBean.admin}">
+        <h2 style="color:red;">Access Denied!</h2>
+        <p>You must be Admin to access Add or Edit Book.</p>
+        <h:link value="Go Back" outcome="user.xhtml" />
+    </h:panelGroup>
+
+    <!-- =============== ADMIN ONLY SECTION =============== -->
+    <h:panelGroup rendered="#{bookBean.admin}">
 <h:form enctype="multipart/form-data">
 
     <h:panelGroup rendered="#{not bookBean.editMode}">
@@ -88,6 +97,7 @@
     </h:panelGroup>
 
 </h:form>
+        </h:panelGroup>
 
 </h:body>
 </html>
