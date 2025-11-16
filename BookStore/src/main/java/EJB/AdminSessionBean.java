@@ -20,14 +20,13 @@ import java.math.BigDecimal;
 import java.util.Collection;
 
 @Stateless
-@DeclareRoles({"Admin","User"})
+@DeclareRoles({"Admin", "User"})
 public class AdminSessionBean implements AdminSessionBeanLocal {
 
     @PersistenceContext(unitName = "my_pu")
     EntityManager em;
 
     //===============User=====================
-
     @PermitAll
     @Override
     public Collection<User> getAllUsers() {
@@ -88,15 +87,14 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
     public User findUserByUsername(String username) {
         try {
             return em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
-                   .setParameter("username", username)
-                   .getSingleResult();
+                    .setParameter("username", username)
+                    .getSingleResult();
         } catch (Exception e) {
             return null;
         }
     }
 
     // ---------- BOOKTYPE, BOOK, CITY, GROUP : all @PermitAll ----------
-
     @PermitAll
     @Override
     public Collection<Booktype> getAllBooktypes() {
@@ -141,7 +139,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
     @PermitAll
     @Override
     public void addBook(String bookname, String authorname, Double price, Integer booktypeId,
-                        String coverPhoto, String frontPagePhoto, String lastPagePhoto) {
+            String coverPhoto, String frontPagePhoto, String lastPagePhoto) {
 
         Booktype bt = em.find(Booktype.class, booktypeId);
         if (bt != null) {
@@ -161,7 +159,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
     @PermitAll
     @Override
     public void updateBook(Integer id, String bookname, String authorname, Double price, Integer booktypeId,
-                        String coverPhoto, String frontPagePhoto, String lastPagePhoto) {
+            String coverPhoto, String frontPagePhoto, String lastPagePhoto) {
 
         Book b = em.find(Book.class, id);
         if (b != null) {
@@ -191,7 +189,6 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
     public Collection<City> getAllCities() {
         return em.createNamedQuery("City.findAll").getResultList();
     }
-    
 
     @PermitAll
     @Override
@@ -219,18 +216,20 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             em.remove(city);
         }
     }
+
     @PermitAll
-      @Override
-public City findCityById(Integer id) {
-    return em.find(City.class, id);
-}
-@PermitAll
-@Override
-public Collection<City> findCityByName(String name) {
-    return em.createQuery("SELECT c FROM City c WHERE c.name = :name", City.class)
-             .setParameter("name", name)
-             .getResultList();
-}
+    @Override
+    public City findCityById(Integer id) {
+        return em.find(City.class, id);
+    }
+
+    @PermitAll
+    @Override
+    public Collection<City> findCityByName(String name) {
+        return em.createQuery("SELECT c FROM City c WHERE c.name = :name", City.class)
+                .setParameter("name", name)
+                .getResultList();
+    }
 
     @PermitAll
     @Override
@@ -277,22 +276,51 @@ public Collection<City> findCityByName(String name) {
 //    public Book findBookById(Integer id) {
 //        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
 //    }
+    @Override
+    public Book findBookById(Integer id) {
+        return em.find(Book.class, id);
+    }
 
- @Override
-public Book findBookById(Integer id) {
-    return em.find(Book.class, id);
-}
+    @Override
+    public GroupMaster findGroupById(Integer id) {
+        return em.find(GroupMaster.class, id);
+    }
 
-   @Override
-public GroupMaster findGroupById(Integer id) {
-    return em.find(GroupMaster.class, id);
-}
+    @Override
+    public Collection<GroupMaster> findGroupByName(String groupname) {
+        return em.createQuery("SELECT g FROM GroupMaster g WHERE g.groupname = :groupname", GroupMaster.class)
+                .setParameter("groupname", groupname)
+                .getResultList();
+    }
 
-@Override
-public Collection<GroupMaster> findGroupByName(String groupname) {
-    return em.createQuery("SELECT g FROM GroupMaster g WHERE g.groupname = :groupname", GroupMaster.class)
-             .setParameter("groupname", groupname)
-             .getResultList();
-}
+    @Override
+    public Collection<Book> searchBooks(String searchBookname, String searchAuthor, String searchBooktype) {
+
+        String jpql = "SELECT b FROM Book b WHERE 1=1";
+
+        if (searchBookname != null && !searchBookname.isEmpty()) {
+            jpql += " AND LOWER(b.bookname) LIKE LOWER(:bn)";
+        }
+        if (searchAuthor != null && !searchAuthor.isEmpty()) {
+            jpql += " AND LOWER(b.authorname) LIKE LOWER(:au)";
+        }
+        if (searchBooktype != null && !searchBooktype.isEmpty()) {
+            jpql += " AND LOWER(b.booktypeId.type) LIKE LOWER(:bt)";
+        }
+
+        var q = em.createQuery(jpql, Book.class);
+
+        if (searchBookname != null && !searchBookname.isEmpty()) {
+            q.setParameter("bn", "%" + searchBookname + "%");
+        }
+        if (searchAuthor != null && !searchAuthor.isEmpty()) {
+            q.setParameter("au", "%" + searchAuthor + "%");
+        }
+        if (searchBooktype != null && !searchBooktype.isEmpty()) {
+            q.setParameter("bt", "%" + searchBooktype + "%");
+        }
+
+        return q.getResultList();
+    }
 
 }

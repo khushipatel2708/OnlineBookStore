@@ -45,6 +45,7 @@ public interface AdminSessionBeanLocal {
 
     void deleteBook(Integer id);
     Book findBookById(Integer id);
+    
 
     //-------------city------------
     Collection<City> getAllCities();
@@ -63,5 +64,7 @@ public interface AdminSessionBeanLocal {
     Collection<GroupMaster> getAllGroups();
     
 //    void deleteShipping(Integer id);
+
+    public Collection<Book> searchBooks(String searchBookname, String searchAuthor, String searchBooktype);
 
 }
