@@ -54,7 +54,7 @@ public class UserCDIBean implements Serializable {
             admin.updateUser(id, fullname, phone, username, email, password, status, groupId);
         }
         clearForm();
-        return "user.xhtml?faces-redirect=true";
+        return "login.xhtml?faces-redirect=true";
     }
 
     public void deleteUser(Integer id) {

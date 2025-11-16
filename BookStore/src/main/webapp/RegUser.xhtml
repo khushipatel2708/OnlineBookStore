@@ -17,25 +17,25 @@
     <h:panelGrid columns="2" cellpadding="5">
 
         <h:outputLabel value="Full Name:" />
-        <h:inputText value="#{userBean.fullname}" required="true" />
+        <h:inputText value="#{userBean.fullname}" required="false" />
 
         <h:outputLabel value="Phone:" />
         <h:inputText value="#{userBean.phone}" />
 
         <h:outputLabel value="Username:" />
-        <h:inputText value="#{userBean.username}" required="true" />
+        <h:inputText value="#{userBean.username}" required="false" />
 
         <h:outputLabel value="Email:" />
-        <h:inputText value="#{userBean.email}" required="true" />
+        <h:inputText value="#{userBean.email}" required="false" />
 
         <h:outputLabel value="Password:" />
-        <h:inputSecret value="#{userBean.password}" required="true" />
+        <h:inputSecret value="#{userBean.password}" required="false" />
 
         <h:outputLabel value="Status:" />
         <h:inputText value="#{userBean.status}" />
 
         <h:outputLabel value="Group:" />
-        <h:selectOneMenu value="#{userBean.groupId}" required="true">
+        <h:selectOneMenu value="#{userBean.groupId}" required="false">
             <f:selectItems value="#{userBean.allGroups}"
                var="g"
                itemValue="#{g.groupid}"
