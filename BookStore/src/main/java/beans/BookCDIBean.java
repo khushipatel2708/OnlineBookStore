@@ -76,7 +76,7 @@ public class BookCDIBean implements Serializable {
 
         try {
             String fileName = System.currentTimeMillis() + "_" + file.getSubmittedFileName();
-            String uploadPath = "D:\\project mscict\\OnlineBookStore\\BookStore\\src\\main\\webapp\\uiImage\\";
+            String uploadPath = "D:\\project3\\OnlineBookStore\\BookStore\\src\\main\\webapp\\uiImages\\";
 
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) uploadDir.mkdirs();
