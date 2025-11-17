@@ -24,7 +24,7 @@ import java.util.*;
 @SessionScoped
 public class BookCDIBean implements Serializable {
 
-    private final String BASE_URL = "http://localhost:8080/BookStore/admin";
+    private final String BASE_URL = "http://localhost:8080/BookStore/resources";
 
     private Client client = ClientBuilder.newClient();
 
