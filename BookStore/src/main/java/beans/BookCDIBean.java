@@ -1,28 +1,32 @@
 package beans;
 
-import EJB.AdminSessionBeanLocal;
 import Entity.Book;
 import Entity.Booktype;
-import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.Part;
+
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import java.io.*;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Base64;
-import java.util.Collection;
+import java.util.*;
 
 @Named("bookBean")
 @SessionScoped
 public class BookCDIBean implements Serializable {
 
-    @EJB
-    private AdminSessionBeanLocal admin;
+    private final String BASE_URL = "http://localhost:8080/BookStore/admin";
+
+    private Client client = ClientBuilder.newClient();
 
     @Inject
     private LoginBean loginBean;
@@ -33,12 +37,10 @@ public class BookCDIBean implements Serializable {
     private Double price;
     private Integer booktypeId;
 
-    // File upload fields
     private Part coverPhoto;
     private Part frontPagePhoto;
     private Part lastPagePhoto;
 
-    // Preview (Base64 or image path)
     private String coverPreview;
     private String frontPreview;
     private String lastPreview;
@@ -49,28 +51,27 @@ public class BookCDIBean implements Serializable {
 
     private boolean editMode = false;
 
-    // ================= GET ALL ===================
-    public String searchBooks() { return null; }
-    public String clearSearch() {
-        searchBookname = null;
-        searchAuthor = null;
-        searchBooktype = null;
-        return null;
-    }
-
+    // ============ GET ALL BOOKS ================
     public Collection<Book> getAllBooks() {
-        return admin.searchBooks(searchBookname, searchAuthor, searchBooktype);
+        return client.target(BASE_URL + "/books/search")
+                .queryParam("bookname", searchBookname)
+                .queryParam("authorname", searchAuthor)
+                .queryParam("booktype", searchBooktype)
+                .request(MediaType.APPLICATION_JSON)
+                .get(Collection.class);
     }
 
     public Collection<Booktype> getAllBooktypes() {
-        return admin.getAllBooktypes();
+        return client.target(BASE_URL + "/booktypes")
+                .request(MediaType.APPLICATION_JSON)
+                .get(Collection.class);
     }
 
     public boolean isAdmin() {
         return "Admin".equalsIgnoreCase(loginBean.getRole());
     }
 
-    // ================= PREVIEW BASE64 ==================
+    // ============ HELPERS ================
     private String convertToBase64(Part file) {
         try {
             byte[] bytes = file.getInputStream().readAllBytes();
@@ -80,7 +81,6 @@ public class BookCDIBean implements Serializable {
         }
     }
 
-    // ================= SAVE FILE ==================
     private String saveFile(Part file) {
         if (file == null || file.getSubmittedFileName() == null || file.getSubmittedFileName().isEmpty()) {
             return null;
@@ -103,22 +103,22 @@ public class BookCDIBean implements Serializable {
             return fileName;
 
         } catch (Exception e) {
-            System.out.println("Upload Error: " + e.getMessage());
             return null;
         }
     }
 
-    // ================= ADD PAGE ==================
+    // ================ NAVIGATION ==================
     public String goToAddPage() {
         clear();
         editMode = false;
         return "bookForm.xhtml?faces-redirect=true";
     }
 
-    // ================= EDIT BOOK ==================
     public String editBook(Integer bookId) {
 
-        Book b = admin.findBookById(bookId);
+        Book b = client.target(BASE_URL + "/books/" + bookId)
+                .request(MediaType.APPLICATION_JSON)
+                .get(Book.class);
 
         id = b.getId();
         bookname = b.getBookname();
@@ -126,45 +126,69 @@ public class BookCDIBean implements Serializable {
         price = b.getPrice().doubleValue();
         booktypeId = b.getBooktypeId().getId();
 
-        // IMAGE PREVIEW (existing images)
-        coverPreview = (b.getCoverPhoto() != null) ? "/uiImages/" + b.getCoverPhoto() : null;
-        frontPreview = (b.getFrontPagePhoto() != null) ? "/uiImages/" + b.getFrontPagePhoto() : null;
-        lastPreview = (b.getLastPagePhoto() != null) ? "/uiImages/" + b.getLastPagePhoto() : null;
+        coverPreview = b.getCoverPhoto() != null ? "/uiImages/" + b.getCoverPhoto() : null;
+        frontPreview = b.getFrontPagePhoto() != null ? "/uiImages/" + b.getFrontPagePhoto() : null;
+        lastPreview = b.getLastPagePhoto() != null ? "/uiImages/" + b.getLastPagePhoto() : null;
 
         coverPhoto = null;
         frontPagePhoto = null;
         lastPagePhoto = null;
 
         editMode = true;
+
         return "bookForm.xhtml?faces-redirect=true";
     }
 
-    // ================= ADD BOOK ==================
+    // ================== ADD BOOK ====================
     public String addBook() {
 
         String img1 = saveFile(coverPhoto);
         String img2 = saveFile(frontPagePhoto);
         String img3 = saveFile(lastPagePhoto);
 
-        admin.addBook(bookname, authorname, price, booktypeId, img1, img2, img3);
+        Map<String, Object> json = new HashMap<>();
+        json.put("bookname", bookname);
+        json.put("authorname", authorname);
+        json.put("price", price);
+        json.put("booktypeId", booktypeId);
+        json.put("coverPhoto", img1);
+        json.put("frontPagePhoto", img2);
+        json.put("lastPagePhoto", img3);
+
+        client.target(BASE_URL + "/books")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(json));
 
         clear();
         return "BookList.xhtml?faces-redirect=true";
     }
 
-    // ================= UPDATE BOOK ==================
+    // ================== UPDATE BOOK ====================
     public String updateBook() {
 
         String img1 = saveFile(coverPhoto);
         String img2 = saveFile(frontPagePhoto);
         String img3 = saveFile(lastPagePhoto);
 
-        // If no new file uploaded, do not overwrite existing!
-        if (img1 == null) img1 = coverPreview.replace("/uiImages/", "");
-        if (img2 == null) img2 = frontPreview.replace("/uiImages/", "");
-        if (img3 == null) img3 = lastPreview.replace("/uiImages/", "");
+        if (img1 == null && coverPreview != null)
+            img1 = coverPreview.replace("/uiImages/", "");
+        if (img2 == null && frontPreview != null)
+            img2 = frontPreview.replace("/uiImages/", "");
+        if (img3 == null && lastPreview != null)
+            img3 = lastPreview.replace("/uiImages/", "");
 
-        admin.updateBook(id, bookname, authorname, price, booktypeId, img1, img2, img3);
+        Map<String, Object> json = new HashMap<>();
+        json.put("bookname", bookname);
+        json.put("authorname", authorname);
+        json.put("price", price);
+        json.put("booktypeId", booktypeId);
+        json.put("coverPhoto", img1);
+        json.put("frontPagePhoto", img2);
+        json.put("lastPagePhoto", img3);
+
+        client.target(BASE_URL + "/books/" + id)
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(json));
 
         editMode = false;
         clear();
@@ -174,7 +198,11 @@ public class BookCDIBean implements Serializable {
 
     // ================= DELETE ==================
     public String deleteBook(Integer id) {
-        admin.deleteBook(id);
+
+        client.target(BASE_URL + "/books/" + id)
+                .request()
+                .delete();
+
         return "BookList.xhtml?faces-redirect=true";
     }
 
@@ -185,7 +213,6 @@ public class BookCDIBean implements Serializable {
         return "BookList.xhtml?faces-redirect=true";
     }
 
-    // ================= CLEAR ==================
     public void clear() {
         id = null;
         bookname = "";
@@ -202,24 +229,16 @@ public class BookCDIBean implements Serializable {
         lastPreview = null;
     }
 
-    // ================= GET/SET ==================
+    // ========= GETTERS/SETTERS =========
+
     public Part getCoverPhoto() { return coverPhoto; }
-    public void setCoverPhoto(Part p) {
-        this.coverPhoto = p;
-        if (p != null) this.coverPreview = convertToBase64(p);
-    }
+    public void setCoverPhoto(Part p) { this.coverPhoto = p; if (p != null) this.coverPreview = convertToBase64(p); }
 
     public Part getFrontPagePhoto() { return frontPagePhoto; }
-    public void setFrontPagePhoto(Part p) {
-        this.frontPagePhoto = p;
-        if (p != null) this.frontPreview = convertToBase64(p);
-    }
+    public void setFrontPagePhoto(Part p) { this.frontPagePhoto = p; if (p != null) this.frontPreview = convertToBase64(p); }
 
     public Part getLastPagePhoto() { return lastPagePhoto; }
-    public void setLastPagePhoto(Part p) {
-        this.lastPagePhoto = p;
-        if (p != null) this.lastPreview = convertToBase64(p);
-    }
+    public void setLastPagePhoto(Part p) { this.lastPagePhoto = p; if (p != null) this.lastPreview = convertToBase64(p); }
 
     public String getCoverPreview() { return coverPreview; }
     public String getFrontPreview() { return frontPreview; }

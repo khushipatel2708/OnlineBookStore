@@ -6,27 +6,24 @@ import Entity.Booktype;
 import Entity.City;
 import Entity.GroupMaster;
 import Entity.User;
+
 import jakarta.ejb.EJB;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
 import java.util.Collection;
 
-@Path("admin") // URL path: http://localhost:8080/bookstore/resources/admin
+@Path("admin")
+@Produces(MediaType.APPLICATION_JSON)     // GLOBAL PRODUCES
+@Consumes(MediaType.APPLICATION_JSON)     // GLOBAL CONSUMES
 public class Admin {
 
     @EJB
     private AdminSessionBeanLocal adminSessionBean;
 
-  
-    // ==================== USER CRUD ====================
-// GET all users
-// URL: http://localhost:8080/BookStore/resources/admin/users
+    // ================= USER CRUD =================
+
     @GET
     @Path("users")
     @Produces(MediaType.APPLICATION_JSON)
@@ -34,8 +31,6 @@ public class Admin {
         return adminSessionBean.getAllUsers();
     }
 
-// GET single user by ID
-// URL: http://localhost:8080/BookStore/resources/admin/users/1
     @GET
     @Path("users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -43,12 +38,11 @@ public class Admin {
         return adminSessionBean.findUserById(id);
     }
 
-// POST (Add new user)
-// URL: http://localhost:8080/BookStore/resources/admin/users
     @POST
     @Path("users")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void addUser(User user) {
+    public Response addUser(User user) {
         adminSessionBean.addUser(
                 user.getFullname(),
                 user.getPhone(),
@@ -58,14 +52,14 @@ public class Admin {
                 user.getStatus(),
                 user.getGroupid().getGroupid()
         );
+        return Response.ok("{\"status\":\"User Added\"}").build();
     }
 
-// PUT (Update user)
-// URL: http://localhost:8080/BookStore/resources/admin/users/1
     @PUT
     @Path("users/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void updateUser(@PathParam("id") Integer id, User user) {
+    public Response updateUser(@PathParam("id") Integer id, User user) {
         adminSessionBean.updateUser(
                 id,
                 user.getFullname(),
@@ -76,54 +70,68 @@ public class Admin {
                 user.getStatus(),
                 user.getGroupid().getGroupid()
         );
+        return Response.ok("{\"status\":\"User Updated\"}").build();
     }
 
-// DELETE user by ID
-// URL: http://localhost:8080/BookStore/resources/admin/users/1
     @DELETE
     @Path("users/{id}")
-    public void deleteUser(@PathParam("id") Integer id) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteUser(@PathParam("id") Integer id) {
         adminSessionBean.deleteUser(id);
+        return Response.ok("{\"status\":\"User Deleted\"}").build();
     }
 
+    // ================= CITY CRUD =================
+
     @GET
-    @Path("cities") // GET http://localhost:8080/BookStore/resources/admin/cities
+    @Path("cities")
+    @Produces(MediaType.APPLICATION_JSON)
     public Collection<City> getAllCities() {
         return adminSessionBean.getAllCities();
     }
 
     @POST
-    @Path("cities") // POST http://localhost:8080/BookStore/resources/admin/cities
-    public void addCity(City city) {
+    @Path("cities")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addCity(City city) {
         adminSessionBean.addCity(city.getName());
+        return Response.ok("{\"status\":\"City Added\"}").build();
     }
 
     @PUT
-    @Path("cities/{id}") // PUT http://localhost:8080/BookStore/resources/admin/cities/1
-    public void updateCity(@PathParam("id") Integer id, City city) {
+    @Path("cities/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateCity(@PathParam("id") Integer id, City city) {
         adminSessionBean.updateCity(id, city.getName());
+        return Response.ok("{\"status\":\"City Updated\"}").build();
     }
 
     @DELETE
-    @Path("cities/{id}") // DELETE http://localhost:8080/BookStore/resources/admin/cities/1
-    public void removeCity(@PathParam("id") Integer id) {
+    @Path("cities/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCity(@PathParam("id") Integer id) {
         adminSessionBean.removeCity(id);
+        return Response.ok("{\"status\":\"City Deleted\"}").build();
     }
 
     @GET
-    @Path("cities/{id}") // GET http://localhost:8080/BookStore/resources/admin/cities/1
+    @Path("cities/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     public City getCityById(@PathParam("id") Integer id) {
         return adminSessionBean.findCityById(id);
     }
 
     @GET
-    @Path("cities/search/{name}") // GET http://localhost:8080/BookStore/resources/admin/cities/search/Surat
-    public Collection<City> getCityByName(@PathParam("name") String name) {
+    @Path("cities/search/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<City> searchCity(@PathParam("name") String name) {
         return adminSessionBean.findCityByName(name);
     }
 
-    // ==================== BOOKTYPE CRUD ====================
-    //get :- http://localhost:8080/BookStore/resources/admin/booktypes
+    // ================= BOOKTYPE CRUD =================
+
     @GET
     @Path("booktypes")
     @Produces(MediaType.APPLICATION_JSON)
@@ -131,7 +139,6 @@ public class Admin {
         return adminSessionBean.getAllBooktypes();
     }
 
-    //get:- http://localhost:8080/BookStore/resources/admin/booktypes/1
     @GET
     @Path("booktypes/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -139,29 +146,35 @@ public class Admin {
         return adminSessionBean.getBooktypeById(id);
     }
 
-    //Post :- http://localhost:8080/BookStore/resources/admin/booktypes
     @POST
     @Path("booktypes")
-    public void addBooktype(Booktype bt) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addBooktype(Booktype bt) {
         adminSessionBean.addBooktype(bt.getType(), bt.getDescription());
+        return Response.ok("{\"status\":\"Booktype Added\"}").build();
     }
 
-    //put:- http://localhost:8080/BookStore/resources/admin/booktypes/1
     @PUT
     @Path("booktypes/{id}")
-    public void updateBooktype(@PathParam("id") Integer id, Booktype bt) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateBooktype(@PathParam("id") Integer id, Booktype bt) {
         adminSessionBean.updateBooktype(id, bt.getType(), bt.getDescription());
+        return Response.ok("{\"status\":\"Booktype Updated\"}").build();
     }
 
-    //delete :- http://localhost:8080/BookStore/resources/admin/booktypes/1
     @DELETE
     @Path("booktypes/{id}")
-    public void deleteBooktype(@PathParam("id") Integer id) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteBooktype(@PathParam("id") Integer id) {
         adminSessionBean.deleteBooktype(id);
+        return Response.ok("{\"status\":\"Booktype Deleted\"}").build();
     }
 
-    // ==================== BOOK CRUD ====================
-    //get:-http://localhost:8080/BookStore/resources/admin/books
+    // ================= BOOK CRUD (WITH IMAGES) =================
+    // Images are sent as BASE64 strings in JSON
+
     @GET
     @Path("books")
     @Produces(MediaType.APPLICATION_JSON)
@@ -169,7 +182,6 @@ public class Admin {
         return adminSessionBean.getAllBooks();
     }
 
-    //get:-http://localhost:8080/BookStore/resources/admin/books/1
     @GET
     @Path("books/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -177,87 +189,94 @@ public class Admin {
         return adminSessionBean.findBookById(id);
     }
 
-   // POST: http://localhost:8080/BookStore/resources/admin/books
     @POST
     @Path("books")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void addBook(Book book) {
+    public Response addBook(Book book) {
+
+        // book.getCoverPhoto() → BASE64 string
         adminSessionBean.addBook(
-            book.getBookname(),
-            book.getAuthorname(),
-            book.getPrice().doubleValue(),
-            book.getBooktypeId().getId(),
-            book.getCoverPhoto(),
-            book.getFrontPagePhoto(),
-            book.getLastPagePhoto()
+                book.getBookname(),
+                book.getAuthorname(),
+                book.getPrice().doubleValue(),
+                book.getBooktypeId().getId(),
+                book.getCoverPhoto(),        // BASE64
+                book.getFrontPagePhoto(),    // BASE64
+                book.getLastPagePhoto()      // BASE64
         );
+
+        return Response.ok("{\"status\":\"Book Added\"}").build();
     }
 
-    // PUT: http://localhost:8080/BookStore/resources/admin/books/1
     @PUT
     @Path("books/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void updateBook(@PathParam("id") Integer id, Book book) {
+    public Response updateBook(@PathParam("id") Integer id, Book book) {
+
         adminSessionBean.updateBook(
-            id,
-            book.getBookname(),
-            book.getAuthorname(),
-            book.getPrice().doubleValue(),
-            book.getBooktypeId().getId(),
-            book.getCoverPhoto(),
-            book.getFrontPagePhoto(),
-            book.getLastPagePhoto()
+                id,
+                book.getBookname(),
+                book.getAuthorname(),
+                book.getPrice().doubleValue(),
+                book.getBooktypeId().getId(),
+                book.getCoverPhoto(),
+                book.getFrontPagePhoto(),
+                book.getLastPagePhoto()
         );
+
+        return Response.ok("{\"status\":\"Book Updated\"}").build();
     }
 
-    //delete:-http://localhost:8080/BookStore/resources/admin/books/1
     @DELETE
     @Path("books/{id}")
-    public void deleteBook(@PathParam("id") Integer id) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteBook(@PathParam("id") Integer id) {
         adminSessionBean.deleteBook(id);
+        return Response.ok("{\"status\":\"Book Deleted\"}").build();
     }
 
-    //--------------Group Master-------------------
+    // ================= GROUP CRUD =================
+
     @GET
-    @Path("groups") // GET http://localhost:8080/BookStore/resources/admin/groups
+    @Path("groups")
+    @Produces(MediaType.APPLICATION_JSON)
     public Collection<GroupMaster> getAllGroups() {
         return adminSessionBean.getAllGroups();
     }
 
     @GET
-    @Path("groups/{id}") // GET http://localhost:8080/BookStore/resources/admin/groups/1
-    public GroupMaster getGroupById(@PathParam("id") Integer id) {
-        return adminSessionBean.findGroupById(id);
-    }
-
-    @GET
-    @Path("groups/search/{name}") // GET http://localhost:8080/BookStore/resources/admin/groups/search/Admins
-    public Collection<GroupMaster> getGroupByName(@PathParam("name") String name) {
+    @Path("groups/search/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<GroupMaster> searchGroup(@PathParam("name") String name) {
         return adminSessionBean.findGroupByName(name);
     }
 
     @POST
-    @Path("groups") // POST http://localhost:8080/BookStore/resources/admin/groups
-    public void addGroup(GroupMaster group) {
+    @Path("groups")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addGroup(GroupMaster group) {
         adminSessionBean.addGroup(group.getGroupname(), group.getUsername());
+        return Response.ok("{\"status\":\"Group Added\"}").build();
     }
 
     @PUT
-    @Path("groups/{id}") // PUT http://localhost:8080/BookStore/resources/admin/groups/1
-    public void updateGroup(@PathParam("id") Integer id, GroupMaster group) {
+    @Path("groups/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateGroup(@PathParam("id") Integer id, GroupMaster group) {
         adminSessionBean.updateGroup(id, group.getGroupname(), group.getUsername());
+        return Response.ok("{\"status\":\"Group Updated\"}").build();
     }
 
     @DELETE
-    @Path("groups/{id}") // DELETE http://localhost:8080/BookStore/resources/admin/groups/1
-    public void removeGroup(@PathParam("id") Integer id) {
+    @Path("groups/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteGroup(@PathParam("id") Integer id) {
         adminSessionBean.removeGroup(id);
+        return Response.ok("{\"status\":\"Group Deleted\"}").build();
     }
-    
-//    @DELETE
-//    @Path("shippings/{id}") // DELETE http://localhost:8080/BookStore/resources/admin/shippings/5
-//    public void deleteShipping(@PathParam("id") Integer id) {
-//        adminSessionBean.deleteShipping(id);
-//    }
 
 }
