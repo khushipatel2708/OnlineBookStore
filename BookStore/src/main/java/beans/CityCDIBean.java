@@ -1,20 +1,19 @@
 package beans;
 
-import EJB.AdminSessionBeanLocal;
 import Entity.City;
-import jakarta.ejb.EJB;
+import client.MyAdminClient;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
 import java.io.Serializable;
 import java.util.Collection;
 
 @Named("cityBean")
-@SessionScoped   // <-- important: CRUD must stay in same page
+@SessionScoped
 public class CityCDIBean implements Serializable {
 
-    @EJB
-    private AdminSessionBeanLocal admin;
+    private MyAdminClient adminClient = new MyAdminClient();  // USE CLIENT ONLY
 
     @Inject
     private LoginBean loginBean;
@@ -28,49 +27,62 @@ public class CityCDIBean implements Serializable {
         return "Admin".equalsIgnoreCase(loginBean.getRole());
     }
 
-    // FETCH ALL CITIES
+    // ===================== GET ALL CITIES ======================
     public Collection<City> getAllCities() {
         if (!isAdmin()) return null;
-        return admin.getAllCities();
+        return adminClient.getAllCities(Collection.class);
     }
 
-    // ADD CITY
+    // ===================== ADD CITY ===========================
     public String addCity() {
-        admin.addCity(name);
+
+        City city = new City();
+        city.setName(name);
+
+        adminClient.addCity(city);   // POST call
+
         name = "";
         return null;
     }
 
-    // LOAD CITY (EDIT MODE)
+    // ===================== EDIT CITY ===========================
     public String editCity(Integer cityId) {
-        City c = admin.findCityById(cityId);
+
+        City c = adminClient.getCityById(City.class, cityId.toString());
+
         this.id = c.getId();
         this.name = c.getName();
         this.editMode = true;
-        return null;   // stay same page
+
+        return null;
     }
 
-    // UPDATE CITY
+    // ===================== UPDATE CITY =========================
     public String updateCity() {
-        admin.updateCity(id, name);
+
+        City c = new City();
+        c.setName(name);
+
+        adminClient.updateCity(c, id.toString());   // PUT call
+
         editMode = false;
         name = "";
         return null;
     }
 
-    // CANCEL
+    // ===================== CANCEL EDIT =========================
     public void cancelEdit() {
         editMode = false;
         name = "";
     }
 
-    // DELETE CITY
+    // ===================== DELETE CITY =========================
     public String deleteCity(Integer cityId) {
-        admin.removeCity(cityId);
+        adminClient.deleteCity(cityId.toString());   // DELETE call
         return null;
     }
 
-    // GETTERS + SETTERS
+    // ===================== GETTERS / SETTERS ===================
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
