@@ -4,6 +4,7 @@
  */
 package Entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -92,6 +93,7 @@ public class GroupMaster implements Serializable {
         this.username = username;
     }
 
+    @JsonbTransient
     @XmlTransient
     public Collection<User> getUserCollection() {
         return userCollection;

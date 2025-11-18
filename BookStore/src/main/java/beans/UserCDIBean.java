@@ -1,20 +1,18 @@
 package beans;
 
-import EJB.AdminSessionBeanLocal;
 import Entity.GroupMaster;
 import Entity.User;
+import client.MyAdminClient;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
-import jakarta.ejb.EJB;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 
 @Named("userBean")
 @ViewScoped
 public class UserCDIBean implements Serializable {
 
-    @EJB
-    AdminSessionBeanLocal admin;
+    private MyAdminClient client = new MyAdminClient();
 
     private Integer id;
     private String fullname;
@@ -27,13 +25,17 @@ public class UserCDIBean implements Serializable {
 
     private User selectedUser;
 
-    public Collection<User> getAllUsers() {
-        return admin.getAllUsers();
+    // ===================== GET LISTS ======================
+
+    public List<User> getAllUsers() {
+        return client.getAllUsers(List.class);
     }
 
-    public Collection<GroupMaster> getAllGroups() {
-        return admin.getAllGroups();
+    public List<GroupMaster> getAllGroups() {
+        return client.getAllGroups(List.class);
     }
+
+    // ===================== EDIT USER ======================
 
     public void editUser(User u) {
         selectedUser = u;
@@ -47,32 +49,69 @@ public class UserCDIBean implements Serializable {
         groupId = u.getGroupid().getGroupid();
     }
 
+    // ===================== SAVE USER (ADD/UPDATE) ======================
+
     public String saveUser() {
-        if (selectedUser == null) { // ADD
-            admin.addUser(fullname, phone, username, email, password, status, groupId);
-        } else {                    // UPDATE
-            admin.updateUser(id, fullname, phone, username, email, password, status, groupId);
+
+        // Build proper object for JSON serialization
+        User user = new User();
+        user.setFullname(fullname);
+        user.setPhone(phone);
+        user.setUsername(username);
+        user.setEmail(email);
+
+        // If updating AND password is empty → keep old password
+        if (password == null || password.trim().isEmpty()) {
+            if (selectedUser != null) {
+                user.setPassword(selectedUser.getPassword());
+            }
+        } else {
+            user.setPassword(password);
         }
+
+        // default status if empty
+        if (status == null || status.trim().isEmpty()) {
+            status = "Active";
+        }
+        user.setStatus(status);
+
+        // Group object is mandatory for REST API
+        GroupMaster gm = new GroupMaster();
+        gm.setGroupid(groupId);
+        user.setGroupid(gm);
+
+        // Decide add or update
+        if (selectedUser == null) {
+            client.addUser(user);
+        } else {
+            client.updateUser(user, id.toString());
+        }
+
         clearForm();
-        return "login.xhtml?faces-redirect=true";
+        return "userList.xhtml?faces-redirect=true";
     }
 
+    // ===================== DELETE ======================
+
     public void deleteUser(Integer id) {
-        admin.deleteUser(id);
+        client.deleteUser(id.toString());
     }
+
+    // ===================== CLEAR FORM ======================
 
     public void clearForm() {
         selectedUser = null;
+        id = null;
         fullname = "";
         phone = "";
         username = "";
         email = "";
         password = "";
-        status = "";
+        status = "Active";
         groupId = null;
     }
 
-    // ---------- Getters & Setters ----------
+    // ============== GETTERS / SETTERS ===================
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
