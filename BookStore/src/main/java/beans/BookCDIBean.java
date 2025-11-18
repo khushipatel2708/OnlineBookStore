@@ -6,7 +6,6 @@ import client.MyAdminClient;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.Part;
 
 import java.io.File;
@@ -16,8 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @Named("bookBean")
 @SessionScoped
@@ -31,8 +28,7 @@ public class BookCDIBean implements Serializable {
     private Integer id;
     private String bookname;
     private String authorname;
-      private BigDecimal price;
-
+    private BigDecimal price;
     private Integer booktypeId;
 
     private Part coverPhoto;
@@ -48,6 +44,9 @@ public class BookCDIBean implements Serializable {
     private String searchBooktype;
 
     private boolean editMode = false;
+
+    // ===== FILE STORAGE PATH =====
+    private final String uploadFolder = System.getProperty("user.home") + File.separator + "BookStoreUploads";
 
     // ===== ROLE CHECK =====
     public boolean isAdmin() {
@@ -83,11 +82,7 @@ public class BookCDIBean implements Serializable {
 
         try {
             String fileName = System.currentTimeMillis() + "_" + file.getSubmittedFileName();
-            String deploymentPath = FacesContext.getCurrentInstance()
-                    .getExternalContext()
-                    .getRealPath("/uiImages/");
-
-            File uploadDir = new File(deploymentPath);
+            File uploadDir = new File(uploadFolder);
             if (!uploadDir.exists()) uploadDir.mkdirs();
 
             Files.copy(file.getInputStream(),
@@ -119,9 +114,9 @@ public class BookCDIBean implements Serializable {
         this.price = b.getPrice();
         this.booktypeId = b.getBooktypeId().getId();
 
-        coverPreview = b.getCoverPhoto() != null ? "/uiImages/" + b.getCoverPhoto() : null;
-        frontPreview = b.getFrontPagePhoto() != null ? "/uiImages/" + b.getFrontPagePhoto() : null;
-        lastPreview = b.getLastPagePhoto() != null ? "/uiImages/" + b.getLastPagePhoto() : null;
+        coverPreview = (b.getCoverPhoto() != null) ? getFilePath(b.getCoverPhoto()) : null;
+        frontPreview = (b.getFrontPagePhoto() != null) ? getFilePath(b.getFrontPagePhoto()) : null;
+        lastPreview = (b.getLastPagePhoto() != null) ? getFilePath(b.getLastPagePhoto()) : null;
 
         coverPhoto = null;
         frontPagePhoto = null;
@@ -129,6 +124,10 @@ public class BookCDIBean implements Serializable {
 
         editMode = true;
         return "bookForm.xhtml?faces-redirect=true";
+    }
+
+    private String getFilePath(String fileName) {
+        return "/BookStoreUploads/" + fileName;
     }
 
     // ===== ADD BOOK =====
@@ -163,11 +162,11 @@ public class BookCDIBean implements Serializable {
         String img3 = saveFile(lastPagePhoto);
 
         if (img1 == null && coverPreview != null)
-            img1 = coverPreview.replace("/uiImages/", "");
+            img1 = new File(coverPreview).getName();
         if (img2 == null && frontPreview != null)
-            img2 = frontPreview.replace("/uiImages/", "");
+            img2 = new File(frontPreview).getName();
         if (img3 == null && lastPreview != null)
-            img3 = lastPreview.replace("/uiImages/", "");
+            img3 = new File(lastPreview).getName();
 
         Book b = new Book();
         b.setBookname(bookname);
@@ -228,10 +227,8 @@ public class BookCDIBean implements Serializable {
     public String getAuthorname() { return authorname; }
     public void setAuthorname(String authorname) { this.authorname = authorname; }
 
-
-public BigDecimal getPrice() { return price; }
-public void setPrice(BigDecimal price) { this.price = price; }
-
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
 
     public Integer getBooktypeId() { return booktypeId; }
     public void setBooktypeId(Integer booktypeId) { this.booktypeId = booktypeId; }
