@@ -1,8 +1,7 @@
 package beans;
 
-import EJB.AdminSessionBeanLocal;
 import Entity.Booktype;
-import jakarta.ejb.EJB;
+import client.MyAdminClient;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -13,8 +12,7 @@ import java.util.Collection;
 @SessionScoped
 public class BooktypeCDIBean implements Serializable {
 
-    @EJB
-    private AdminSessionBeanLocal admin;
+    private MyAdminClient adminClient = new MyAdminClient();
 
     @Inject
     private LoginBean loginBean;
@@ -24,58 +22,95 @@ public class BooktypeCDIBean implements Serializable {
     private String description;
     private boolean editMode = false;
 
-    // ROLE CHECK
+    // ================= ROLE CHECK =================
     public boolean isAdmin() {
         return "Admin".equalsIgnoreCase(loginBean.getRole());
     }
 
-    // FETCH ALL
+    // ===================== GET ALL BOOKTYPES =======================
     public Collection<Booktype> getAllBooktypes() {
         if (!isAdmin()) return null;
-        return admin.getAllBooktypes();
+        try {
+            return adminClient.getAllBooktypes(Collection.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    // ADD
+    // ===================== ADD BOOKTYPE ============================
     public String addBooktype() {
-        admin.addBooktype(type, description);
+        if (!isAdmin()) return null;
+        Booktype bt = new Booktype();
+        bt.setType(type);
+        bt.setDescription(description);
+
+        try {
+            adminClient.addBooktype(bt);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
         type = "";
         description = "";
         return null;
     }
 
-    // LOAD FOR EDIT
+    // ===================== LOAD BOOKTYPE FOR EDIT ===================
     public String editBooktype(Integer btId) {
-        Booktype bt = admin.getBooktypeById(btId);
-        this.id = bt.getId();
-        this.type = bt.getType();
-        this.description = bt.getDescription();
-        this.editMode = true;
+        try {
+            Booktype bt = adminClient.getBooktypeById(Booktype.class, btId.toString());
+            this.id = bt.getId();
+            this.type = bt.getType();
+            this.description = bt.getDescription();
+            this.editMode = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
-    // UPDATE
+    // ===================== UPDATE BOOKTYPE ==========================
     public String updateBooktype() {
-        admin.updateBooktype(id, type, description);
+        if (!isAdmin()) return null;
+
+        Booktype bt = new Booktype();
+        bt.setId(id); // important to set the ID for update
+        bt.setType(type);
+        bt.setDescription(description);
+
+        try {
+            adminClient.updateBooktype(bt, id.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         editMode = false;
         type = "";
         description = "";
         return null;
     }
 
-    // CANCEL
+    // ===================== CANCEL EDIT ==============================
     public void cancelEdit() {
         editMode = false;
         type = "";
         description = "";
     }
 
-    // DELETE
+    // ===================== DELETE BOOKTYPE ==========================
     public String deleteBooktype(Integer btId) {
-        admin.deleteBooktype(btId);
+        if (!isAdmin()) return null;
+        try {
+            adminClient.deleteBooktype(btId.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
-    // GETTERS & SETTERS
+    // ===================== GETTERS / SETTERS ========================
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

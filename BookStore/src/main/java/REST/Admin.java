@@ -15,8 +15,6 @@ import jakarta.ws.rs.core.Response;
 import java.util.Collection;
 
 @Path("admin")
-@Produces(MediaType.APPLICATION_JSON)     // GLOBAL PRODUCES
-@Consumes(MediaType.APPLICATION_JSON)     // GLOBAL CONSUMES
 public class Admin {
 
     @EJB
@@ -83,11 +81,13 @@ public class Admin {
 
     // ================= CITY CRUD =================
 
+
+
     @GET
-    @Path("cities")
+    @Path("cities/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Collection<City> getAllCities() {
-        return adminSessionBean.getAllCities();
+    public City getCityById(@PathParam("id") Integer id) {
+        return adminSessionBean.findCityById(id);
     }
 
     @POST
@@ -117,13 +117,6 @@ public class Admin {
     }
 
     @GET
-    @Path("cities/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public City getCityById(@PathParam("id") Integer id) {
-        return adminSessionBean.findCityById(id);
-    }
-
-    @GET
     @Path("cities/search/{name}")
     @Produces(MediaType.APPLICATION_JSON)
     public Collection<City> searchCity(@PathParam("name") String name) {
@@ -139,6 +132,13 @@ public class Admin {
         return adminSessionBean.getAllBooktypes();
     }
 
+    @GET
+    @Path("cities")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<City> getAllCities() {
+        return adminSessionBean.getAllCities();
+    }
+    
     @GET
     @Path("booktypes/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -172,8 +172,7 @@ public class Admin {
         return Response.ok("{\"status\":\"Booktype Deleted\"}").build();
     }
 
-    // ================= BOOK CRUD (WITH IMAGES) =================
-    // Images are sent as BASE64 strings in JSON
+    // ================= BOOK CRUD =================
 
     @GET
     @Path("books")
@@ -194,18 +193,15 @@ public class Admin {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addBook(Book book) {
-
-        // book.getCoverPhoto() → BASE64 string
         adminSessionBean.addBook(
                 book.getBookname(),
                 book.getAuthorname(),
                 book.getPrice().doubleValue(),
                 book.getBooktypeId().getId(),
-                book.getCoverPhoto(),        // BASE64
-                book.getFrontPagePhoto(),    // BASE64
-                book.getLastPagePhoto()      // BASE64
+                book.getCoverPhoto(),
+                book.getFrontPagePhoto(),
+                book.getLastPagePhoto()
         );
-
         return Response.ok("{\"status\":\"Book Added\"}").build();
     }
 
@@ -214,7 +210,6 @@ public class Admin {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateBook(@PathParam("id") Integer id, Book book) {
-
         adminSessionBean.updateBook(
                 id,
                 book.getBookname(),
@@ -225,7 +220,6 @@ public class Admin {
                 book.getFrontPagePhoto(),
                 book.getLastPagePhoto()
         );
-
         return Response.ok("{\"status\":\"Book Updated\"}").build();
     }
 
@@ -278,5 +272,4 @@ public class Admin {
         adminSessionBean.removeGroup(id);
         return Response.ok("{\"status\":\"Group Deleted\"}").build();
     }
-
 }

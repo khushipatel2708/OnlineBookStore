@@ -21,7 +21,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.Collection;
-
+import jakarta.json.bind.annotation.JsonbTransient;
 /**
  *
  * @author KHUSHI PC
@@ -89,6 +89,7 @@ public class Booktype implements Serializable {
         this.description = description;
     }
 
+    @JsonbTransient
     @XmlTransient
     public Collection<Book> getBookCollection() {
         return bookCollection;
