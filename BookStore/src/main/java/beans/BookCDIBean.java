@@ -13,14 +13,13 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Base64;
 import java.util.Collection;
 
 @Named("bookBean")
 @SessionScoped
 public class BookCDIBean implements Serializable {
 
-    private MyAdminClient adminClient = new MyAdminClient(); // USE CLIENT ONLY
+    private MyAdminClient adminClient = new MyAdminClient();
 
     @Inject
     private LoginBean loginBean;
@@ -35,6 +34,7 @@ public class BookCDIBean implements Serializable {
     private Part frontPagePhoto;
     private Part lastPagePhoto;
 
+    // preview values for showing existing images (these will be URL paths like "/BookStore/BookStoreUploads/filename.jpg")
     private String coverPreview;
     private String frontPreview;
     private String lastPreview;
@@ -45,92 +45,83 @@ public class BookCDIBean implements Serializable {
 
     private boolean editMode = false;
 
-    // ===== FILE STORAGE PATH =====
+    // storage folder on server (must match servlet)
     private final String uploadFolder = System.getProperty("user.home") + File.separator + "BookStoreUploads";
 
-    // ===== ROLE CHECK =====
     public boolean isAdmin() {
         return "Admin".equalsIgnoreCase(loginBean.getRole());
     }
 
-    // ===== GET ALL BOOKS =====
     public Collection<Book> getAllBooks() {
         if (!isAdmin()) return null;
         return adminClient.getAllBooks(Collection.class);
     }
 
-    // ===== GET ALL BOOK TYPES =====
     public Collection<Booktype> getAllBooktypes() {
         if (!isAdmin()) return null;
         return adminClient.getAllBooktypes(Collection.class);
     }
 
-    // ===== HELPER METHODS =====
-    private String convertToBase64(Part file) {
-        try {
-            byte[] bytes = file.getInputStream().readAllBytes();
-            return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
+    // Save file to uploadFolder; return safe filename or null
     private String saveFile(Part file) {
-        if (file == null || file.getSubmittedFileName() == null || file.getSubmittedFileName().isEmpty()) {
-            return null;
-        }
-
         try {
-            String fileName = System.currentTimeMillis() + "_" + file.getSubmittedFileName();
-            File uploadDir = new File(uploadFolder);
-            if (!uploadDir.exists()) uploadDir.mkdirs();
+            if (file == null) return null;
+            String submitted = file.getSubmittedFileName();
+            if (submitted == null || submitted.trim().isEmpty()) return null;
 
-            Files.copy(file.getInputStream(),
-                    new File(uploadDir, fileName).toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
+            // sanitize filename: replace spaces and remove path parts
+            String baseName = new File(submitted).getName().replaceAll("\\s+", "_");
 
+            String fileName = System.currentTimeMillis() + "_" + baseName;
+
+            File dir = new File(uploadFolder);
+            if (!dir.exists()) dir.mkdirs();
+
+            File dest = new File(dir, fileName);
+            Files.copy(file.getInputStream(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
             return fileName;
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
 
-    // ===== NAVIGATION =====
+    // helper to produce the public URL path used in JSF (matches servlet mapping)
+    private String makePublicPath(String filename) {
+        if (filename == null) return null;
+        // this is the path that will be requested and handled by FileServlet
+        return "/BookStore/BookStoreUploads/" + filename;
+    }
+
     public String goToAddPage() {
         clear();
         editMode = false;
         return "bookForm.xhtml?faces-redirect=true";
     }
 
-    // ===== EDIT BOOK =====
     public String editBook(Integer bookId) {
         Book b = adminClient.getBookById(Book.class, bookId.toString());
+        if (b == null) return "BookList.xhtml?faces-redirect=true";
 
         this.id = b.getId();
         this.bookname = b.getBookname();
         this.authorname = b.getAuthorname();
         this.price = b.getPrice();
-        this.booktypeId = b.getBooktypeId().getId();
+        if (b.getBooktypeId() != null) this.booktypeId = b.getBooktypeId().getId();
 
-        coverPreview = (b.getCoverPhoto() != null) ? getFilePath(b.getCoverPhoto()) : null;
-        frontPreview = (b.getFrontPagePhoto() != null) ? getFilePath(b.getFrontPagePhoto()) : null;
-        lastPreview = (b.getLastPagePhoto() != null) ? getFilePath(b.getLastPagePhoto()) : null;
+        // show public URL (handled by FileServlet)
+        this.coverPreview = (b.getCoverPhoto() != null) ? makePublicPath(b.getCoverPhoto()) : null;
+        this.frontPreview = (b.getFrontPagePhoto() != null) ? makePublicPath(b.getFrontPagePhoto()) : null;
+        this.lastPreview = (b.getLastPagePhoto() != null) ? makePublicPath(b.getLastPagePhoto()) : null;
 
-        coverPhoto = null;
-        frontPagePhoto = null;
-        lastPagePhoto = null;
+        this.coverPhoto = null;
+        this.frontPagePhoto = null;
+        this.lastPagePhoto = null;
 
         editMode = true;
         return "bookForm.xhtml?faces-redirect=true";
     }
 
-    private String getFilePath(String fileName) {
-        return "/BookStoreUploads/" + fileName;
-    }
-
-    // ===== ADD BOOK =====
     public String addBook() {
         String img1 = saveFile(coverPhoto);
         String img2 = saveFile(frontPagePhoto);
@@ -149,24 +140,25 @@ public class BookCDIBean implements Serializable {
         b.setFrontPagePhoto(img2);
         b.setLastPagePhoto(img3);
 
-        adminClient.addBook(b); // POST
-
+        adminClient.addBook(b);
         clear();
         return "BookList.xhtml?faces-redirect=true";
     }
 
-    // ===== UPDATE BOOK =====
     public String updateBook() {
+        // get existing filenames from server (to keep when user doesn't upload new)
+        Book old = adminClient.getBookById(Book.class, id.toString());
+        String oldCover = (old != null) ? old.getCoverPhoto() : null;
+        String oldFront = (old != null) ? old.getFrontPagePhoto() : null;
+        String oldLast = (old != null) ? old.getLastPagePhoto() : null;
+
         String img1 = saveFile(coverPhoto);
         String img2 = saveFile(frontPagePhoto);
         String img3 = saveFile(lastPagePhoto);
 
-        if (img1 == null && coverPreview != null)
-            img1 = new File(coverPreview).getName();
-        if (img2 == null && frontPreview != null)
-            img2 = new File(frontPreview).getName();
-        if (img3 == null && lastPreview != null)
-            img3 = new File(lastPreview).getName();
+        if (img1 == null) img1 = oldCover;
+        if (img2 == null) img2 = oldFront;
+        if (img3 == null) img3 = oldLast;
 
         Book b = new Book();
         b.setBookname(bookname);
@@ -181,26 +173,22 @@ public class BookCDIBean implements Serializable {
         b.setFrontPagePhoto(img2);
         b.setLastPagePhoto(img3);
 
-        adminClient.updateBook(b, id.toString()); // PUT
-
-        editMode = false;
+        adminClient.updateBook(b, id.toString());
         clear();
+        editMode = false;
         return "BookList.xhtml?faces-redirect=true";
     }
 
-    // ===== DELETE BOOK =====
     public String deleteBook(Integer bookId) {
         adminClient.deleteBook(bookId.toString());
         return "BookList.xhtml?faces-redirect=true";
     }
 
-    // ===== CANCEL EDIT =====
     public void cancelEdit() {
         editMode = false;
         clear();
     }
 
-    // ===== CLEAR FIELDS =====
     private void clear() {
         id = null;
         bookname = "";
@@ -217,7 +205,8 @@ public class BookCDIBean implements Serializable {
         lastPreview = null;
     }
 
-    // ===== GETTERS & SETTERS =====
+    // ===== GETTERS / SETTERS =====
+
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
@@ -233,30 +222,21 @@ public class BookCDIBean implements Serializable {
     public Integer getBooktypeId() { return booktypeId; }
     public void setBooktypeId(Integer booktypeId) { this.booktypeId = booktypeId; }
 
-    public boolean isEditMode() { return editMode; }
-    public void setEditMode(boolean editMode) { this.editMode = editMode; }
-
     public Part getCoverPhoto() { return coverPhoto; }
-    public void setCoverPhoto(Part coverPhoto) {
-        this.coverPhoto = coverPhoto;
-        if (coverPhoto != null) this.coverPreview = convertToBase64(coverPhoto);
-    }
+    public void setCoverPhoto(Part coverPhoto) { this.coverPhoto = coverPhoto; }
 
     public Part getFrontPagePhoto() { return frontPagePhoto; }
-    public void setFrontPagePhoto(Part frontPagePhoto) {
-        this.frontPagePhoto = frontPagePhoto;
-        if (frontPagePhoto != null) this.frontPreview = convertToBase64(frontPagePhoto);
-    }
+    public void setFrontPagePhoto(Part frontPagePhoto) { this.frontPagePhoto = frontPagePhoto; }
 
     public Part getLastPagePhoto() { return lastPagePhoto; }
-    public void setLastPagePhoto(Part lastPagePhoto) {
-        this.lastPagePhoto = lastPagePhoto;
-        if (lastPagePhoto != null) this.lastPreview = convertToBase64(lastPagePhoto);
-    }
+    public void setLastPagePhoto(Part lastPagePhoto) { this.lastPagePhoto = lastPagePhoto; }
 
     public String getCoverPreview() { return coverPreview; }
     public String getFrontPreview() { return frontPreview; }
     public String getLastPreview() { return lastPreview; }
+
+    public boolean isEditMode() { return editMode; }
+    public void setEditMode(boolean editMode) { this.editMode = editMode; }
 
     public String getSearchBookname() { return searchBookname; }
     public void setSearchBookname(String searchBookname) { this.searchBookname = searchBookname; }

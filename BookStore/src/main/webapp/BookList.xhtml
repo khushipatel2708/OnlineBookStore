@@ -65,7 +65,7 @@
         <h:column>
             <f:facet name="header">Cover</f:facet>
 <!--            <h:graphicImage value="/images/#{b.coverPhoto}" width="80"/>-->
-            <h:graphicImage value="/BookStoreUploads/#{b.coverPhoto}" width="80" />
+           <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}" width="80" rendered="#{not empty b.coverPhoto}" />
         </h:column>
 
         <h:column>
