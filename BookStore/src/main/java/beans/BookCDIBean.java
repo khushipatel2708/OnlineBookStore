@@ -43,6 +43,8 @@ public class BookCDIBean implements Serializable {
     private String searchAuthor;
     private String searchBooktype;
 
+    private Collection<Book> searchResults = null;
+
     private boolean editMode = false;
 
     // storage folder on server (must match servlet)
@@ -52,22 +54,52 @@ public class BookCDIBean implements Serializable {
         return "Admin".equalsIgnoreCase(loginBean.getRole());
     }
 
+// Override to return either all books or filtered
     public Collection<Book> getAllBooks() {
-        if (!isAdmin()) return null;
+        if (searchResults != null) {
+            return searchResults;
+        }
         return adminClient.getAllBooks(Collection.class);
     }
 
+    // ========== SEARCH ==========
+    public String searchBooks() {
+
+        searchResults = adminClient.searchBooks(
+                Collection.class,
+                searchAuthor,
+                searchBooktype,
+                searchBookname
+        );
+
+        return null; // stay on same page
+    }
+
+    public String clearSearch() {
+        searchAuthor = "";
+        searchBookname = "";
+        searchBooktype = "";
+        searchResults = null;
+        return null;
+    }
+
     public Collection<Booktype> getAllBooktypes() {
-        if (!isAdmin()) return null;
+        if (!isAdmin()) {
+            return null;
+        }
         return adminClient.getAllBooktypes(Collection.class);
     }
 
     // Save file to uploadFolder; return safe filename or null
     private String saveFile(Part file) {
         try {
-            if (file == null) return null;
+            if (file == null) {
+                return null;
+            }
             String submitted = file.getSubmittedFileName();
-            if (submitted == null || submitted.trim().isEmpty()) return null;
+            if (submitted == null || submitted.trim().isEmpty()) {
+                return null;
+            }
 
             // sanitize filename: replace spaces and remove path parts
             String baseName = new File(submitted).getName().replaceAll("\\s+", "_");
@@ -75,7 +107,9 @@ public class BookCDIBean implements Serializable {
             String fileName = System.currentTimeMillis() + "_" + baseName;
 
             File dir = new File(uploadFolder);
-            if (!dir.exists()) dir.mkdirs();
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
 
             File dest = new File(dir, fileName);
             Files.copy(file.getInputStream(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -88,7 +122,9 @@ public class BookCDIBean implements Serializable {
 
     // helper to produce the public URL path used in JSF (matches servlet mapping)
     private String makePublicPath(String filename) {
-        if (filename == null) return null;
+        if (filename == null) {
+            return null;
+        }
         // this is the path that will be requested and handled by FileServlet
         return "/BookStore/BookStoreUploads/" + filename;
     }
@@ -101,13 +137,17 @@ public class BookCDIBean implements Serializable {
 
     public String editBook(Integer bookId) {
         Book b = adminClient.getBookById(Book.class, bookId.toString());
-        if (b == null) return "BookList.xhtml?faces-redirect=true";
+        if (b == null) {
+            return "BookList.xhtml?faces-redirect=true";
+        }
 
         this.id = b.getId();
         this.bookname = b.getBookname();
         this.authorname = b.getAuthorname();
         this.price = b.getPrice();
-        if (b.getBooktypeId() != null) this.booktypeId = b.getBooktypeId().getId();
+        if (b.getBooktypeId() != null) {
+            this.booktypeId = b.getBooktypeId().getId();
+        }
 
         // show public URL (handled by FileServlet)
         this.coverPreview = (b.getCoverPhoto() != null) ? makePublicPath(b.getCoverPhoto()) : null;
@@ -156,9 +196,15 @@ public class BookCDIBean implements Serializable {
         String img2 = saveFile(frontPagePhoto);
         String img3 = saveFile(lastPagePhoto);
 
-        if (img1 == null) img1 = oldCover;
-        if (img2 == null) img2 = oldFront;
-        if (img3 == null) img3 = oldLast;
+        if (img1 == null) {
+            img1 = oldCover;
+        }
+        if (img2 == null) {
+            img2 = oldFront;
+        }
+        if (img3 == null) {
+            img3 = oldLast;
+        }
 
         Book b = new Book();
         b.setBookname(bookname);
@@ -206,44 +252,111 @@ public class BookCDIBean implements Serializable {
     }
 
     // ===== GETTERS / SETTERS =====
+    public Integer getId() {
+        return id;
+    }
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getBookname() { return bookname; }
-    public void setBookname(String bookname) { this.bookname = bookname; }
+    public String getBookname() {
+        return bookname;
+    }
 
-    public String getAuthorname() { return authorname; }
-    public void setAuthorname(String authorname) { this.authorname = authorname; }
+    public void setBookname(String bookname) {
+        this.bookname = bookname;
+    }
 
-    public BigDecimal getPrice() { return price; }
-    public void setPrice(BigDecimal price) { this.price = price; }
+    public String getAuthorname() {
+        return authorname;
+    }
 
-    public Integer getBooktypeId() { return booktypeId; }
-    public void setBooktypeId(Integer booktypeId) { this.booktypeId = booktypeId; }
+    public void setAuthorname(String authorname) {
+        this.authorname = authorname;
+    }
 
-    public Part getCoverPhoto() { return coverPhoto; }
-    public void setCoverPhoto(Part coverPhoto) { this.coverPhoto = coverPhoto; }
+    public BigDecimal getPrice() {
+        return price;
+    }
 
-    public Part getFrontPagePhoto() { return frontPagePhoto; }
-    public void setFrontPagePhoto(Part frontPagePhoto) { this.frontPagePhoto = frontPagePhoto; }
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 
-    public Part getLastPagePhoto() { return lastPagePhoto; }
-    public void setLastPagePhoto(Part lastPagePhoto) { this.lastPagePhoto = lastPagePhoto; }
+    public Integer getBooktypeId() {
+        return booktypeId;
+    }
 
-    public String getCoverPreview() { return coverPreview; }
-    public String getFrontPreview() { return frontPreview; }
-    public String getLastPreview() { return lastPreview; }
+    public void setBooktypeId(Integer booktypeId) {
+        this.booktypeId = booktypeId;
+    }
 
-    public boolean isEditMode() { return editMode; }
-    public void setEditMode(boolean editMode) { this.editMode = editMode; }
+    public Part getCoverPhoto() {
+        return coverPhoto;
+    }
 
-    public String getSearchBookname() { return searchBookname; }
-    public void setSearchBookname(String searchBookname) { this.searchBookname = searchBookname; }
+    public void setCoverPhoto(Part coverPhoto) {
+        this.coverPhoto = coverPhoto;
+    }
 
-    public String getSearchAuthor() { return searchAuthor; }
-    public void setSearchAuthor(String searchAuthor) { this.searchAuthor = searchAuthor; }
+    public Part getFrontPagePhoto() {
+        return frontPagePhoto;
+    }
 
-    public String getSearchBooktype() { return searchBooktype; }
-    public void setSearchBooktype(String searchBooktype) { this.searchBooktype = searchBooktype; }
+    public void setFrontPagePhoto(Part frontPagePhoto) {
+        this.frontPagePhoto = frontPagePhoto;
+    }
+
+    public Part getLastPagePhoto() {
+        return lastPagePhoto;
+    }
+
+    public void setLastPagePhoto(Part lastPagePhoto) {
+        this.lastPagePhoto = lastPagePhoto;
+    }
+
+    public String getCoverPreview() {
+        return coverPreview;
+    }
+
+    public String getFrontPreview() {
+        return frontPreview;
+    }
+
+    public String getLastPreview() {
+        return lastPreview;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
+
+    public String getSearchBookname() {
+        return searchBookname;
+    }
+
+    public void setSearchBookname(String searchBookname) {
+        this.searchBookname = searchBookname;
+    }
+
+    public String getSearchAuthor() {
+        return searchAuthor;
+    }
+
+    public void setSearchAuthor(String searchAuthor) {
+        this.searchAuthor = searchAuthor;
+    }
+
+    public String getSearchBooktype() {
+        return searchBooktype;
+    }
+
+    public void setSearchBooktype(String searchBooktype) {
+        this.searchBooktype = searchBooktype;
+    }
 }

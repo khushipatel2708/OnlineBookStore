@@ -3,88 +3,88 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-<h:body>
+    <h:body>
 
-<h:form>
+        <h:form>
 
-    <h2>Book List</h2>
-    <br/><!-- comment -->
-        
-        <h:panelGrid columns="6" cellpadding="5">
+            <h2>Book List</h2>
+            <br/><!-- comment -->
 
-    <h:outputLabel value="Book Name:" />
-    <h:inputText value="#{bookBean.searchBookname}" />
+            <h:panelGrid columns="6" cellpadding="5">
 
-    <h:outputLabel value="Author:" />
-    <h:inputText value="#{bookBean.searchAuthor}" />
+                <h:outputLabel value="Book Name:" />
+                <h:inputText value="#{bookBean.searchBookname}" />
 
-    <h:outputLabel value="Book Type:" />
-    <h:inputText value="#{bookBean.searchBooktype}" />
+                <h:outputLabel value="Author:" />
+                <h:inputText value="#{bookBean.searchAuthor}" />
 
-    <h:commandButton value="Search" action="#{bookBean.searchBooks}" />
-    <h:commandButton value="Clear" action="#{bookBean.clearSearch}" />
-</h:panelGrid>
+                <h:outputLabel value="Book Type:" />
+                <h:inputText value="#{bookBean.searchBooktype}" />
 
-<br/>
+                <h:commandButton value="Search" action="#{bookBean.searchBooks}" />
+                <h:commandButton value="Clear" action="#{bookBean.clearSearch}" />
+            </h:panelGrid>
+
+            <br/>
 
 
-    <!-- ADD NEW BOOK BUTTON -->
-    <h:commandButton value="Add New Book"
-                     action="#{bookBean.goToAddPage}" />
-    <br/><br/>
+            <!-- ADD NEW BOOK BUTTON -->
+            <h:commandButton value="Add New Book"
+                             action="#{bookBean.goToAddPage}" />
+            <br/><br/>
 
-    <!-- BOOK TABLE -->
-    <h:dataTable value="#{bookBean.allBooks}" var="b"
-                 border="1" cellpadding="10">
+            <!-- BOOK TABLE -->
+            <h:dataTable value="#{bookBean.allBooks}" var="b"
+                         border="1" cellpadding="10">
 
-        <h:column>
-            <f:facet name="header">ID</f:facet>
-            #{b.id}
-        </h:column>
+                <h:column>
+                    <f:facet name="header">ID</f:facet>
+                        #{b.id}
+                </h:column>
 
-        <h:column>
-            <f:facet name="header">Book Name</f:facet>
-            #{b.bookname}
-        </h:column>
+                <h:column>
+                    <f:facet name="header">Book Name</f:facet>
+                        #{b.bookname}
+                </h:column>
 
-        <h:column>
-            <f:facet name="header">Author</f:facet>
-            #{b.authorname}
-        </h:column>
+                <h:column>
+                    <f:facet name="header">Author</f:facet>
+                        #{b.authorname}
+                </h:column>
 
-        <h:column>
-            <f:facet name="header">Price</f:facet>
-            ₹ #{b.price}
-        </h:column>
+                <h:column>
+                    <f:facet name="header">Price</f:facet>
+                    ₹ #{b.price}
+                </h:column>
 
-        <h:column>
-            <f:facet name="header">Book Type</f:facet>
-            #{b.booktypeId.type}
-        </h:column>
+                <h:column>
+                    <f:facet name="header">Book Type</f:facet>
+                        #{b.booktypeId.type}
+                </h:column>
 
-        <h:column>
-            <f:facet name="header">Cover</f:facet>
-<!--            <h:graphicImage value="/images/#{b.coverPhoto}" width="80"/>-->
-           <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}" width="80" rendered="#{not empty b.coverPhoto}" />
-        </h:column>
+                <h:column>
+                    <f:facet name="header">Cover</f:facet>
+        <!--            <h:graphicImage value="/images/#{b.coverPhoto}" width="80"/>-->
+                    <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}" width="80" rendered="#{not empty b.coverPhoto}" />
+                </h:column>
 
-        <h:column>
-            <f:facet name="header">Actions</f:facet>
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
 
-            <!-- EDIT -->
-            <h:commandButton value="Edit"
-                             action="#{bookBean.editBook(b.id)}"
-                             style="margin-right:10px"/>
+                    <!-- EDIT -->
+                    <h:commandButton value="Edit"
+                                     action="#{bookBean.editBook(b.id)}"
+                                     style="margin-right:10px"/>
 
-            <!-- DELETE -->
-            <h:commandButton value="Delete"
-                             action="#{bookBean.deleteBook(b.id)}"
-                             onclick="return confirm('Are you sure?')"/>
-        </h:column>
+                    <!-- DELETE -->
+                    <h:commandButton value="Delete"
+                                     action="#{bookBean.deleteBook(b.id)}"
+                                     onclick="return confirm('Are you sure?')"/>
+                </h:column>
 
-    </h:dataTable>
+            </h:dataTable>
 
-</h:form>
+        </h:form>
 
-</h:body>
+    </h:body>
 </html>

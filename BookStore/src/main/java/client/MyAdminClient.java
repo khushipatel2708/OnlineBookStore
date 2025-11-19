@@ -19,7 +19,7 @@ import jakarta.ws.rs.core.Response;
  *        client.close();
  * </pre>
  *
- * @author KHUSHI PC
+ * @author 91931
  */
 public class MyAdminClient {
 
@@ -120,6 +120,21 @@ public class MyAdminClient {
         return resource.request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
+    public <T> T searchBooks(Class<T> responseType, String author, String booktype, String bookname) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (author != null) {
+            resource = resource.queryParam("author", author);
+        }
+        if (booktype != null) {
+            resource = resource.queryParam("booktype", booktype);
+        }
+        if (bookname != null) {
+            resource = resource.queryParam("bookname", bookname);
+        }
+        resource = resource.path("books/search");
+        return resource.request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
     public Response updateBooktype(Object requestEntity, String id) throws ClientErrorException {
         return webTarget.path(java.text.MessageFormat.format("booktypes/{0}", new Object[]{id})).request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).put(jakarta.ws.rs.client.Entity.entity(requestEntity, jakarta.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
     }
@@ -161,5 +176,5 @@ public class MyAdminClient {
     public void close() {
         client.close();
     }
-    
+
 }

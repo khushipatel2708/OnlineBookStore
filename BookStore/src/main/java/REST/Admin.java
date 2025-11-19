@@ -21,7 +21,6 @@ public class Admin {
     private AdminSessionBeanLocal adminSessionBean;
 
     // ================= USER CRUD =================
-
     @GET
     @Path("users")
     @Produces(MediaType.APPLICATION_JSON)
@@ -80,9 +79,6 @@ public class Admin {
     }
 
     // ================= CITY CRUD =================
-
-
-
     @GET
     @Path("cities/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -124,7 +120,6 @@ public class Admin {
     }
 
     // ================= BOOKTYPE CRUD =================
-
     @GET
     @Path("booktypes")
     @Produces(MediaType.APPLICATION_JSON)
@@ -138,7 +133,7 @@ public class Admin {
     public Collection<City> getAllCities() {
         return adminSessionBean.getAllCities();
     }
-    
+
     @GET
     @Path("booktypes/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -173,7 +168,6 @@ public class Admin {
     }
 
     // ================= BOOK CRUD =================
-
     @GET
     @Path("books")
     @Produces(MediaType.APPLICATION_JSON)
@@ -231,8 +225,18 @@ public class Admin {
         return Response.ok("{\"status\":\"Book Deleted\"}").build();
     }
 
-    // ================= GROUP CRUD =================
+    @GET
+    @Path("books/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<Book> searchBooks(
+            @QueryParam("bookname") String bookname,
+            @QueryParam("author") String author,
+            @QueryParam("booktype") String booktype
+    ) {
+        return adminSessionBean.searchBooks(bookname, author, booktype);
+    }
 
+    // ================= GROUP CRUD =================
     @GET
     @Path("groups")
     @Produces(MediaType.APPLICATION_JSON)
