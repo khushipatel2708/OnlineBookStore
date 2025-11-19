@@ -26,6 +26,8 @@ public interface AdminSessionBeanLocal {
     void updateUser(Integer id, String fullname, String phone, String username, String email, String password, String status, Integer groupId);
     void deleteUser(Integer id);
     User findUserByUsername(String username);
+    String hashPassword(String password);
+
 
 
     // ---------- Book Type----------

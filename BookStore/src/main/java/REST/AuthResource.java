@@ -19,6 +19,7 @@ public class AuthResource {
     @Inject
     private TokenProvider tokenProvider;
 
+    // --- DTO CLASS ---
     public static class LoginRequest {
         public String username;
         public String password;
@@ -27,32 +28,44 @@ public class AuthResource {
     @POST
     @Path("/login")
     public Response login(LoginRequest request) {
+
+        // Find user from DB
         User user = adminSessionBean.findUserByUsername(request.username);
-
-        if (user != null && user.getPassword().equals(request.password)) {
-            String role = (user.getGroupid() != null)
-                    ? user.getGroupid().getGroupname()
-                    : "ROLE_USER";
-
-            String token = tokenProvider.createTokenWithClaims(
-                    user.getUsername(),
-                    user.getPassword(),
-                    role,
-                    false
-            );
-
-            String jsonResponse = String.format(
-                    "{\"token\":\"%s\", \"username\":\"%s\", \"role\":\"%s\"}",
-                    token, user.getUsername(), role
-            );
-
-            return Response.ok(jsonResponse)
-                    .header("Authorization", "Bearer " + token)
+        if (user == null) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"error\":\"Invalid username or password\"}")
                     .build();
         }
 
-        return Response.status(Response.Status.UNAUTHORIZED)
-                .entity("{\"error\":\"Invalid username or password\"}")
+        // 🔥 HASH input password using EJB method
+        String hashedInput = adminSessionBean.hashPassword(request.password);
+
+        // 🔥 Compare hashed values
+        if (!user.getPassword().equals(hashedInput)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"error\":\"Invalid username or password\"}")
+                    .build();
+        }
+
+        // SUCCESS — generate JWT
+        String role = (user.getGroupid() != null)
+                ? user.getGroupid().getGroupname()
+                : "ROLE_USER";
+
+        String token = tokenProvider.createTokenWithClaims(
+                user.getUsername(),
+                "",      // ❌ DO NOT PUT PASSWORD IN TOKEN
+                role,
+                false
+        );
+
+        String jsonResponse = String.format(
+                "{\"token\":\"%s\", \"username\":\"%s\", \"role\":\"%s\"}",
+                token, user.getUsername(), role
+        );
+
+        return Response.ok(jsonResponse)
+                .header("Authorization", "Bearer " + token)
                 .build();
     }
 }

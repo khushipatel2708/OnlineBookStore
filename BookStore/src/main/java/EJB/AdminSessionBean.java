@@ -49,7 +49,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             u.setPhone(phone);
             u.setUsername(username);
             u.setEmail(email);
-            u.setPassword(password);
+            u.setPassword(hashPassword(password)); // hash the password only ONCE
             u.setStatus(status != null ? status : "Active");
             u.setGroupid(group);
             em.persist(u);
@@ -66,7 +66,10 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             u.setPhone(phone);
             u.setUsername(username);
             u.setEmail(email);
-            u.setPassword(password);
+            if (password != null && !password.trim().isEmpty()) {
+                u.setPassword(hashPassword(password));
+            }
+
             u.setStatus(status);
             u.setGroupid(group);
             em.merge(u);
@@ -321,6 +324,21 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
 
         return q.getResultList();
+    }
+
+    @Override
+    public String hashPassword(String password) {
+        try {
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+            byte[] hash = md.digest(password.getBytes("UTF-8"));
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hash) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

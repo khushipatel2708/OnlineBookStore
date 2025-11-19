@@ -27,77 +27,117 @@ public class LoginBean implements Serializable {
     private String token;
     private String role;
 
-  public String login() {
-    try {
-        User user = adminSessionBean.findUserByUsername(username);
+    public String login() {
+        try {
+            User user = adminSessionBean.findUserByUsername(username);
 
-        if (user != null && user.getPassword().equals(password)) {
+            if (user != null) {
 
-            role = (user.getGroupid() != null)
-                    ? user.getGroupid().getGroupname()
-                    : "User";
+                // 🔹 Hash the input password
+                String hashedInput = adminSessionBean.hashPassword(password);
 
-            token = tokenProvider.createTokenWithClaims(
-                    user.getUsername(),
-                    user.getPassword(),
-                    role,
-                    false
-            );
+                if (user.getPassword().equals(hashedInput)) {
 
-            message = "Login successful! Welcome, " + user.getFullname();
-            errorStatus = "";
+                    role = (user.getGroupid() != null)
+                            ? user.getGroupid().getGroupname()
+                            : "User";
 
-            if (role.equalsIgnoreCase("Admin")) {
-                return "admin.xhtml?faces-redirect=true";
-            } else if (role.equalsIgnoreCase("User")) {
-                return "user.xhtml?faces-redirect=true";
+                    token = tokenProvider.createTokenWithClaims(
+                            user.getUsername(),
+                            "", // don't put password in token
+                            role,
+                            false
+                    );
+
+                    message = "Login successful! Welcome, " + user.getFullname();
+                    errorStatus = "";
+
+                    if (role.equalsIgnoreCase("Admin")) {
+                        return "admin.xhtml?faces-redirect=true";
+                    } else if (role.equalsIgnoreCase("User")) {
+                        return "user.xhtml?faces-redirect=true";
+                    } else {
+                        return "login.xhtml?faces-redirect=true";
+                    }
+
+                } else {
+                    errorStatus = "Invalid username or password!";
+                    message = "";
+                    return null;
+                }
+
             } else {
-                return "login.xhtml?faces-redirect=true";
+                errorStatus = "Invalid username or password!";
+                message = "";
+                return null;
             }
 
-        } else {
-            errorStatus = "Invalid username or password!";
-            message = "";
+        } catch (Exception e) {
+            errorStatus = "Error during login: " + e.getMessage();
+            e.printStackTrace();
             return null;
         }
-
-    } catch (Exception e) {
-        errorStatus = "Error during login: " + e.getMessage();
-        e.printStackTrace();
-        return null;
     }
-}
 
     public String logout() {
-    username = null;
-    password = null;
-    token = null;
-    role = null;
-    message = null;
-    errorStatus = null;
+        username = null;
+        password = null;
+        token = null;
+        role = null;
+        message = null;
+        errorStatus = null;
 
-    FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 
-    return "login.xhtml?faces-redirect=true";  // Correct navigation rule
-}
-
+        return "login.xhtml?faces-redirect=true";  // Correct navigation rule
+    }
 
     // Getters & Setters
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getUsername() {
+        return username;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String getErrorStatus() { return errorStatus; }
-    public void setErrorStatus(String errorStatus) { this.errorStatus = errorStatus; }
+    public String getPassword() {
+        return password;
+    }
 
-    public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public String getToken() { return token; }
-    public void setToken(String token) { this.token = token; }
+    public String getErrorStatus() {
+        return errorStatus;
+    }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public void setErrorStatus(String errorStatus) {
+        this.errorStatus = errorStatus;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }
