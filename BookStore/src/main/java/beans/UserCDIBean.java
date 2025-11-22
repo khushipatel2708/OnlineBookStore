@@ -88,7 +88,7 @@ public class UserCDIBean implements Serializable {
         }
 
         clearForm();
-        return "userList.xhtml?faces-redirect=true";
+        return "login.xhtml?faces-redirect=true";
     }
 
     // ===================== DELETE ======================
