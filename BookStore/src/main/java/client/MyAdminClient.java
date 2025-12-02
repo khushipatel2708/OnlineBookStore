@@ -19,7 +19,7 @@ import jakarta.ws.rs.core.Response;
  *        client.close();
  * </pre>
  *
- * @author 91931
+ * @author KHUSHI PC
  */
 public class MyAdminClient {
 
@@ -40,6 +40,10 @@ public class MyAdminClient {
         WebTarget resource = webTarget;
         resource = resource.path("groups");
         return resource.request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
+    public Response resetPassword(Object requestEntity) throws ClientErrorException {
+        return webTarget.path("reset-password").request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).post(jakarta.ws.rs.client.Entity.entity(requestEntity, jakarta.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
     }
 
     public <T> T getUserById(Class<T> responseType, String id) throws ClientErrorException {
@@ -157,6 +161,10 @@ public class MyAdminClient {
         return webTarget.path("cities").request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).post(jakarta.ws.rs.client.Entity.entity(requestEntity, jakarta.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
     }
 
+    public Response changePassword(Object requestEntity, String userId) throws ClientErrorException {
+        return webTarget.path(java.text.MessageFormat.format("change-password/{0}", new Object[]{userId})).request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).post(jakarta.ws.rs.client.Entity.entity(requestEntity, jakarta.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
+    }
+
     public <T> T getBooktypeById(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("booktypes/{0}", new Object[]{id}));
@@ -176,5 +184,5 @@ public class MyAdminClient {
     public void close() {
         client.close();
     }
-
+    
 }

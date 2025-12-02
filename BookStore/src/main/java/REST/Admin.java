@@ -277,5 +277,50 @@ public class Admin {
         adminSessionBean.removeGroup(id);
         return Response.ok("{\"status\":\"Group Deleted\"}").build();
     }
-    
+
+    @POST
+    @Path("reset-password")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response resetPassword(User user) {
+        if (user.getEmail() == null || user.getPassword() == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Email and New Password required\"}")
+                    .build();
+        }
+
+        adminSessionBean.resetPassword(user.getEmail(), user.getPassword());
+
+        return Response.ok("{\"status\":\"Password Reset Successful\"}").build();
+    }
+
+    @POST
+    @Path("change-password/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changePassword(
+            @PathParam("userId") Integer userId,
+            User user
+    ) {
+        if (user.getPassword() == null || user.getStatus() == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Old and New Password required\"}")
+                    .build();
+        }
+
+        boolean changed = adminSessionBean.changePassword(
+                userId,
+                user.getStatus(), // old password sent in status
+                user.getPassword() // new password sent in password field
+        );
+
+        if (changed) {
+            return Response.ok("{\"status\":\"Password Changed\"}").build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"error\":\"Old password incorrect\"}")
+                    .build();
+        }
+    }
+
 }

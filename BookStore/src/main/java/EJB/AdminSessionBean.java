@@ -337,4 +337,46 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         }
     }
 
+    // ================= RESET PASSWORD (EMAIL) =================
+    @PermitAll
+    @Override
+    public void resetPassword(String email, String newPassword) {
+        try {
+            User user = em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+
+            if (user != null) {
+                user.setPassword(hashPassword(newPassword)); // ALWAYS HASH
+                em.merge(user);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Email not found for reset: " + email);
+        }
+    }
+
+    @PermitAll
+    @Override
+    public boolean changePassword(Integer userId, String oldPassword, String newPassword) {
+
+        User user = em.find(User.class, userId);
+
+        if (user == null) {
+            return false;
+        }
+
+        String hashedOld = hashPassword(oldPassword);
+
+        // check old password match
+        if (!user.getPassword().equals(hashedOld)) {
+            return false;  // old password incorrect
+        }
+
+        // update to new hashed password
+        user.setPassword(hashPassword(newPassword));
+        em.merge(user);
+        return true;
+    }
+
 }

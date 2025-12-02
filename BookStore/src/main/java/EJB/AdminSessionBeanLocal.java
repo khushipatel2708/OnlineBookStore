@@ -27,6 +27,9 @@ public interface AdminSessionBeanLocal {
     void deleteUser(Integer id);
     User findUserByUsername(String username);
     String hashPassword(String password);
+    public void resetPassword(String email, String newPassword);
+public boolean changePassword(Integer userId, String oldPassword, String newPassword);
+
 
 
 
