@@ -1,0 +1,41 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>My Profile</title>
+</h:head>
+
+<h:body>
+
+<h2>My Profile</h2>
+
+<h:form>
+
+    <h:panelGrid columns="2" cellpadding="5">
+
+        <h:outputLabel value="Full Name:" />
+        <h:inputText value="#{profileBean.user.fullname}" required="true" />
+
+        <h:outputLabel value="Phone:" />
+        <h:inputText value="#{profileBean.user.phone}" required="true" />
+
+        <h:outputLabel value="Username:" />
+        <h:inputText value="#{profileBean.user.username}" required="true" />
+
+        <h:outputLabel value="Email:" />
+        <h:inputText value="#{profileBean.user.email}" required="true" />
+
+        <h:outputLabel value="Group (Role):" />
+        <h:inputText value="#{profileBean.user.groupid.groupname}" disabled="true" />
+
+    </h:panelGrid>
+
+    <br/>
+
+    <h:commandButton value="Update Profile" action="#{profileBean.updateProfile}" />
+</h:form>
+
+</h:body>
+
+</html>

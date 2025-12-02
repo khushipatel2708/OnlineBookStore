@@ -23,7 +23,7 @@ public interface AdminSessionBeanLocal {
     Collection<User> getAllUsers();
     User findUserById(Integer id);
     void addUser(String fullname, String phone, String username, String email, String password, String status, Integer groupId);
-    void updateUser(Integer id, String fullname, String phone, String username, String email, String password, String status, Integer groupId);
+    void updateUser(Integer id, String fullname, String phone, String username, String email, String status, Integer groupId);
     void deleteUser(Integer id);
     User findUserByUsername(String username);
     String hashPassword(String password);

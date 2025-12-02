@@ -27,16 +27,20 @@ public class LoginBean implements Serializable {
     private String token;
     private String role;
 
+    private Integer userid;   // 🔹 ADDED THIS FIELD
+
     public String login() {
         try {
             User user = adminSessionBean.findUserByUsername(username);
 
             if (user != null) {
 
-                // 🔹 Hash the input password
                 String hashedInput = adminSessionBean.hashPassword(password);
 
                 if (user.getPassword().equals(hashedInput)) {
+
+                    // 🔹 Store USER ID for later use
+                    this.userid = user.getId();
 
                     role = (user.getGroupid() != null)
                             ? user.getGroupid().getGroupname()
@@ -44,7 +48,7 @@ public class LoginBean implements Serializable {
 
                     token = tokenProvider.createTokenWithClaims(
                             user.getUsername(),
-                            "", // don't put password in token
+                            "",
                             role,
                             false
                     );
@@ -54,21 +58,17 @@ public class LoginBean implements Serializable {
 
                     if (role.equalsIgnoreCase("Admin")) {
                         return "admin.xhtml?faces-redirect=true";
-                    } else if (role.equalsIgnoreCase("User")) {
-                        return "user.xhtml?faces-redirect=true";
                     } else {
-                        return "login.xhtml?faces-redirect=true";
+                        return "user.xhtml?faces-redirect=true";
                     }
 
                 } else {
                     errorStatus = "Invalid username or password!";
-                    message = "";
                     return null;
                 }
 
             } else {
                 errorStatus = "Invalid username or password!";
-                message = "";
                 return null;
             }
 
@@ -79,65 +79,49 @@ public class LoginBean implements Serializable {
         }
     }
 
+
     public String logout() {
+
         username = null;
         password = null;
         token = null;
         role = null;
         message = null;
         errorStatus = null;
+        userid = null;
 
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 
-        return "login.xhtml?faces-redirect=true";  // Correct navigation rule
+        return "login.xhtml?faces-redirect=true";
     }
 
-    // Getters & Setters
-    public String getUsername() {
-        return username;
+    // -----------------------------
+    // GETTERS - SETTERS
+    // -----------------------------
+
+    public Integer getUserid() {   // 🔹 IMPORTANT GETTER
+        return userid;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserid(Integer userid) {
+        this.userid = userid;
     }
 
-    public String getPassword() {
-        return password;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public String getErrorStatus() {
-        return errorStatus;
-    }
+    public String getErrorStatus() { return errorStatus; }
+    public void setErrorStatus(String errorStatus) { this.errorStatus = errorStatus; }
 
-    public void setErrorStatus(String errorStatus) {
-        this.errorStatus = errorStatus;
-    }
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
 
-    public String getMessage() {
-        return message;
-    }
+    public String getToken() { return token; }
+    public void setToken(String token) { this.token = token; }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }

@@ -58,7 +58,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
 
     @PermitAll
     @Override
-    public void updateUser(Integer id, String fullname, String phone, String username, String email, String password, String status, Integer groupId) {
+    public void updateUser(Integer id, String fullname, String phone, String username, String email, String status, Integer groupId) {
         User u = em.find(User.class, id);
         if (u != null) {
             GroupMaster group = em.find(GroupMaster.class, groupId);
@@ -66,10 +66,6 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             u.setPhone(phone);
             u.setUsername(username);
             u.setEmail(email);
-            if (password != null && !password.trim().isEmpty()) {
-                u.setPassword(hashPassword(password));
-            }
-
             u.setStatus(status);
             u.setGroupid(group);
             em.merge(u);

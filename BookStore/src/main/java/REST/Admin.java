@@ -65,7 +65,6 @@ public class Admin {
                 user.getPhone(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getPassword(),
                 user.getStatus(),
                 user.getGroupid().getGroupid()
         );
@@ -278,4 +277,5 @@ public class Admin {
         adminSessionBean.removeGroup(id);
         return Response.ok("{\"status\":\"Group Deleted\"}").build();
     }
+    
 }
