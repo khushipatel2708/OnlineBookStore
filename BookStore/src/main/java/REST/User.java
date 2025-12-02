@@ -1,128 +1,127 @@
 package REST;
 
 import EJB.UserSessionBeanLocal;
+import Entity.Cart;
 import Entity.Shipping;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
 import java.util.Collection;
 
 @Path("user")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 public class User {
 
     @EJB
     private UserSessionBeanLocal userSessionBean;
 
-    // ✅ GET all shipping records
-    // URL: http://localhost:8080/BookStore/resources/user/shipping
+    // ===================== SHIPPING CRUD =====================
+
     @GET
     @Path("shipping")
+    @Produces(MediaType.APPLICATION_JSON)
     public Collection<Shipping> getAllShipping() {
         return userSessionBean.getAllShippings();
     }
 
-    // ✅ GET single shipping by ID
-    // URL: http://localhost:8080/BookStore/resources/user/shipping/{id}
     @GET
     @Path("shipping/{id}")
-    public Shipping getShippingById(@PathParam("id") int id) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Shipping getShippingById(@PathParam("id") Integer id) {
         return userSessionBean.getShippingById(id);
     }
 
-    // ✅ ADD new shipping
-    // URL: http://localhost:8080/BookStore/resources/user/shipping/add
     @POST
-    @Path("shipping/add")
-    public void addShipping(Shipping s) {
+    @Path("shipping")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addShipping(Shipping s) {
+
         userSessionBean.addShipping(
-            s.getUserid().getId(),       // assuming getUserid() returns a User entity
-            s.getCityid() != null ? s.getCityid().getId() : null,
-            s.getName(),
-            s.getPhone(),
-            s.getAddress1(),
-            s.getAddress2(),
-            s.getLandmark(),
-            s.getPincode()
+                s.getUserid().getId(),
+                s.getCityid() != null ? s.getCityid().getId() : null,
+                s.getName(),
+                s.getPhone(),
+                s.getAddress1(),
+                s.getAddress2(),
+                s.getLandmark(),
+                s.getPincode()
         );
+
+        return Response.ok("{\"status\":\"Shipping Added\"}").build();
     }
 
-    // ✅ UPDATE existing shipping
-    // URL: http://localhost:8080/BookStore/resources/user/shipping/update/{id}
     @PUT
-    @Path("shipping/update/{id}")
-    public void updateShipping(@PathParam("id") int id, Shipping s) {
+    @Path("shipping/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateShipping(@PathParam("id") Integer id, Shipping s) {
+
         userSessionBean.updateShipping(
-            id,
-            s.getUserid().getId(),
-            s.getCityid() != null ? s.getCityid().getId() : null,
-            s.getName(),
-            s.getPhone(),
-            s.getAddress1(),
-            s.getAddress2(),
-            s.getLandmark(),
-            s.getPincode()
+                id,
+                s.getUserid().getId(),
+                s.getCityid() != null ? s.getCityid().getId() : null,
+                s.getName(),
+                s.getPhone(),
+                s.getAddress1(),
+                s.getAddress2(),
+                s.getLandmark(),
+                s.getPincode()
         );
+
+        return Response.ok("{\"status\":\"Shipping Updated\"}").build();
     }
-    // ✅ DELETE shipping
-    // URL: http://localhost:8080/BookStore/resources/user/shipping/delete/{id}
+
     @DELETE
-    @Path("shipping/delete/{id}")
-    public void deleteShipping(@PathParam("id") int id) {
+    @Path("shipping/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteShipping(@PathParam("id") Integer id) {
+
         userSessionBean.removeShipping(id);
+        return Response.ok("{\"status\":\"Shipping Deleted\"}").build();
     }
-    
-    // ====================== CART MANAGEMENT =======================
 
-    // ✅ ADD TO CART
-    // URL: http://localhost:8080/BookStore/resources/user/cart/add
-    // METHOD: POST
-    // BODY:
-    // {
-    //   "userId": {"id": 1},
-    //   "bookId": {"id": 3},
-    //   "quantity": 2
-    // }
+    // ===================== CART CRUD =====================
+
     @POST
-    @Path("cart/add")
-    public void addToCart(Entity.Cart cart) {
+    @Path("cart")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addToCart(Cart cart) {
+
         userSessionBean.addToCart(
-            cart.getUserId().getId(),
-            cart.getBookId().getId(),
-            cart.getQuantity()
+                cart.getUserId().getId(),
+                cart.getBookId().getId(),
+                cart.getQuantity()
         );
+
+        return Response.ok("{\"status\":\"Added to Cart\"}").build();
     }
 
-    // ✅ GET ALL CART ITEMS FOR USER
-    // URL: http://localhost:8080/BookStore/resources/user/cart/{userId}
-    // METHOD: GET
     @GET
     @Path("cart/{userId}")
-    public Collection<Entity.Cart> getCartByUser(@PathParam("userId") Integer userId) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<Cart> getCartByUser(@PathParam("userId") Integer userId) {
         return userSessionBean.getCartByUser(userId);
     }
 
-    // ✅ UPDATE CART QUANTITY
-    // URL: http://localhost:8080/BookStore/resources/user/cart/update/{cartId}
-    // METHOD: PUT
-    // BODY:
-    // {
-    //   "quantity": 3
-    // }
     @PUT
-    @Path("cart/update/{cartId}")
-    public void updateCartQuantity(@PathParam("cartId") Integer cartId, Entity.Cart cart) {
+    @Path("cart/{cartId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateCart(@PathParam("cartId") Integer cartId, Cart cart) {
+
         userSessionBean.updateCartQuantity(cartId, cart.getQuantity());
+        return Response.ok("{\"status\":\"Cart Updated\"}").build();
     }
 
-    // ✅ DELETE CART ITEM
-    // URL: http://localhost:8080/BookStore/resources/user/cart/delete/{cartId}
-    // METHOD: DELETE
     @DELETE
-    @Path("cart/delete/{cartId}")
-    public void deleteCartItem(@PathParam("cartId") Integer cartId) {
-        userSessionBean.deleteCartItem(cartId);
-    }
+    @Path("cart/{cartId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCartItem(@PathParam("cartId") Integer cartId) {
 
+        userSessionBean.deleteCartItem(cartId);
+        return Response.ok("{\"status\":\"Cart Item Deleted\"}").build();
+    }
 }
