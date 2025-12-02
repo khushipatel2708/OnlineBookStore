@@ -25,7 +25,7 @@ public class MyAdminClient {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/BookStore/resources";
+    private static final String BASE_URI = "https://localhost:8181/BookStore/resources";
 
     public MyAdminClient() {
         client = jakarta.ws.rs.client.ClientBuilder.newClient();

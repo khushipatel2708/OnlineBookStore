@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets">
+
+<h:head>
+    <title>Books</title>
+
+    <!-- BOOTSTRAP ICONS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+
+    <style>
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            width: 250px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px #ccc;
+            padding: 15px;
+            background: #fff;
+            text-align: center;
+        }
+        .card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .btn-view {
+            background: #007bff;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-cart {
+            background: #28a745;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+<h:form>
+    <h2>Available Books</h2>
+
+    <div class="grid">
+
+        <ui:repeat value="#{bookBean.allBooks}" var="b">
+
+            <div class="card">
+
+                <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}"
+                                rendered="#{not empty b.coverPhoto}" />
+
+                <h3>#{b.bookname}</h3>
+                <p><b>Author:</b> #{b.authorname}</p>
+                <p><b>Price:</b> ₹#{b.price}</p>
+
+                <!-- VIEW DETAILS BUTTON -->
+                <h:commandLink action="#{bookBean.viewDetails(b.id)}"
+                               styleClass="btn-view">
+                    <i class="bi bi-eye"></i> View Details
+                </h:commandLink>
+
+                <!-- ADD TO CART BUTTON -->
+                <a href="#" class="btn-cart">
+                    <i class="bi bi-cart"></i> Add to Cart
+                </a>
+
+            </div>
+
+        </ui:repeat>
+
+    </div>
+
+</h:form>
+
+</h:body>
+</html>

@@ -42,7 +42,7 @@ public class BookCDIBean implements Serializable {
     private String searchBookname;
     private String searchAuthor;
     private String searchBooktype;
-
+private Book selectedBook;
     private Collection<Book> searchResults = null;
 
     private boolean editMode = false;
@@ -54,6 +54,10 @@ public class BookCDIBean implements Serializable {
         return "Admin".equalsIgnoreCase(loginBean.getRole());
     }
 
+    public Book getSelectedBook() {
+    return selectedBook;
+}
+    
 // Override to return either all books or filtered
     public Collection<Book> getAllBooks() {
         if (searchResults != null) {
@@ -250,6 +254,11 @@ public class BookCDIBean implements Serializable {
         frontPreview = null;
         lastPreview = null;
     }
+    
+    public String viewDetails(Integer id) {
+    selectedBook = adminClient.getBookById(Book.class, id.toString());
+    return "ViewDetails.xhtml?faces-redirect=true";
+}
 
     // ===== GETTERS / SETTERS =====
     public Integer getId() {

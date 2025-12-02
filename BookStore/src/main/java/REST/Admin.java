@@ -6,6 +6,7 @@ import Entity.Booktype;
 import Entity.City;
 import Entity.GroupMaster;
 import Entity.User;
+import jakarta.annotation.security.PermitAll;
 
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
@@ -15,6 +16,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.Collection;
 
 @Path("admin")
+@PermitAll
 public class Admin {
 
     @EJB

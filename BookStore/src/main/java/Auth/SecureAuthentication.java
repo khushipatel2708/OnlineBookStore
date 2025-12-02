@@ -61,7 +61,7 @@ AuthenticationStatus status;
             
            // request.getRequestDispatcher("/index.jsp").forward(request, response);              
             
-           response.sendRedirect("index.jsp");
+           response.sendRedirect("index.html");
             return ctx.doNothing();
        
         
@@ -84,19 +84,19 @@ AuthenticationStatus status;
              keepRecord.setPassword(password);
               keepRecord.setPrincipal(result.getCallerPrincipal());
               keepRecord.setRoles(result.getCallerGroups());
-        if(request.getRequestURI().contains("index.jsp"))
+        if(request.getRequestURI().contains("index.html"))
               {
                   request.setAttribute("user", result.getCallerPrincipal().getName());
                   if(result.getCallerGroups().contains("Admin"))
                           {
                               
-                              request.getServletContext().getRequestDispatcher("/admin.jsp").forward(request, response);
+                              request.getServletContext().getRequestDispatcher("/admin.jsf").forward(request, response);
                           return status;
                           }
                   else if(result.getCallerGroups().contains("Supervisor"))
                           {
                               
-                              request.getServletContext().getRequestDispatcher("/users.jsp").forward(request, response);
+                              request.getServletContext().getRequestDispatcher("/user.jsf").forward(request, response);
                           return status;
                           }
                   
@@ -107,7 +107,7 @@ AuthenticationStatus status;
           else
           {
               request.setAttribute("error", "User Name and Password do not match with our records ..");
-              request.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+              request.getServletContext().getRequestDispatcher("/index.html").forward(request, response);
               return ctx.doNothing();
           }
       }
