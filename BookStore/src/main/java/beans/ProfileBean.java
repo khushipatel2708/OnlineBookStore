@@ -16,24 +16,21 @@ public class ProfileBean implements Serializable {
     private LoginBean loginBean;
 
     private MyAdminClient client = new MyAdminClient();
-
-    private User user;  // Profile data
+    private User user;
 
     @PostConstruct
     public void init() {
-        loadProfile();
+        // optional, in case user returns to page later
+        if (loginBean != null && loginBean.getUserid() != null) {
+            loadProfile();
+        }
     }
 
     public void loadProfile() {
         try {
-
             if (loginBean != null && loginBean.getUserid() != null) {
-
-                System.out.println("Loading profile for User ID: " + loginBean.getUserid());
-
                 user = client.getUserById(User.class, loginBean.getUserid().toString());
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,17 +38,20 @@ public class ProfileBean implements Serializable {
 
     public String updateProfile() {
         try {
-            client.updateUser(user, user.getId().toString());
-
+            if (user != null && user.getId() != null) {
+                client.updateUser(user, user.getId().toString());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return "profile.xhtml?faces-redirect=true";
     }
 
-    // GETTER - SETTER
     public User getUser() {
+        if (user == null) {
+            loadProfile();
+            if (user == null) user = new User();
+        }
         return user;
     }
 

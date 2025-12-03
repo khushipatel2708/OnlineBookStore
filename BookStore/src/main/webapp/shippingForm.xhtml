@@ -1,44 +1,135 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="jakarta.faces.facelets">
+
 <h:head>
     <title>Shipping Information</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .sticky-header-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .shipping-container {
+            max-width: 500px;
+            margin: 60px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .shipping-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .shipping-header h2 {
+            color: #0066cc;
+            font-weight: 700;
+        }
+
+        .form-label {
+            font-weight: 500;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        .btn-shipping {
+            background-color: #0066cc;
+            color: white;
+            font-weight: 600;
+            border-radius: 8px;
+            width: 100%;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-shipping:hover {
+            background-color: #3385ff;
+            transform: translateY(-2px);
+        }
+
+        .messages {
+            margin-top: 15px;
+            color: red;
+            text-align: center;
+            font-weight: 500;
+        }
+    </style>
 </h:head>
 
 <h:body>
 
-    <h:form>
+    <!-- Include Header -->
+    <div class="sticky-header-wrapper">
+        <ui:include src="/header.xhtml" />
+    </div>
 
-        <h2>Shipping Details</h2>
+    <div class="shipping-container">
+        <div class="shipping-header">
+            <h2><i class="bi bi-truck me-2"></i>Shipping Details</h2>
+            <p class="text-muted">Manage your delivery address information.</p>
+        </div>
 
-        <h:panelGrid columns="2" cellpadding="5">
+        <h:form>
 
-            <h:outputLabel value="Full Name:" />
-            <h:inputText value="#{shippingBean.shipping.name}" required="true" />
+            <div class="mb-3">
+                <h:outputLabel value="Full Name:" styleClass="form-label"/>
+                <h:inputText value="#{shippingBean.shipping.name}" required="true" styleClass="form-control"/>
+            </div>
 
-            <h:outputLabel value="Phone:" />
-            <h:inputText value="#{shippingBean.shipping.phone}" required="true" />
+            <div class="mb-3">
+                <h:outputLabel value="Phone:" styleClass="form-label"/>
+                <h:inputText value="#{shippingBean.shipping.phone}" required="true" styleClass="form-control"/>
+            </div>
 
-            <h:outputLabel value="Address Line 1:" />
-            <h:inputText value="#{shippingBean.shipping.address1}" required="true" />
+            <div class="mb-3">
+                <h:outputLabel value="Address Line 1:" styleClass="form-label"/>
+                <h:inputText value="#{shippingBean.shipping.address1}" required="true" styleClass="form-control"/>
+            </div>
 
-            <h:outputLabel value="Address Line 2:" />
-            <h:inputText value="#{shippingBean.shipping.address2}" />
+            <div class="mb-3">
+                <h:outputLabel value="Address Line 2:" styleClass="form-label"/>
+                <h:inputText value="#{shippingBean.shipping.address2}" styleClass="form-control"/>
+            </div>
 
-            <h:outputLabel value="Landmark:" />
-            <h:inputText value="#{shippingBean.shipping.landmark}" />
+            <div class="mb-3">
+                <h:outputLabel value="Landmark:" styleClass="form-label"/>
+                <h:inputText value="#{shippingBean.shipping.landmark}" styleClass="form-control"/>
+            </div>
 
-            <h:outputLabel value="Pincode:" />
-            <h:inputText value="#{shippingBean.shipping.pincode}" required="true" />
+            <div class="mb-3">
+                <h:outputLabel value="Pincode:" styleClass="form-label"/>
+                <h:inputText value="#{shippingBean.shipping.pincode}" required="true" styleClass="form-control"/>
+            </div>
 
-        </h:panelGrid>
+            <h:commandButton 
+                value="#{shippingBean.isExisting ? 'Update Address' : 'Save Address'}"
+                action="#{shippingBean.saveShipping}" 
+                styleClass="btn btn-shipping btn-primary"/>
 
-        <h:commandButton 
-            value="#{shippingBean.isExisting ? 'Update Address' : 'Save Address'}"
-            action="#{shippingBean.saveShipping}" 
-            style="margin-top: 20px;" />
+            <h:messages globalOnly="true" styleClass="messages" />
 
-    </h:form>
+        </h:form>
+    </div>
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </h:body>
 </html>
