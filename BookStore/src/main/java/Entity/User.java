@@ -4,6 +4,7 @@
  */
 package Entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -186,6 +187,7 @@ public class User implements Serializable {
     }
 
     @XmlTransient
+    @JsonbTransient
     public Collection<Cart> getCartCollection() {
         return cartCollection;
     }

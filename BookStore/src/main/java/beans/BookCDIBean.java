@@ -2,6 +2,8 @@ package beans;
 
 import Entity.Book;
 import Entity.Booktype;
+import Entity.Cart;
+import Entity.User;
 import client.MyAdminClient;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
@@ -42,7 +44,7 @@ public class BookCDIBean implements Serializable {
     private String searchBookname;
     private String searchAuthor;
     private String searchBooktype;
-private Book selectedBook;
+    private Book selectedBook;
     private Collection<Book> searchResults = null;
 
     private boolean editMode = false;
@@ -55,9 +57,9 @@ private Book selectedBook;
     }
 
     public Book getSelectedBook() {
-    return selectedBook;
-}
-    
+        return selectedBook;
+    }
+
 // Override to return either all books or filtered
     public Collection<Book> getAllBooks() {
         if (searchResults != null) {
@@ -254,11 +256,41 @@ private Book selectedBook;
         frontPreview = null;
         lastPreview = null;
     }
-    
+
     public String viewDetails(Integer id) {
-    selectedBook = adminClient.getBookById(Book.class, id.toString());
-    return "ViewDetails.xhtml?faces-redirect=true";
-}
+        selectedBook = adminClient.getBookById(Book.class, id.toString());
+        return "ViewDetails.xhtml?faces-redirect=true";
+    }
+
+    public String addToCart(Integer bookId) {
+
+        try {
+            Integer userId = loginBean.getUserid(); // logged-in user
+
+            // Create REST client call
+            client.UserClient userClient = new client.UserClient();
+
+            Cart c = new Cart();
+
+            User u = new User();
+            u.setId(userId);
+
+            Book b = new Book();
+            b.setId(bookId);
+
+            c.setUserId(u);
+            c.setBookId(b);
+            c.setQuantity(1);
+
+            userClient.addToCart(c);   // REST call
+
+            return null; // stay on same page
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     // ===== GETTERS / SETTERS =====
     public Integer getId() {
