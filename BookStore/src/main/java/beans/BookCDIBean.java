@@ -90,11 +90,9 @@ public class BookCDIBean implements Serializable {
     }
 
     public Collection<Booktype> getAllBooktypes() {
-        if (!isAdmin()) {
-            return null;
-        }
-        return adminClient.getAllBooktypes(Collection.class);
-    }
+    return adminClient.getAllBooktypes(Collection.class);
+}
+
 
     // Save file to uploadFolder; return safe filename or null
     private String saveFile(Part file) {

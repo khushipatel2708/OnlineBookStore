@@ -4,56 +4,119 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
-      xmlns:ui="jakarta.faces.facelets">
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core">
 
     <h:head>
         <title>Books</title>
 
-        <!-- BOOTSTRAP ICONS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+              rel="stylesheet" />
+
         <link rel="stylesheet"
-              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"/>
 
         <style>
-            .grid {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 20px;
+            body {
+                background: #f5f7fb;
+                font-family: 'Segoe UI', sans-serif;
             }
-            .card {
-                width: 250px;
-                border-radius: 8px;
-                box-shadow: 0 0 8px #ccc;
-                padding: 15px;
-                background: #fff;
-                text-align: center;
+
+            .sidebar-card {
+                padding: 20px;
+                border-radius: 12px;
+                background: #ffffff;
+                box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+                height: fit-content;
             }
-            .card img {
+
+            .list-group-item {
+                border: none;
+                padding: 8px 10px;
+                cursor: pointer;
+                color: #222;
+            }
+
+            .list-group-item.active-category {
+                background-color: #007bff !important;
+                color: white !important;
+                font-weight: 600;
+                border-radius: 6px;
+                margin-bottom: 5px;
+            }
+
+            .list-group-item:not(.active-category):hover {
+                background-color: #e9ecef;
+            }
+
+            .book-card {
+                border: none;
+                border-radius: 12px;
+                box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+                transition: transform 0.2s, box-shadow 0.2s;
+                height: 100%;
+            }
+
+            .book-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            }
+
+            .book-card img {
                 width: 100%;
                 height: 250px;
                 object-fit: cover;
-                border-radius: 6px;
-                margin-bottom: 10px;
+                border-radius: 8px;
+                margin-bottom: 12px;
             }
+
+            .price-new {
+                color: #007bff;
+                font-weight: bold;
+                font-size: 1.1rem;
+            }
+
+            .rating-stars {
+                color: #ffc107;
+                font-size: 0.9rem;
+            }
+
+            .rating-count {
+                color: #6c757d;
+                font-size: 0.85rem;
+                margin-left: 5px;
+            }
+
+            /* ✔ FIXED BUTTON  */
+            .btn-add-to-cart {
+                width: 100%;
+                padding: 10px;
+                border-radius: 6px;
+                font-weight: 600;
+                background-color: #007bff;
+                border: none;
+                color: white;
+            }
+
+            .btn-add-to-cart:hover {
+                background-color: #0056b3;
+            }
+
             .btn-view {
-                background: #007bff;
-                color: white;
-                padding: 8px 12px;
-                border-radius: 6px;
-                text-decoration: none;
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
+                display: none;
             }
-            .btn-cart {
-                background: #28a745;
-                color: white;
-                padding: 8px 12px;
-                border-radius: 6px;
-                text-decoration: none;
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-                margin-top: 8px;
+
+            .book-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                overflow: hidden;
+                margin-bottom: 5px;
+            }
+
+            .book-author {
+                font-size: 0.9rem;
+                color: #6c757d;
+                margin-bottom: 10px;
             }
         </style>
     </h:head>
@@ -62,44 +125,120 @@
 
         <h:form>
 
-            <h:commandButton value="View Cart" action="cartList.xhtml?faces-redirect=true"/>
+            <ui:include src="/header.xhtml"/>
 
-            <h2>Available Books</h2>
+            <div class="container-fluid py-4">
 
-            <div class="grid">
+                <div class="row gx-5">
 
-                <ui:repeat value="#{bookBean.allBooks}" var="b">
+                    <div class="col-lg-3">
+                        <div class="sidebar-card sticky-top" style="top: 20px;">
 
-                    <div class="card">
+                            <h5 class="fw-bold mb-3 text-muted">Filters</h5>
 
-                        <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}"
-                                        rendered="#{not empty b.coverPhoto}" />
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Search</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="bi bi-search"></i>
+                                    </span>
 
-                        <h3>#{b.bookname}</h3>
-                        <p><b>Author:</b> #{b.authorname}</p>
-                        <p><b>Price:</b> ₹#{b.price}</p>
+                                    <h:inputText id="searchBook"
+                                                 value="#{bookBean.searchBookname}"
+                                                 styleClass="form-control border-start-0"
+                                                 title="Press Enter to search" />
+                                </div>
+                            </div>
 
-                        <!-- VIEW DETAILS BUTTON -->
-                        <h:commandLink action="#{bookBean.viewDetails(b.id)}"
-                                       styleClass="btn-view">
-                            <i class="bi bi-eye"></i> View Details
-                        </h:commandLink>
+                            <div class="mb-4">
+                                <h5 class="fw-bold mb-3 text-muted">Category</h5>
 
-                        <!-- ADD TO CART BUTTON -->
-                        <h:commandButton value="Add to Cart"
-                                         styleClass="btn-cart"
-                                         action="#{cartBean.addToCart(b.id)}">
-                        </h:commandButton>
+                                <div class="list-group list-group-flush">
 
+                                    <h:commandLink action="#{bookBean.clearSearch}"
+                                                   styleClass="list-group-item active-category">
+                                        <i class="bi bi-list me-2"></i> All Categories
+                                    </h:commandLink>
+
+                                    <ui:repeat value="#{bookBean.allBooktypes}" var="t">
+                                        <h:commandLink styleClass="list-group-item list-group-item-action"
+                                                       action="#{bookBean.searchBooks}">
+                                            <f:setPropertyActionListener
+                                                target="#{bookBean.searchBooktype}"
+                                                value="#{t.type}" />
+                                            <h:outputText value="#{t.type}" />
+                                        </h:commandLink>
+                                    </ui:repeat>
+
+                                </div>
+                            </div>
+
+                            <h:commandLink value="Clear Filter"
+                                           styleClass="text-danger fw-bold d-block text-decoration-none mt-3"
+                                           action="#{bookBean.clearSearch}" />
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-9">
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
+
+                            <ui:repeat value="#{bookBean.allBooks}" var="b">
+
+                                <div class="col">
+                                    <div class="card book-card p-3">
+
+                                        <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}"
+                                                        rendered="#{not empty b.coverPhoto}"
+                                                        styleClass="card-img-top"/>
+
+                                        <div class="card-body p-0 d-flex flex-column">
+                                            <h3 class="book-title">#{b.bookname}</h3>
+
+                                            <div class="book-author">
+                                                by <span class="fw-bold">#{b.authorname}</span>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="price-new">₹#{b.price}</span>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <span class="rating-stars">
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <i class="bi bi-star-fill"></i>
+                                                    <i class="bi bi-star-half"></i>
+                                                </span>
+                                                <span class="rating-count">(#{b.rating})</span>
+                                            </div>
+
+                                           <h:commandButton value="Add to Cart"
+                 styleClass="btn-add-to-cart"
+                 action="#{cartBean.addToCart}">
+    <f:param name="bookId" value="#{b.id}" />
+    <f:ajax render="@form" />
+</h:commandButton>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </ui:repeat>
+
+                        </div>
 
                     </div>
 
-                </ui:repeat>
-
+                </div>
             </div>
 
         </h:form>
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     </h:body>
 </html>
-

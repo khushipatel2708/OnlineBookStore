@@ -1,45 +1,82 @@
 package beans;
 
-
+import EJB.UserSessionBeanLocal;
 import Entity.Cart;
 import Entity.User;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-
-import EJB.UserSessionBeanLocal;
-import beans.LoginBean;
+import java.util.Map;
 
 @Named("cartBean")
 @SessionScoped
 public class CartBean implements Serializable {
 
     @EJB
-    private UserSessionBeanLocal cartSession;
+    private UserSessionBeanLocal cartSession; // your EJB
 
     @Inject
-    private LoginBean loginBean;
+    private LoginBean loginBean; // must provide getLoggedInUser() or getUserid()
 
-    public void addToCart(int bookId) {
-        User logged = loginBean.getLoggedInUser();
-        if (logged != null) {
-            cartSession.addToCart(logged.getId(), bookId);
+    // --- Add to cart (reads f:param bookId) ---
+    public String addToCart() {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+        String bookIdStr = params.get("bookId");
+
+        if (bookIdStr == null || bookIdStr.trim().isEmpty()) {
+            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No book selected.", null));
+            return null;
         }
+
+        try {
+            int bookId = Integer.parseInt(bookIdStr);
+
+            // Get logged-in user either by userid or User object from LoginBean
+            User loggedUser = loginBean.getLoggedInUser(); // prefer this method
+            Integer userId = null;
+            if (loggedUser != null) {
+                userId = loggedUser.getId();
+            } else if (loginBean.getUserid() != null) { // fallback to userid field if you have it
+                userId = loginBean.getUserid();
+            }
+
+            if (userId == null) {
+                // not logged in — redirect to login (or show message)
+                fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Please login to add to cart.", null));
+                // optional: redirect
+                // fc.getExternalContext().redirect("login.xhtml");
+                return null;
+            }
+
+            // call EJB to add
+            cartSession.addToCart(userId, bookId);
+
+            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Added to cart.", null));
+        } catch (NumberFormatException ex) {
+            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid book id.", null));
+        } catch (Exception ex) {
+            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Could not add to cart: " + ex.getMessage(), null));
+            ex.printStackTrace();
+        }
+        return null; // stay on same page
     }
 
+    // --- helper to return cart items if you need it in view ---
     public List<Cart> getCartItems() {
-        User logged = loginBean.getLoggedInUser();
-        if (logged != null) {
-            return cartSession.getCartItems(logged.getId());
+        User loggedUser = loginBean.getLoggedInUser();
+        if (loggedUser != null) {
+            return cartSession.getCartItems(loggedUser.getId());
         }
         return null;
     }
 
+    // remove / update methods (optional)
     public void removeFromCart(int cartId) {
         cartSession.removeFromCart(cartId);
     }
@@ -51,16 +88,15 @@ public class CartBean implements Serializable {
     public void decreaseQuantity(int cartId) {
         cartSession.updateQuantity(cartId, -1);
     }
+    public int getCartCount() {
+    User loggedUser = loginBean.getLoggedInUser();
 
-    // NEW — REQUIRED FOR cartList.xhtml
-//    public double getTotalPrice() {
-//        double total = 0.0;
-//        List<Cart> items = getCartItems();
-//        if (items != null) {
-//            for (Cart c : items) {
-//                total += c.getBookId().getPrice() * c.getQuantity();
-//            }
-//        }
-//        return total;
-//    }
+    if (loggedUser != null) {
+        List<Cart> list = cartSession.getCartItems(loggedUser.getId());
+        return list != null ? list.size() : 0;
+    }
+
+    return 0;
+}
+
 }
