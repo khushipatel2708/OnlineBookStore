@@ -45,13 +45,17 @@ public class PaymentBean implements Serializable {
     }
 
     public BigDecimal getTotalAmount() {
-        if (totalAmount == null && getCartItems() != null) {
-            totalAmount = getCartItems().stream()
-                    .map(c -> c.getBookId().getPrice().multiply(BigDecimal.valueOf(c.getQuantity())))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-        }
-        return totalAmount;
+    if (totalAmount == null && getCartItems() != null) {
+        totalAmount = getCartItems().stream()
+                .map(c -> c.getBookId().getPrice().multiply(BigDecimal.valueOf(c.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // ➕ Add delivery charge ₹30
+        totalAmount = totalAmount.add(BigDecimal.valueOf(30));
     }
+    return totalAmount;
+}
+
 
     // ---------------- PayU Payment ----------------
     private String formatAmount(BigDecimal amt) {
@@ -104,8 +108,8 @@ public class PaymentBean implements Serializable {
         String txnid = "TXN" + System.currentTimeMillis();
         String hash = generateHash(txnid);
 
-        String surl = "http://localhost:8080/OnlineBookStore/success.xhtml";
-        String furl = "http://localhost:8080/OnlineBookStore/failure.xhtml";
+        String surl = "https://localhost:8181/BookStore/success.xhtml";
+        String furl = "https://localhost:8181/BookStore/failure.xhtml";
 
         HttpServletResponse response =
             (HttpServletResponse) FacesContext.getCurrentInstance()
