@@ -7,11 +7,13 @@ package EJB;
 import Entity.Book;
 import Entity.Cart;
 import Entity.City;
+import Entity.Payment;
 import Entity.Shipping;
 import Entity.User;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
@@ -173,4 +175,15 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
     }
 
+     @Override
+    public void addPayment(User user, Book book, String paymentMethod, BigDecimal amount, String phone, String status) {
+        Payment payment = new Payment();
+        payment.setUserId(user);
+        payment.setBookId(book);
+        payment.setPaymentMethod(paymentMethod);
+        payment.setAmount(amount);
+        payment.setPhone(phone);
+        payment.setStatus(status);
+        em.persist(payment);
+    }
 }

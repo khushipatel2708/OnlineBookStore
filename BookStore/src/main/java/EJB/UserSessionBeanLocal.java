@@ -4,9 +4,12 @@
  */
 package EJB;
 
+import Entity.Book;
 import Entity.Cart;
 import Entity.Shipping;
+import Entity.User;
 import jakarta.ejb.Local;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,7 +38,7 @@ public interface UserSessionBeanLocal {
     void removeFromCart(int cartId);
     void updateQuantity(int cartId, int change);
     
-    
+      void addPayment(User user, Book book, String paymentMethod, BigDecimal amount, String phone, String status);
     
 
 }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+<h:head>
+    <title>Online Payment</title>
+</h:head>
+<h:body>
+    <h:form>
+
+        <h2 style="text-align:center;">Online Payment</h2>
+
+        <h:panelGrid columns="2" style="margin:auto;">
+            <h:outputLabel value="Phone Number:"/>
+            <h:inputText value="#{paymentBean.phone}" required="true" />
+
+            <h:outputLabel value="Amount (₹):"/>
+            <h:outputText value="#{paymentBean.totalAmount}" />
+        </h:panelGrid>
+
+        <h:commandButton value="Pay Now" action="#{paymentBean.makePayment}" style="margin-top:20px;"/>
+        
+    </h:form>
+</h:body>
+</html>
