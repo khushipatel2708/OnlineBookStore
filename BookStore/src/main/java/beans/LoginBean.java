@@ -27,20 +27,22 @@ public class LoginBean implements Serializable {
     private String token;
     private String role;
 
-    private Integer userid;   // 🔹 ADDED THIS FIELD
+    private Integer userid;
+
+    // ⭐ NEW FIELD
+    private User loggedInUser;   
 
     public String login() {
         try {
             User user = adminSessionBean.findUserByUsername(username);
 
             if (user != null) {
-
                 String hashedInput = adminSessionBean.hashPassword(password);
 
                 if (user.getPassword().equals(hashedInput)) {
 
-                    // 🔹 Store USER ID for later use
                     this.userid = user.getId();
+                    this.loggedInUser = user;   // ⭐ STORE FULL USER OBJECT
 
                     role = (user.getGroupid() != null)
                             ? user.getGroupid().getGroupname()
@@ -79,7 +81,6 @@ public class LoginBean implements Serializable {
         }
     }
 
-
     public String logout() {
 
         username = null;
@@ -89,23 +90,32 @@ public class LoginBean implements Serializable {
         message = null;
         errorStatus = null;
         userid = null;
+        loggedInUser = null;  // ⭐ CLEAR SESSION USER
 
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 
         return "login.xhtml?faces-redirect=true";
     }
 
-    // -----------------------------
-    // GETTERS - SETTERS
-    // -----------------------------
-
-    public Integer getUserid() {   // 🔹 IMPORTANT GETTER
-        return userid;
+    // ⭐ NEW METHOD: Check if user is logged in
+    public boolean isLoggedIn() {
+        return loggedInUser != null;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    // ⭐ GETTER for full user object
+    public User getLoggedInUser() {
+        return loggedInUser;
     }
+
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+    }
+
+    // -----------------------------  
+    // GETTERS - SETTERS  
+    // -----------------------------
+    public Integer getUserid() { return userid; }
+    public void setUserid(Integer userid) { this.userid = userid; }
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

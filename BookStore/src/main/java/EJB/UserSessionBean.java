@@ -13,6 +13,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -99,8 +100,8 @@ public class UserSessionBean implements UserSessionBeanLocal {
                 .setParameter("userId", userId)
                 .getResultList();
     }
-    
-     // ✅ Delete shipping
+
+    // ✅ Delete shipping
     @Override
     public void removeShipping(Integer id) {
         Shipping s = em.find(Shipping.class, id);
@@ -108,64 +109,67 @@ public class UserSessionBean implements UserSessionBeanLocal {
             em.remove(s);
         }
     }
-    
-    
-    // ================= CART OPERATIONS ==================
 
+    // ================= CART OPERATIONS ==================
     @Override
-    public void addToCart(Integer userId, Integer bookId, Integer quantity) {
+    public void addToCart(int userId, int bookId) {
         User user = em.find(User.class, userId);
         Book book = em.find(Book.class, bookId);
 
         if (user != null && book != null) {
-            // Check if the item already exists in the cart
-            Cart existingCart = null;
-            try {
-                existingCart = em.createQuery(
-                        "SELECT c FROM Cart c WHERE c.userId.id = :userId AND c.bookId.id = :bookId", Cart.class)
-                        .setParameter("userId", userId)
-                        .setParameter("bookId", bookId)
-                        .getSingleResult();
-            } catch (Exception e) {
-                // no existing item found
-            }
 
-            if (existingCart != null) {
-                // update quantity
-                existingCart.setQuantity(existingCart.getQuantity() + quantity);
-                em.merge(existingCart);
+            // FIXED QUERY ---------------------- vvvvvvvvvvvvvvvvvvvvv
+            List<Cart> existing = em.createQuery(
+                    "SELECT c FROM Cart c WHERE c.userId.id = :uid AND c.bookId.id = :bid", Cart.class)
+                    .setParameter("uid", userId)
+                    .setParameter("bid", bookId)
+                    .getResultList();
+            // FIXED QUERY ---------------------- ^^^^^^^^^^^^^^^^^^^^^
+
+            if (!existing.isEmpty()) {
+                Cart cart = existing.get(0);
+                cart.setQuantity(cart.getQuantity() + 1);
+                em.merge(cart);
             } else {
-                // create new cart entry
-                Cart c = new Cart();
-                c.setUserId(user);
-                c.setBookId(book);
-                c.setQuantity(quantity);
-                em.persist(c);
+                Cart cart = new Cart();
+                cart.setUserId(user);
+                cart.setBookId(book);
+                cart.setQuantity(1);
+                em.persist(cart);
             }
         }
     }
 
     @Override
-    public Collection<Cart> getCartByUser(Integer userId) {
-        return em.createQuery("SELECT c FROM Cart c WHERE c.userId.id = :userId", Cart.class)
-                .setParameter("userId", userId)
+    public List<Cart> getCartItems(int userId) {
+
+        // FIXED QUERY ---------------------- vvvvvvvvvvvvvvvvvvvvv
+        return em.createQuery(
+                "SELECT c FROM Cart c WHERE c.userId.id = :uid", Cart.class)
+                .setParameter("uid", userId)
                 .getResultList();
+        // FIXED QUERY ---------------------- ^^^^^^^^^^^^^^^^^^^^^
     }
 
     @Override
-    public void updateCartQuantity(Integer cartId, Integer quantity) {
-        Cart c = em.find(Cart.class, cartId);
-        if (c != null && quantity > 0) {
-            c.setQuantity(quantity);
-            em.merge(c);
+    public void removeFromCart(int cartId) {
+        Cart cart = em.find(Cart.class, cartId);
+        if (cart != null) {
+            em.remove(cart);
         }
     }
 
     @Override
-    public void deleteCartItem(Integer cartId) {
-        Cart c = em.find(Cart.class, cartId);
-        if (c != null) {
-            em.remove(c);
+    public void updateQuantity(int cartId, int change) {
+        Cart cart = em.find(Cart.class, cartId);
+        if (cart != null) {
+            int newQty = cart.getQuantity() + change;
+            if (newQty <= 0) {
+                em.remove(cart);
+            } else {
+                cart.setQuantity(newQty);
+                em.merge(cart);
+            }
         }
     }
 

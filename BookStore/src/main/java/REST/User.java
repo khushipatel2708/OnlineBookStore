@@ -82,46 +82,46 @@ public class User {
         return Response.ok("{\"status\":\"Shipping Deleted\"}").build();
     }
 
-    // ===================== CART CRUD =====================
-
-    @POST
-    @Path("cart")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addToCart(Cart cart) {
-
-        userSessionBean.addToCart(
-                cart.getUserId().getId(),
-                cart.getBookId().getId(),
-                cart.getQuantity()
-        );
-
-        return Response.ok("{\"status\":\"Added to Cart\"}").build();
-    }
-
-    @GET
-    @Path("cart/{userId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Collection<Cart> getCartByUser(@PathParam("userId") Integer userId) {
-        return userSessionBean.getCartByUser(userId);
-    }
-
-    @PUT
-    @Path("cart/{cartId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateCart(@PathParam("cartId") Integer cartId, Cart cart) {
-
-        userSessionBean.updateCartQuantity(cartId, cart.getQuantity());
-        return Response.ok("{\"status\":\"Cart Updated\"}").build();
-    }
-
-    @DELETE
-    @Path("cart/{cartId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteCartItem(@PathParam("cartId") Integer cartId) {
-
-        userSessionBean.deleteCartItem(cartId);
-        return Response.ok("{\"status\":\"Cart Item Deleted\"}").build();
-    }
+//    // ===================== CART CRUD =====================
+//
+//    @POST
+//    @Path("cart")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response addToCart(Cart cart) {
+//
+//        userSessionBean.addToCart(
+//                cart.getUserId().getId(),
+//                cart.getBookId().getId(),
+//                cart.getQuantity()
+//        );
+//
+//        return Response.ok("{\"status\":\"Added to Cart\"}").build();
+//    }
+//
+//    @GET
+//    @Path("cart/{userId}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Collection<Cart> getCartByUser(@PathParam("userId") Integer userId) {
+//        return userSessionBean.getCartByUser(userId);
+//    }
+//
+//    @PUT
+//    @Path("cart/{cartId}")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response updateCart(@PathParam("cartId") Integer cartId, Cart cart) {
+//
+//        userSessionBean.updateCartQuantity(cartId, cart.getQuantity());
+//        return Response.ok("{\"status\":\"Cart Updated\"}").build();
+//    }
+//
+//    @DELETE
+//    @Path("cart/{cartId}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response deleteCartItem(@PathParam("cartId") Integer cartId) {
+//
+//        userSessionBean.deleteCartItem(cartId);
+//        return Response.ok("{\"status\":\"Cart Item Deleted\"}").build();
+//    }
 }

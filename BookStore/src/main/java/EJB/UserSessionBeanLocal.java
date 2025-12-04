@@ -8,6 +8,7 @@ import Entity.Cart;
 import Entity.Shipping;
 import jakarta.ejb.Local;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -28,11 +29,11 @@ public interface UserSessionBeanLocal {
     Collection<Shipping> getShippingByUser(Integer userId);
     
     
-    // ========== CART ==========
-    void addToCart(Integer userId, Integer bookId, Integer quantity);
-    Collection<Cart> getCartByUser(Integer userId);
-    void updateCartQuantity(Integer cartId, Integer quantity);
-    void deleteCartItem(Integer cartId);
+   //cart
+    void addToCart(int userId, int bookId);
+    List<Cart> getCartItems(int userId);
+    void removeFromCart(int cartId);
+    void updateQuantity(int cartId, int change);
     
     
     
