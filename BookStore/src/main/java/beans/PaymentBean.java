@@ -45,17 +45,16 @@ public class PaymentBean implements Serializable {
     }
 
     public BigDecimal getTotalAmount() {
-    if (totalAmount == null && getCartItems() != null) {
-        totalAmount = getCartItems().stream()
-                .map(c -> c.getBookId().getPrice().multiply(BigDecimal.valueOf(c.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (totalAmount == null && getCartItems() != null) {
+            totalAmount = getCartItems().stream()
+                    .map(c -> c.getBookId().getPrice().multiply(BigDecimal.valueOf(c.getQuantity())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // ➕ Add delivery charge ₹30
-        totalAmount = totalAmount.add(BigDecimal.valueOf(30));
+            // ➕ Add delivery charge ₹30
+            totalAmount = totalAmount.add(BigDecimal.valueOf(30));
+        }
+        return totalAmount;
     }
-    return totalAmount;
-}
-
 
     // ---------------- PayU Payment ----------------
     private String formatAmount(BigDecimal amt) {
@@ -63,9 +62,9 @@ public class PaymentBean implements Serializable {
     }
 
     private String generateHash(String txnid) {
-        String hashString = key + "|" + txnid + "|" + formatAmount(totalAmount) + "|Book Purchase|" +
-                firstname + "|" + loginBean.getLoggedInUser().getUsername() +
-                "|||||||||||" + salt;
+        String hashString = key + "|" + txnid + "|" + formatAmount(totalAmount) + "|Book Purchase|"
+                + firstname + "|" + loginBean.getLoggedInUser().getUsername()
+                + "|||||||||||" + salt;
         return hashCal("SHA-512", hashString);
     }
 
@@ -95,12 +94,12 @@ public class PaymentBean implements Serializable {
         // Save payments in DB as "Pending"
         for (Cart c : getCartItems()) {
             userEJB.addPayment(
-                user,
-                c.getBookId(),
-                "PayU",
-                c.getBookId().getPrice().multiply(BigDecimal.valueOf(c.getQuantity())),
-                phone,
-                "Pending"
+                    user,
+                    c.getBookId(),
+                    "PayU",
+                    c.getBookId().getPrice().multiply(BigDecimal.valueOf(c.getQuantity())),
+                    phone,
+                    "Pending"
             );
         }
 
@@ -111,10 +110,10 @@ public class PaymentBean implements Serializable {
         String surl = "https://localhost:8181/BookStore/success.jsf";
         String furl = "https://localhost:8181/BookStore/failure.jsf";
 
-        HttpServletResponse response =
-            (HttpServletResponse) FacesContext.getCurrentInstance()
-                                              .getExternalContext()
-                                              .getResponse();
+        HttpServletResponse response
+                = (HttpServletResponse) FacesContext.getCurrentInstance()
+                        .getExternalContext()
+                        .getResponse();
 
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
@@ -140,22 +139,26 @@ public class PaymentBean implements Serializable {
     }
 
     public void clearCartAfterSuccess() {
-    try {
-        int userId = loginBean.getLoggedInUser().getId();
-        List<Cart> list = userEJB.getCartItems(userId);
+        try {
+            int userId = loginBean.getLoggedInUser().getId();
+            List<Cart> list = userEJB.getCartItems(userId);
 
-        for (Cart c : list) {
-            userEJB.removeFromCart(c.getId());   // Remove each item
+            for (Cart c : list) {
+                userEJB.removeFromCart(c.getId());   // Remove each item
+            }
+
+            cartItems = null; // Reset local cache
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        cartItems = null; // Reset local cache
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-}
 
-    
     // ---------------- Getters & Setters ----------------
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

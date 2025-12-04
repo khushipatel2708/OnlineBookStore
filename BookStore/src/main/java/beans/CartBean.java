@@ -127,7 +127,8 @@ public class CartBean implements Serializable {
     }
 
     public String cashOnDelivery() {
-        return "orderSuccess.xhtml?faces-redirect=true";
+        // any backend logic here, like saving order to DB
+        return "success.jsf?faces-redirect=true";
     }
 
 }

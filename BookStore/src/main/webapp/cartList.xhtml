@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <h:head>
@@ -37,8 +36,12 @@
                 cursor: pointer;
                 font-weight: bold;
             }
-            .qty-btn:hover { background-color: #0056b3; }
-            .qty-btn[disabled] { background-color: #ccc !important; }
+            .qty-btn:hover {
+                background-color: #0056b3;
+            }
+            .qty-btn[disabled] {
+                background-color: #ccc !important;
+            }
 
             .delete-btn {
                 background-color: #d9534f;
@@ -48,7 +51,9 @@
                 border-radius: 5px;
                 cursor: pointer;
             }
-            .delete-btn:hover { background-color: #c9302c; }
+            .delete-btn:hover {
+                background-color: #c9302c;
+            }
 
             .charges {
                 width: 80%;
@@ -65,11 +70,21 @@
                 cursor: pointer;
                 border: none;
             }
-            .pay-btn { background-color: #28a745; color: white; }
-            .pay-btn:hover { background-color: #218838; }
+            .pay-btn {
+                background-color: #28a745;
+                color: white;
+            }
+            .pay-btn:hover {
+                background-color: #218838;
+            }
 
-            .cod-btn { background-color: #ffc107; color: black; }
-            .cod-btn:hover { background-color: #e0a800; }
+            .cod-btn {
+                background-color: #ffc107;
+                color: black;
+            }
+            .cod-btn:hover {
+                background-color: #e0a800;
+            }
         </style>
     </h:head>
 
@@ -77,14 +92,14 @@
         <h:form id="cartForm">
             <h2 style="text-align:center;">My Cart</h2>
 
-            <!-- ❌ If cart is empty → Show this -->
+            <!-- Empty Cart Message -->
             <h:panelGroup rendered="#{empty cartBean.cartItems}">
                 <div class="empty-message">
                     No books in cart to purchase.
                 </div>
             </h:panelGroup>
 
-            <!-- ✅ Show table only if cart has items -->
+            <!-- Cart Table -->
             <h:panelGroup rendered="#{not empty cartBean.cartItems}">
                 <h:dataTable value="#{cartBean.cartItems}" var="c">
 
@@ -129,6 +144,7 @@
 
                 </h:dataTable>
 
+                <!-- Charges -->
                 <div class="charges">
                     <p>Subtotal: ₹#{cartBean.totalPrice}</p>
                     <p>Delivery Charge: ₹30</p>
@@ -144,9 +160,37 @@
                 <!-- Cash on Delivery -->
                 <h:commandButton value="Cash on Delivery"
                                  styleClass="cod-btn"
-                                 action="#{cartBean.cashOnDelivery}" />
+                                 action="#{cartBean.cashOnDelivery}"
+                                 onclick="return confirmOrder();" />
             </h:panelGroup>
-
         </h:form>
+
+        <!-- JS Confirmation Script -->
+        <script type="text/javascript">
+            function confirmOrder() {
+                var books = '';
+                var prices = '';
+
+                // Table rows fetch karo
+                var table = document.querySelectorAll("#cartForm table tbody tr");
+                table.forEach(function (row) {
+                    var cells = row.querySelectorAll("td");
+                    if (cells.length > 0) { // skip header
+                        books += cells[0].innerText + '\n';
+                        prices += cells[1].innerText + '\n';
+                    }
+                });
+
+                var msg = "Are you sure?\n\nBooks:\n" + books + "\nPrices:\n" + prices;
+                if (confirm(msg)) {
+                    return true; // form submit thase -> action method call -> success.jsf
+                } else {
+                    return false; // cancel -> current page par raho
+                }
+            }
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     </h:body>
 </html>

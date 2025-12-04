@@ -4,18 +4,18 @@
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core">
 
-<h:head>
-    <title>Payment Success</title>
-</h:head>
+    <h:head>
+        <title>Payment Success</title>
+    </h:head>
 
-<h:body>
+    <h:body>
 
-    <!-- Page load par cart clean kari dese -->
-    <f:event type="preRenderView" listener="#{paymentBean.clearCartAfterSuccess}" />
+        <!-- Page load par cart clean kari dese -->
+        <f:event type="preRenderView" listener="#{paymentBean.clearCartAfterSuccess}" />
 
-    <h1>Payment Successful ✔</h1>
-    <h3>Your cart items have been cleared.</h3>
+        <h1>Payment Successful ✔</h1>
+        <h3>Your cart items have been cleared.</h3>
 
-    <h:link outcome="cartList.jsf" value="Back to Shopping"/>
-</h:body>
+        <h:link outcome="cartList.jsf" value="Back to Shopping"/>
+    </h:body>
 </html>
