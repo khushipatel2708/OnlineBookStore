@@ -214,12 +214,12 @@
                                                 <span class="rating-count">(#{b.rating})</span>
                                             </div>
 
-                                           <h:commandButton value="Add to Cart"
-                 styleClass="btn-add-to-cart"
-                 action="#{cartBean.addToCart}">
-    <f:param name="bookId" value="#{b.id}" />
-    <f:ajax render="@form" />
-</h:commandButton>
+                                            <h:commandButton value="Add to Cart"
+                                                             styleClass="btn-add-to-cart"
+                                                             action="#{cartBean.addToCart}">
+                                                <f:param name="bookId" value="#{b.id}" />
+                                                <f:ajax render="@form" />
+                                            </h:commandButton>
 
 
 

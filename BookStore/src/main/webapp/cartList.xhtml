@@ -4,118 +4,149 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-<h:head>
-    <title>My Cart</title>
-    <style>
-        table { border-collapse: collapse; width: 80%; margin: 20px auto; }
-        th, td { padding: 10px; border: 1px solid #ccc; text-align: center; }
-        th { background-color: #f4f4f4; }
-        .total { text-align: right; font-weight: bold; margin-right: 10%; }
-        .qty-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 3px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .qty-btn:hover { background-color: #0056b3; }
-        .delete-btn {
-            background-color: #d9534f;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .delete-btn:hover { background-color: #c9302c; }
-        .qty-btn[disabled] {
-            background-color: #ccc !important;
-            cursor: not-allowed;
-        }
-        .charges {
-            width: 80%;
-            margin: 20px auto;
-            text-align: right;
-            font-weight: bold;
-        }
-        .pay-btn {
-            display: block;
-            margin: 20px auto;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .pay-btn:hover { background-color: #218838; }
+    <h:head>
+        <title>My Cart</title>
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 80%;
+                margin: 20px auto;
+            }
+            th, td {
+                padding: 10px;
+                border: 1px solid #ccc;
+                text-align: center;
+            }
+            th {
+                background-color: #f4f4f4;
+            }
+            .empty-message {
+                width: 80%;
+                margin: 30px auto;
+                text-align: center;
+                font-size: 20px;
+                font-weight: bold;
+                color: #d9534f;
+            }
+            .qty-btn {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 3px 8px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+            .qty-btn:hover { background-color: #0056b3; }
+            .qty-btn[disabled] { background-color: #ccc !important; }
 
-        .cod-btn {
-            display: block;
-            margin: 10px auto;
-            background-color: #ffc107;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .cod-btn:hover { background-color: #e0a800; }
-    </style>
-</h:head>
+            .delete-btn {
+                background-color: #d9534f;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .delete-btn:hover { background-color: #c9302c; }
 
-<h:body>
-    <h:form id="cartForm">
-        <h2 style="text-align:center;">My Cart</h2>
+            .charges {
+                width: 80%;
+                margin: 20px auto;
+                text-align: right;
+                font-weight: bold;
+            }
+            .pay-btn, .cod-btn {
+                display: block;
+                margin: 15px auto;
+                padding: 10px 20px;
+                border-radius: 6px;
+                font-size: 16px;
+                cursor: pointer;
+                border: none;
+            }
+            .pay-btn { background-color: #28a745; color: white; }
+            .pay-btn:hover { background-color: #218838; }
 
-       <h:dataTable value="#{cartBean.cartItems}" var="c">
+            .cod-btn { background-color: #ffc107; color: black; }
+            .cod-btn:hover { background-color: #e0a800; }
+        </style>
+    </h:head>
 
-    <h:column>
-        <f:facet name="header">Book Name</f:facet>
-        #{c.bookId.bookname}
-    </h:column>
+    <h:body>
+        <h:form id="cartForm">
+            <h2 style="text-align:center;">My Cart</h2>
 
-    <h:column>
-        <f:facet name="header">Price</f:facet>
-        ₹#{c.bookId.price}
-    </h:column>
+            <!-- ❌ If cart is empty → Show this -->
+            <h:panelGroup rendered="#{empty cartBean.cartItems}">
+                <div class="empty-message">
+                    No books in cart to purchase.
+                </div>
+            </h:panelGroup>
 
-    <h:column>
-        <f:facet name="header">Quantity</f:facet>
-        <h:commandButton value="-" styleClass="qty-btn"
-                         action="#{cartBean.decreaseQuantity(c.id)}"
-                         disabled="#{c.quantity le 1}">
-            <f:ajax render="@form"/>
-        </h:commandButton>
+            <!-- ✅ Show table only if cart has items -->
+            <h:panelGroup rendered="#{not empty cartBean.cartItems}">
+                <h:dataTable value="#{cartBean.cartItems}" var="c">
 
-        <h:outputText value="#{c.quantity}" style="margin:0 10px;"/>
+                    <h:column>
+                        <f:facet name="header">Book Name</f:facet>
+                            #{c.bookId.bookname}
+                    </h:column>
 
-        <h:commandButton value="+" styleClass="qty-btn"
-                         action="#{cartBean.increaseQuantity(c.id)}">
-            <f:ajax render="@form"/>
-        </h:commandButton>
-    </h:column>
+                    <h:column>
+                        <f:facet name="header">Price</f:facet>
+                        ₹#{c.bookId.price}
+                    </h:column>
 
-<!--    <h:column>
-        <f:facet name="header">Total</f:facet>
-        ₹#{c.bookId.price * c.quantity}
-    </h:column>-->
+                    <h:column>
+                        <f:facet name="header">Quantity</f:facet>
+                        <h:commandButton value="-" styleClass="qty-btn"
+                                         action="#{cartBean.decreaseQuantity(c.id)}"
+                                         disabled="#{c.quantity le 1}">
+                            <f:ajax render="@form"/>
+                        </h:commandButton>
 
-    <h:column>
-        <f:facet name="header">Action</f:facet>
-        <h:commandButton value="Delete" styleClass="delete-btn"
-                         action="#{cartBean.removeFromCart(c.id)}">
-            <f:ajax render="@form"/>
-        </h:commandButton>
-    </h:column>
+                        <h:outputText value="#{c.quantity}" style="margin:0 10px;"/>
 
-</h:dataTable>
+                        <h:commandButton value="+" styleClass="qty-btn"
+                                         action="#{cartBean.increaseQuantity(c.id)}">
+                            <f:ajax render="@form"/>
+                        </h:commandButton>
+                    </h:column>
 
+                    <h:column>
+                        <f:facet name="header">Total</f:facet>
+                        ₹#{c.bookId.price * c.quantity}
+                    </h:column>
 
-    </h:form>
-</h:body>
+                    <h:column>
+                        <f:facet name="header">Action</f:facet>
+                        <h:commandButton value="Delete" styleClass="delete-btn"
+                                         action="#{cartBean.removeFromCart(c.id)}">
+                            <f:ajax render="@form"/>
+                        </h:commandButton>
+                    </h:column>
+
+                </h:dataTable>
+
+                <div class="charges">
+                    <p>Subtotal: ₹#{cartBean.totalPrice}</p>
+                    <p>Delivery Charge: ₹30</p>
+                    <hr/>
+                    <p><b>Grand Total: ₹#{cartBean.finalTotal}</b></p>
+                </div>
+
+                <!-- Online Payment -->
+                <h:commandButton value="Proceed to Online Payment"
+                                 styleClass="pay-btn"
+                                 action="#{cartBean.goToPayment}" />
+
+                <!-- Cash on Delivery -->
+                <h:commandButton value="Cash on Delivery"
+                                 styleClass="cod-btn"
+                                 action="#{cartBean.cashOnDelivery}" />
+            </h:panelGroup>
+
+        </h:form>
+    </h:body>
 </html>

@@ -88,15 +88,46 @@ public class CartBean implements Serializable {
     public void decreaseQuantity(int cartId) {
         cartSession.updateQuantity(cartId, -1);
     }
-    public int getCartCount() {
-    User loggedUser = loginBean.getLoggedInUser();
 
-    if (loggedUser != null) {
-        List<Cart> list = cartSession.getCartItems(loggedUser.getId());
-        return list != null ? list.size() : 0;
+    public int getCartCount() {
+        User loggedUser = loginBean.getLoggedInUser();
+
+        if (loggedUser != null) {
+            List<Cart> list = cartSession.getCartItems(loggedUser.getId());
+            return list != null ? list.size() : 0;
+        }
+
+        return 0;
     }
 
-    return 0;
-}
+    public double getTotalPrice() {
+        User loggedUser = loginBean.getLoggedInUser();
+        if (loggedUser != null) {
+            List<Cart> cart = cartSession.getCartItems(loggedUser.getId());
+            java.math.BigDecimal total = java.math.BigDecimal.ZERO;
+
+            if (cart != null) {
+                for (Cart c : cart) {
+                    java.math.BigDecimal price = c.getBookId().getPrice();
+                    int qty = c.getQuantity();
+                    total = total.add(price.multiply(java.math.BigDecimal.valueOf(qty)));
+                }
+            }
+            return total.doubleValue();
+        }
+        return 0;
+    }
+
+    public double getFinalTotal() {
+        return getTotalPrice() + 30;
+    }
+
+    public String goToPayment() {
+        return "payment.xhtml?faces-redirect=true";
+    }
+
+    public String cashOnDelivery() {
+        return "orderSuccess.xhtml?faces-redirect=true";
+    }
 
 }
