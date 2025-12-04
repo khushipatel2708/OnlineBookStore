@@ -1,103 +1,300 @@
-<!DOCTYPE html>
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-<h:body>
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core">
+    <h:head>
+        <title>Manage Book Details</title>
 
-    <!-- =============== ACCESS CONTROL =============== -->
-    <h:panelGroup rendered="#{not bookBean.admin}">
-        <h2 style="color:red;">Access Denied!</h2>
-        <p>You must be Admin to access Add or Edit Book.</p>
-        <h:link value="Go Back" outcome="user.xhtml" />
-    </h:panelGroup>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJcT2yXQo5S/A7T/o+1N4rC1J2E3r9GzC9mC81N/M5Lg2tE3r9GzC9mC81N/M5Lg2tE3H2C6eK7uM3A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- =============== ADMIN ONLY SECTION =============== -->
-    <h:panelGroup rendered="#{bookBean.admin}">
-<h:form enctype="multipart/form-data">
+        <style>
+            body {
+                background-color: #f0f2f5;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding-top: 65px;
+            }
 
-    <h:panelGroup rendered="#{not bookBean.editMode}">
-        <h2>Add Book</h2>
-    </h:panelGroup>
+            /* 1. STICKY HEADER - Remains Fixed */
+            .sticky-header-wrapper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1030;
+                background-color: white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                height: 65px;
+            }
 
-    <h:panelGroup rendered="#{bookBean.editMode}">
-        <h2>Edit Book (ID: #{bookBean.id})</h2>
-    </h:panelGroup>
+            /* 2. MAIN LAYOUT CONTAINER - Remains Flexbox */
+            .main-layout {
+                display: flex;
+                gap: 24px;
+                padding-top: 25px;
+            }
 
-    <h:outputLabel value="Book Name:"/>
-    <h:inputText value="#{bookBean.bookname}" required="true"/>
-    <br/><br/>
+            /* 3. SIDEBAR STYLES (for sticky) */
+            .admin-sidebar {
+                width: 250px;
+                flex-shrink: 0;
+                background-color: #fff;
+                padding: 15px;
+                border-radius: 12px; /* Increased radius for modern look */
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Lighter shadow for cleaner look */
+                position: sticky;
+                top: 85px;
+                height: fit-content;
+                align-self: flex-start;
+            }
 
-    <h:outputLabel value="Author:"/>
-    <h:inputText value="#{bookBean.authorname}" required="true"/>
-    <br/><br/>
+            .main-content {
+                flex-grow: 1;
+            }
 
-    <h:outputLabel value="Price:"/>
-    <h:inputText value="#{bookBean.price}" required="true"/>
-    <br/><br/>
+            /* --- Nav Link Styles (Simplified to match image) --- */
+            .sidebar-header {
+                font-size: 1.1rem;
+                font-weight: 500;
+                color: #333;
+                padding-bottom: 15px;
+                margin-bottom: 10px;
+                border-bottom: none; /* Removed separator to match image */
+            }
+            .nav-item-link {
+                display: flex;
+                align-items: center;
+                padding: 10px 15px;
+                margin: 5px 0;
+                text-decoration: none;
+                color: #495057;
+                border-radius: 8px;
+                transition: background-color 0.2s;
+            }
+            .nav-item-link:hover {
+                color: #000;
+                background-color: #f8f9fa;
+            }
+            .nav-item-link i {
+                width: 20px;
+                margin-right: 10px;
+                font-size: 1.1rem;
+            }
+            .nav-item-link.active {
+                background-color: #0d6efd;
+                color: #fff;
+                font-weight: 600;
+            }
+            .nav-item-link.active i {
+                color: #fff;
+            }
 
-    <h:outputLabel value="Book Type:"/>
-    <h:selectOneMenu value="#{bookBean.booktypeId}">
-        <f:selectItems value="#{bookBean.allBooktypes}" var="bt"
-                       itemValue="#{bt.id}" itemLabel="#{bt.type}"/>
-    </h:selectOneMenu>
-    <br/><br/>
+            .main-content {
+                flex-grow: 1;
+            }
 
-    <!-- COVER -->
-    <h3>Cover Photo</h3>
-    <h:inputFile value="#{bookBean.coverPhoto}">
-        <f:ajax event="change" listener="#{bookBean.setCoverPhoto(bookBean.coverPhoto)}"
-                render="coverPreviewPanel"/>
-    </h:inputFile>
+            /* FORM CONTAINER AND STYLING */
+            .form-card {
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+                padding: 25px;
+                margin-bottom: 20px;
+            }
+            h2 {
+                font-weight: 600;
+                color: #343a40;
+                margin-bottom: 25px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #eee;
+            }
 
-    <h:panelGroup id="coverPreviewPanel">
-        <h:panelGroup rendered="#{not empty bookBean.coverPreview}">
-            <h:graphicImage value="#{bookBean.coverPreview}" width="150"/>
-        </h:panelGroup>
-    </h:panelGroup>
+            /* JSF Component Styling to fit Bootstrap */
+            .form-field-group .form-control {
+                width: 100%;
+                padding: 8px 12px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                box-sizing: border-box; /* Important for width calculation */
+            }
 
-    <br/><br/>
+            .form-field-group label {
+                font-weight: 600;
+                color: #495057;
+                margin-bottom: 5px;
+                display: block;
+            }
 
-    <!-- FRONT -->
-    <h3>Front Page Photo</h3>
-    <h:inputFile value="#{bookBean.frontPagePhoto}">
-        <f:ajax event="change" listener="#{bookBean.setFrontPagePhoto(bookBean.frontPagePhoto)}"
-                render="frontPreviewPanel"/>
-    </h:inputFile>
+            /* For h:selectOneMenu */
+            .form-field-group .form-control select {
+                /* Fix for h:selectOneMenu styling */
+                appearance: none;
+                background-color: #fff;
+                background-clip: padding-box;
+                line-height: 1.5;
+                color: #495057;
+            }
 
-    <h:panelGroup id="frontPreviewPanel">
-        <h:panelGroup rendered="#{not empty bookBean.frontPreview}">
-            <h:graphicImage value="#{bookBean.frontPreview}" width="150"/>
-        </h:panelGroup>
-    </h:panelGroup>
+            /* File Upload and Image Previews */
+            .upload-section {
+                padding: 15px;
+                border: 1px dashed #ced4da;
+                border-radius: 6px;
+                margin-top: 10px;
+                margin-bottom: 20px;
+            }
+            .preview-image {
+                display: block;
+                margin-top: 10px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
 
-    <br/><br/>
+            /* Buttons Styling */
+            .btn-primary {
+                background-color: #0d6efd;
+                border-color: #0d6efd;
+                color: white;
+                padding: 10px 15px;
+                border-radius: 6px;
+                margin-right: 10px;
+                cursor: pointer;
+            }
+            .btn-secondary {
+                background-color: #6c757d;
+                border-color: #6c757d;
+                color: white;
+                padding: 10px 15px;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+        </style>
+    </h:head>
 
-    <!-- LAST -->
-    <h3>Last Page Photo</h3>
-    <h:inputFile value="#{bookBean.lastPagePhoto}">
-        <f:ajax event="change" listener="#{bookBean.setLastPagePhoto(bookBean.lastPagePhoto)}"
-                render="lastPreviewPanel"/>
-    </h:inputFile>
+    <h:body>
+        <div class="sticky-header-wrapper">
+            <ui:include src="/adminHeader.xhtml" /> 
+        </div>
 
-    <h:panelGroup id="lastPreviewPanel">
-        <h:panelGroup rendered="#{not empty bookBean.lastPreview}">
-            <h:graphicImage value="#{bookBean.lastPreview}" width="150"/>
-        </h:panelGroup>
-    </h:panelGroup>
+        <div class="main-layout">
 
-    <br/><br/>
+            <ui:include src="sidebar.xhtml"/> 
 
-    <h:panelGroup rendered="#{not bookBean.editMode}">
-        <h:commandButton value="Add Book" action="#{bookBean.addBook}"/>
-    </h:panelGroup>
+            <div class="main-content">
 
-    <h:panelGroup rendered="#{bookBean.editMode}">
-        <h:commandButton value="Update Book" action="#{bookBean.updateBook}"/>
-        <h:commandButton value="Cancel" action="#{bookBean.cancelEdit}"/>
-    </h:panelGroup>
+                <h:panelGroup rendered="#{not bookBean.admin}">
+                    <div class="form-card">
+                        <h2 style="color:#dc3545;">Access Denied! 🛑</h2>
+                        <p>You must be an **Admin** to access Add or Edit Book functionalities.</p>
+                        <h:link value="Go Back to User View" outcome="user.xhtml" />
+                    </div>
+                </h:panelGroup>
 
-</h:form>
-        </h:panelGroup>
+                <h:panelGroup rendered="#{bookBean.admin}">
+                    <h:form enctype="multipart/form-data">
+                        <div class="form-card">
+                            <h:panelGroup rendered="#{not bookBean.editMode}">
+                                <h2>Add New Book 📚</h2>
+                            </h:panelGroup>
 
-</h:body>
+                            <h:panelGroup rendered="#{bookBean.editMode}">
+                                <h2>Edit Book (ID: #{bookBean.id}) ✏️</h2>
+                            </h:panelGroup>
+
+                            <div class="row g-4">
+
+                                <div class="col-md-6">
+                                    <div class="form-field-group mb-3">
+                                        <h:outputLabel value="Book Name:"/>
+                                        <h:inputText value="#{bookBean.bookname}" required="true" styleClass="form-control"/>
+                                    </div>
+
+                                    <div class="form-field-group mb-3">
+                                        <h:outputLabel value="Author:"/>
+                                        <h:inputText value="#{bookBean.authorname}" required="true" styleClass="form-control"/>
+                                    </div>
+
+                                    <div class="form-field-group mb-3">
+                                        <h:outputLabel value="Price:"/>
+                                        <h:inputText value="#{bookBean.price}" required="true" styleClass="form-control"/>
+                                    </div>
+
+                                    <div class="form-field-group mb-3">
+                                        <h:outputLabel value="Book Type (Category):"/>
+                                        <h:selectOneMenu value="#{bookBean.booktypeId}" styleClass="form-control">
+                                            <f:selectItems value="#{bookBean.allBooktypes}" var="bt"
+                                                           itemValue="#{bt.id}" itemLabel="#{bt.type}"/>
+                                        </h:selectOneMenu>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <div class="upload-section">
+                                        <h3 style="font-size:1.1rem; margin-top:0;">Cover Photo</h3>
+                                        <h:inputFile value="#{bookBean.coverPhoto}" styleClass="form-control">
+                                            <f:ajax event="change" listener="#{bookBean.setCoverPhoto(bookBean.coverPhoto)}"
+                                                    render="coverPreviewPanel"/>
+                                        </h:inputFile>
+
+                                        <h:panelGroup id="coverPreviewPanel">
+                                            <h:panelGroup rendered="#{not empty bookBean.coverPreview}">
+                                                <h:graphicImage value="#{bookBean.coverPreview}" width="150" styleClass="preview-image"/>
+                                            </h:panelGroup>
+                                        </h:panelGroup>
+                                    </div>
+
+                                    <div class="upload-section">
+                                        <h3 style="font-size:1.1rem;">Front Page Photo</h3>
+                                        <h:inputFile value="#{bookBean.frontPagePhoto}" styleClass="form-control">
+                                            <f:ajax event="change" listener="#{bookBean.setFrontPagePhoto(bookBean.frontPagePhoto)}"
+                                                    render="frontPreviewPanel"/>
+                                        </h:inputFile>
+
+                                        <h:panelGroup id="frontPreviewPanel">
+                                            <h:panelGroup rendered="#{not empty bookBean.frontPreview}">
+                                                <h:graphicImage value="#{bookBean.frontPreview}" width="150" styleClass="preview-image"/>
+                                            </h:panelGroup>
+                                        </h:panelGroup>
+                                    </div>
+
+                                    <div class="upload-section">
+                                        <h3 style="font-size:1.1rem;">Last Page Photo</h3>
+                                        <h:inputFile value="#{bookBean.lastPagePhoto}" styleClass="form-control">
+                                            <f:ajax event="change" listener="#{bookBean.setLastPagePhoto(bookBean.lastPagePhoto)}"
+                                                    render="lastPreviewPanel"/>
+                                        </h:inputFile>
+
+                                        <h:panelGroup id="lastPreviewPanel">
+                                            <h:panelGroup rendered="#{not empty bookBean.lastPreview}">
+                                                <h:graphicImage value="#{bookBean.lastPreview}" width="150" styleClass="preview-image"/>
+                                            </h:panelGroup>
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr style="margin-top:20px; margin-bottom:20px;"/>
+
+                            <h:panelGroup rendered="#{not bookBean.editMode}">
+                                <h:commandButton value="Add Book" action="#{bookBean.addBook}"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup rendered="#{bookBean.editMode}">
+                                <h:commandButton value="Update Book" action="#{bookBean.updateBook}"/>
+                                <h:commandButton value="Cancel" action="#{bookBean.cancelEdit}"/>
+                            </h:panelGroup>
+
+                        </div>
+                    </h:form>
+                </h:panelGroup>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    </h:body>
 </html>
