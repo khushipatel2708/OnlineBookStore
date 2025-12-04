@@ -4,7 +4,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
-      xmlns:ui="jakarta.faces.facelets">
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core">
 
 <h:head>
     <title>Books</title>
@@ -62,8 +63,6 @@
 
 <h:form>
     
-    <h:commandButton value="View Cart" action="cartList.xhtml?faces-redirect=true"/>
-    
     <h2>Available Books</h2>
 
     <div class="grid">
@@ -85,18 +84,22 @@
                     <i class="bi bi-eye"></i> View Details
                 </h:commandLink>
 
-                <!-- ADD TO CART BUTTON -->
+                 <!--ADD TO CART BUTTON--> 
                 <h:commandButton value="Add to Cart"
                  styleClass="btn-cart"
-                 action="#{bookBean.addToCart(b.id)}" >
+                 action="#{cartBean.addToCart(b.id)}" >
     <i class="bi bi-cart"></i>
 </h:commandButton>
+
 
             </div>
 
         </ui:repeat>
 
     </div>
+
+    <h:commandLink value="My Cart"
+               action="#{cartBean.goToCart}" />
 
 </h:form>
 
