@@ -108,8 +108,8 @@ public class PaymentBean implements Serializable {
         String txnid = "TXN" + System.currentTimeMillis();
         String hash = generateHash(txnid);
 
-        String surl = "https://localhost:8181/BookStore/success.xhtml";
-        String furl = "https://localhost:8181/BookStore/failure.xhtml";
+        String surl = "https://localhost:8181/BookStore/success.jsf";
+        String furl = "https://localhost:8181/BookStore/failure.jsf";
 
         HttpServletResponse response =
             (HttpServletResponse) FacesContext.getCurrentInstance()
@@ -139,6 +139,22 @@ public class PaymentBean implements Serializable {
         FacesContext.getCurrentInstance().responseComplete();
     }
 
+    public void clearCartAfterSuccess() {
+    try {
+        int userId = loginBean.getLoggedInUser().getId();
+        List<Cart> list = userEJB.getCartItems(userId);
+
+        for (Cart c : list) {
+            userEJB.removeFromCart(c.getId());   // Remove each item
+        }
+
+        cartItems = null; // Reset local cache
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+    
     // ---------------- Getters & Setters ----------------
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }

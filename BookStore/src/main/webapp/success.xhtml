@@ -1,12 +1,21 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html">
-    <h:head>
-        <title>Facelet Title</title>
-    </h:head>
-    <h:body>
-    <h1>THIS IS SUCCESS PAYMENT...</h1>
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
 
+<h:head>
+    <title>Payment Success</title>
+</h:head>
+
+<h:body>
+
+    <!-- Page load par cart clean kari dese -->
+    <f:event type="preRenderView" listener="#{paymentBean.clearCartAfterSuccess}" />
+
+    <h1>Payment Successful ✔</h1>
+    <h3>Your cart items have been cleared.</h3>
+
+    <h:link outcome="cartList.jsf" value="Back to Shopping"/>
 </h:body>
 </html>
