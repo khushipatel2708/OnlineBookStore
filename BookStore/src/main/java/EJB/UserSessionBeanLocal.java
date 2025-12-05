@@ -6,6 +6,8 @@ package EJB;
 
 import Entity.Book;
 import Entity.Cart;
+import Entity.Orderlist;
+import Entity.Payment;
 import Entity.Shipping;
 import Entity.User;
 import jakarta.ejb.Local;
@@ -40,5 +42,8 @@ public interface UserSessionBeanLocal {
     
       void addPayment(User user, Book book, String paymentMethod, BigDecimal amount, String phone, String status);
     
-
+ List<Orderlist> getPendingOrders();
+    void markAsDelivered(Integer orderId);
+    List<Orderlist> getOrdersByUser(User user);
+    void createOrderFromPayment(Payment payment);
 }

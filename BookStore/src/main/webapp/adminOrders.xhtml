@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+      <h:form>
+    <h2>Pending Orders</h2>
+    <h:dataTable value="#{orderBean.pendingOrders}" var="o" border="1" cellpadding="5">
+        <h:column><f:facet name="header">Order ID</f:facet>#{o.orderId}</h:column>
+        <h:column><f:facet name="header">User</f:facet>#{o.userId.fullname}</h:column>
+        <h:column><f:facet name="header">Date</f:facet>#{o.orderDate}</h:column>
+        <h:column><f:facet name="header">Time</f:facet>#{o.orderTime}</h:column>
+        <h:column><f:facet name="header">Total</f:facet>#{o.totalPrice}</h:column>
+        <h:column><f:facet name="header">Status</f:facet>#{o.status}</h:column>
+        <h:column>
+            <f:facet name="header">Action</f:facet>
+            <h:commandButton value="Delivered" action="#{orderBean.deliverOrder(o.orderId)}">
+                <f:ajax render="@form"/>
+            </h:commandButton>
+        </h:column>
+    </h:dataTable>
+</h:form>
+
+    </h:body>
+</html>

@@ -7,12 +7,14 @@ package EJB;
 import Entity.Book;
 import Entity.Cart;
 import Entity.City;
+import Entity.Orderlist;
 import Entity.Payment;
 import Entity.Shipping;
 import Entity.User;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
@@ -185,5 +187,47 @@ public class UserSessionBean implements UserSessionBeanLocal {
         payment.setPhone(phone);
         payment.setStatus(status);
         em.persist(payment);
+        // Automatically create order after payment
+        createOrderFromPayment(payment);
+    }
+    
+     // Get all pending orders for admin (status != Delivered)
+    @Override
+    public List<Orderlist> getPendingOrders() {
+        TypedQuery<Orderlist> query = em.createQuery(
+            "SELECT o FROM Orderlist o WHERE o.status <> :delivered ORDER BY o.orderDate DESC", Orderlist.class);
+        query.setParameter("delivered", "Delivered");
+        return query.getResultList();
+    }
+
+    // Mark order as delivered
+    @Override
+    public void markAsDelivered(Integer orderId) {
+        Orderlist order = em.find(Orderlist.class, orderId);
+        if(order != null){
+            order.setStatus("Delivered");
+            em.merge(order);
+        }
+    }
+
+    // Get orders for a specific user
+    @Override
+    public List<Orderlist> getOrdersByUser(User user) {
+        TypedQuery<Orderlist> query = em.createQuery(
+            "SELECT o FROM Orderlist o WHERE o.userId = :user ORDER BY o.orderDate DESC", Orderlist.class);
+        query.setParameter("user", user);
+        return query.getResultList();
+    }
+
+    // Create order from payment
+    @Override
+    public void createOrderFromPayment(Payment payment) {
+        Orderlist order = new Orderlist();
+        order.setUserId(payment.getUserId());
+        order.setOrderDate(new java.util.Date());
+        order.setOrderTime(new java.util.Date());
+        order.setTotalPrice(payment.getAmount());
+        order.setStatus("Pending");
+        em.persist(order);
     }
 }
