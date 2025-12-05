@@ -193,6 +193,7 @@ public class Admin {
                 book.getAuthorname(),
                 book.getPrice().doubleValue(),
                 book.getBooktypeId().getId(),
+                book.getAvailable(),
                 book.getCoverPhoto(),
                 book.getFrontPagePhoto(),
                 book.getLastPagePhoto()
@@ -211,6 +212,7 @@ public class Admin {
                 book.getAuthorname(),
                 book.getPrice().doubleValue(),
                 book.getBooktypeId().getId(),
+                book.getAvailable(),
                 book.getCoverPhoto(),
                 book.getFrontPagePhoto(),
                 book.getLastPagePhoto()

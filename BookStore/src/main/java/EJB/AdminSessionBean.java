@@ -137,7 +137,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
 
     @PermitAll
     @Override
-    public void addBook(String bookname, String authorname, Double price, Integer booktypeId,
+    public void addBook(String bookname, String authorname, Double price, Integer booktypeId,Integer available,
             String coverPhoto, String frontPagePhoto, String lastPagePhoto) {
 
         Booktype bt = em.find(Booktype.class, booktypeId);
@@ -147,7 +147,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             b.setAuthorname(authorname);
             b.setPrice(BigDecimal.valueOf(price));
             b.setBooktypeId(bt);
-            b.setAvailable(0);
+            b.setAvailable(available);
             b.setCoverPhoto(coverPhoto);
             b.setFrontPagePhoto(frontPagePhoto);
             b.setLastPagePhoto(lastPagePhoto);
@@ -157,7 +157,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
 
     @PermitAll
     @Override
-    public void updateBook(Integer id, String bookname, String authorname, Double price, Integer booktypeId,
+    public void updateBook(Integer id, String bookname, String authorname, Double price, Integer booktypeId,Integer available,
             String coverPhoto, String frontPagePhoto, String lastPagePhoto) {
 
         Book b = em.find(Book.class, id);
@@ -167,6 +167,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             b.setAuthorname(authorname);
             b.setPrice(BigDecimal.valueOf(price));
             b.setBooktypeId(bt);
+            b.setAvailable(available);
             b.setCoverPhoto(coverPhoto);
             b.setFrontPagePhoto(frontPagePhoto);
             b.setLastPagePhoto(lastPagePhoto);

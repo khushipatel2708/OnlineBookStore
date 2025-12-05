@@ -33,6 +33,7 @@ public class BookCDIBean implements Serializable {
     private String authorname;
     private BigDecimal price;
     private Integer booktypeId;
+     private Integer available;
 
     private Part coverPhoto;
     private Part frontPagePhoto;
@@ -150,6 +151,7 @@ public class BookCDIBean implements Serializable {
         this.bookname = b.getBookname();
         this.authorname = b.getAuthorname();
         this.price = b.getPrice();
+        this.available=b.getAvailable();
         if (b.getBooktypeId() != null) {
             this.booktypeId = b.getBooktypeId().getId();
         }
@@ -176,6 +178,7 @@ public class BookCDIBean implements Serializable {
         b.setBookname(bookname);
         b.setAuthorname(authorname);
         b.setPrice(price);
+        b.setAvailable(available);
 
         Booktype bt = new Booktype();
         bt.setId(booktypeId);
@@ -215,7 +218,7 @@ public class BookCDIBean implements Serializable {
         b.setBookname(bookname);
         b.setAuthorname(authorname);
         b.setPrice(price);
-
+  b.setAvailable(available);
         Booktype bt = new Booktype();
         bt.setId(booktypeId);
         b.setBooktypeId(bt);
@@ -246,6 +249,7 @@ public class BookCDIBean implements Serializable {
         authorname = "";
         price = null;
         booktypeId = null;
+         available=null;
 
         coverPhoto = null;
         frontPagePhoto = null;
@@ -333,6 +337,14 @@ public class BookCDIBean implements Serializable {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+     public Integer getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Integer available) {
+        this.available = available;
+    }
+
 
     public Integer getBooktypeId() {
         return booktypeId;

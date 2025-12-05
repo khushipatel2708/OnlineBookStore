@@ -42,10 +42,10 @@ public boolean changePassword(Integer userId, String oldPassword, String newPass
     
     // ---------- Book ----------
     Collection<Book> getAllBooks();
-    void addBook(String bookname, String authorname, Double price, Integer booktypeId,
+    void addBook(String bookname, String authorname, Double price, Integer booktypeId,Integer available,
              String coverPhoto, String frontPagePhoto, String lastPagePhoto);
 
-    void updateBook(Integer id, String bookname, String authorname, Double price, Integer booktypeId,
+    void updateBook(Integer id, String bookname, String authorname, Double price, Integer booktypeId,Integer available,
                 String coverPhoto, String frontPagePhoto, String lastPagePhoto);
 
     void deleteBook(Integer id);
