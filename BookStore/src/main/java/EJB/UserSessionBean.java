@@ -177,6 +177,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
     }
 
+    // ------------------- Payment & Order -------------------
     @Override
     public void addPayment(User user, Book book, String paymentMethod, BigDecimal amount, String phone, String status) {
         Payment payment = new Payment();
@@ -187,48 +188,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         payment.setPhone(phone);
         payment.setStatus(status);
         em.persist(payment);
-        // Automatically create order after payment
         createOrderFromPayment(payment);
-    }
-
-    // Get all pending orders for admin (status != Delivered)
-    @Override
-    public List<Orderlist> getPendingOrders() {
-        TypedQuery<Orderlist> query = em.createQuery(
-                "SELECT o FROM Orderlist o WHERE o.status <> :delivered ORDER BY o.orderDate DESC", Orderlist.class);
-        query.setParameter("delivered", "Delivered");
-        return query.getResultList();
-    }
-
-    // Mark order as delivered
-    @Override
-    public void markAsDelivered(Integer orderId) {
-        Orderlist order = em.find(Orderlist.class, orderId);
-        if (order != null) {
-            order.setStatus("Delivered");
-            em.merge(order);
-        }
-    }
-
-    // Get orders for a specific user
-    @Override
-    public List<Orderlist> getOrdersByUser(User user) {
-        TypedQuery<Orderlist> query = em.createQuery(
-                "SELECT o FROM Orderlist o WHERE o.userId = :user ORDER BY o.orderDate DESC", Orderlist.class);
-        query.setParameter("user", user);
-        return query.getResultList();
-    }
-
-    // Create order from payment
-    @Override
-    public void createOrderFromPayment(Payment payment) {
-        Orderlist order = new Orderlist();
-        order.setUserId(payment.getUserId());
-        order.setOrderDate(new java.util.Date());
-        order.setOrderTime(new java.util.Date());
-        order.setTotalPrice(payment.getAmount());
-        order.setStatus("Pending");
-        em.persist(order);
     }
 
     @Override
@@ -241,10 +201,46 @@ public class UserSessionBean implements UserSessionBeanLocal {
         payment.setBookId(book);
         payment.setAmount(amount);
         payment.setPaymentMethod("COD");
-        payment.setPhone(user.getPhone()); // <-- Fetch user phone dynamically
-        payment.setStatus("Paid"); // COD = Paid
+        payment.setPhone(user.getPhone());
+        payment.setStatus("Paid"); // COD auto-paid
 
         em.persist(payment);
+        createOrderFromPayment(payment);
+    }
+
+    @Override
+    public void createOrderFromPayment(Payment payment) {
+        Orderlist order = new Orderlist();
+        order.setUserId(payment.getUserId());
+        order.setOrderDate(new java.util.Date());
+        order.setOrderTime(new java.util.Date());
+        order.setTotalPrice(payment.getAmount());
+        order.setStatus(payment.getPaymentMethod().equals("COD") ? "Pending" : "Pending"); // Always Pending initially
+        em.persist(order);
+    }
+
+    @Override
+    public List<Orderlist> getOrdersByUser(User user) {
+        return em.createQuery(
+                "SELECT o FROM Orderlist o WHERE o.userId = :user ORDER BY o.orderDate DESC", Orderlist.class)
+                .setParameter("user", user)
+                .getResultList();
+    }
+
+    @Override
+    public List<Orderlist> getPendingOrders() {
+        return em.createQuery(
+                "SELECT o FROM Orderlist o WHERE o.status <> 'Delivered' ORDER BY o.orderDate DESC", Orderlist.class)
+                .getResultList();
+    }
+
+    @Override
+    public void markAsDelivered(Integer orderId) {
+        Orderlist order = em.find(Orderlist.class, orderId);
+        if (order != null) {
+            order.setStatus("Delivered");
+            em.merge(order);
+        }
     }
 
     @Override
@@ -264,5 +260,9 @@ public class UserSessionBean implements UserSessionBeanLocal {
             em.merge(p);
         }
     }
+@Override
+public Orderlist getOrderById(Integer orderId) {
+    return em.find(Orderlist.class, orderId);
+}
 
 }

@@ -15,26 +15,26 @@ public class OrderBean implements Serializable {
 
     @EJB
     private UserSessionBeanLocal userSessionBean;
-
-    private List<Orderlist> orders;
-
-    // Admin - view pending orders
+ private Orderlist selectedOrder;
+    // ---------------- Admin ----------------
     public List<Orderlist> getPendingOrders() {
-        orders = userSessionBean.getPendingOrders();
-        return orders;
+        return userSessionBean.getPendingOrders();
     }
 
     public void deliverOrder(Integer orderId) {
         userSessionBean.markAsDelivered(orderId);
-        orders = userSessionBean.getPendingOrders();
     }
 
-    // User - view own orders
+    // ---------------- User ----------------
     public List<Orderlist> getUserOrders(User user) {
-        orders = userSessionBean.getOrdersByUser(user);
-        return orders;
+        return userSessionBean.getOrdersByUser(user);
     }
+     // Getter & Setter
+    public Orderlist getSelectedOrder() { return selectedOrder; }
+    public void setSelectedOrder(Orderlist selectedOrder) { this.selectedOrder = selectedOrder; }
 
-    public List<Orderlist> getOrders() { return orders; }
-    public void setOrders(List<Orderlist> orders) { this.orders = orders; }
+    // Load order by ID
+    public void loadOrderById(Integer orderId) {
+        selectedOrder = userSessionBean.getOrderById(orderId); // Use EJB method
+    }
 }

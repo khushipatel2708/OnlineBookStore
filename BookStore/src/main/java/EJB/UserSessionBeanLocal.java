@@ -42,11 +42,11 @@ public interface UserSessionBeanLocal {
     
       void addPayment(User user, Book book, String paymentMethod, BigDecimal amount, String phone, String status);
     
- List<Orderlist> getPendingOrders();
+    List<Orderlist> getPendingOrders();
     void markAsDelivered(Integer orderId);
     List<Orderlist> getOrdersByUser(User user);
     void createOrderFromPayment(Payment payment);
     public void addCODPayment(Integer userId, Integer bookId, BigDecimal amount);
-    
-public void updatePaymentStatus(Integer userId, String oldStatus, String newStatus);
+    Orderlist getOrderById(Integer orderId);
+    public void updatePaymentStatus(Integer userId, String oldStatus, String newStatus);
 }

@@ -6,6 +6,7 @@ import Entity.Cart;
 import Entity.User;
 import client.MyAdminClient;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.Part;
@@ -16,6 +17,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
+import java.util.Map;
 
 @Named("bookBean")
 @SessionScoped
@@ -90,9 +92,8 @@ public class BookCDIBean implements Serializable {
     }
 
     public Collection<Booktype> getAllBooktypes() {
-    return adminClient.getAllBooktypes(Collection.class);
-}
-
+        return adminClient.getAllBooktypes(Collection.class);
+    }
 
     // Save file to uploadFolder; return safe filename or null
     private String saveFile(Part file) {
@@ -255,9 +256,19 @@ public class BookCDIBean implements Serializable {
         lastPreview = null;
     }
 
-    public String viewDetails(Integer id) {
-        selectedBook = adminClient.getBookById(Book.class, id.toString());
-        return "ViewDetails.xhtml?faces-redirect=true";
+    public String viewDetails() {
+        // Get the request parameter
+        Map<String, String> params = FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getRequestParameterMap();
+        String bookIdStr = params.get("bookId");
+
+        if (bookIdStr != null) {
+            Integer id = Integer.valueOf(bookIdStr);
+            selectedBook = adminClient.getBookById(Book.class, id.toString());
+            return "ViewDetails.xhtml?faces-redirect=true";
+        }
+        return null; // stay on same page if id is null
     }
 
     public String addToCart(Integer bookId) {

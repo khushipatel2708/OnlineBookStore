@@ -1,75 +1,206 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html">
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
 
-<h:head>
-    <title>Book Details</title>
+    <h:head>
+        <title>Book Details</title>
 
-    <style>
-        .box {
-            width: 500px;
-            margin: 40px auto;
-            padding: 20px;
-            border-radius: 10px;
-            background: #fff;
-            box-shadow: 0 0 10px #bbb;
-            text-align: center;
-        }
-        .box img {
-            width: 100%;
-            height: 350px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        .btn-back {
-            background: #333;
-            color: white;
-            padding: 10px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-        }
-        .btn-cart {
-            background: #28a745;
-            color: white;
-            padding: 10px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            margin-top: 10px;
-            display: inline-block;
-        }
-    </style>
-</h:head>
+        <!-- Bootstrap & Icons -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"/>
 
-<h:body>
+        <style>
+            body {
+                background: #f5f7fb;
+                font-family: 'Segoe UI', sans-serif;
+            }
 
-<h:form>
+            .sticky-header-wrapper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1030;
+                background-color: white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                height: 65px;
+            }
 
-    <div class="box">
+            .book-details-container {
+                max-width: 1000px;
+                margin: 120px auto 40px; /* space for sticky header */
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                padding: 30px;
+            }
 
-        <h:graphicImage value="/BookStore/BookStoreUploads/#{bookBean.selectedBook.coverPhoto}"
-                        rendered="#{not empty bookBean.selectedBook.coverPhoto}" />
+            /* Carousel */
+            .carousel img {
+                width: 100%;
+                height: auto;
+                max-height: 450px;
+                border-radius: 8px;
+            }
 
-        <h2>#{bookBean.selectedBook.bookname}</h2>
-        <p><b>Author:</b> #{bookBean.selectedBook.authorname}</p>
-        <p><b>Price:</b> ₹#{bookBean.selectedBook.price}</p>
+            /* Book Info */
+            .book-title {
+                font-size: 2.2rem;
+                font-weight: 700;
+                margin-bottom: 10px;
+            }
 
-        <br/>
+            .book-author {
+                font-size: 1.1rem;
+                color: #6c757d;
+                margin-bottom: 15px;
+            }
 
-        <h:commandLink value="Back to Books"
-                       action="UserBookList.xhtml?faces-redirect=true"
-                       styleClass="btn-back" />
+            .book-price {
+                font-size: 1.7rem;
+                font-weight: 700;
+                color: #28a745;
+                margin-bottom: 20px;
+            }
 
-        <br/><br/>
+            .book-description {
+                font-size: 1rem;
+                color: #555;
+                margin-bottom: 25px;
+                line-height: 1.6;
+            }
 
-        <a href="#" class="btn-cart">
-            <i class="bi bi-cart"></i> Add to Cart
-        </a>
+            /* Buttons */
+            .btn-back {
+                background: #333;
+                color: white;
+                padding: 12px 22px;
+                border-radius: 6px;
+                text-decoration: none;
+                margin-right: 10px;
+                transition: all 0.3s ease;
+            }
 
-    </div>
+            .btn-back:hover {
+                background: #555;
+                transform: translateY(-2px);
+            }
 
-</h:form>
+            .btn-cart, .btn-buy {
+                background: #28a745;
+                color: white;
+                padding: 12px 22px;
+                border-radius: 6px;
+                font-weight: 600;
+                margin-right: 10px;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
 
-</h:body>
+            .btn-cart:hover, .btn-buy:hover {
+                background: #218838;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            }
+
+            .btn-buy i, .btn-cart i {
+                margin-right: 6px;
+                transition: transform 0.3s;
+            }
+
+            .btn-buy:hover i, .btn-cart:hover i {
+                transform: scale(1.2);
+            }
+
+            @media(max-width: 768px) {
+                .book-details-container {
+                    margin: 100px 15px;
+                    padding: 20px;
+                }
+                .carousel img {
+                    max-height: 300px;
+                }
+            }
+
+        </style>
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <!-- Sticky Header -->
+
+            <div class="sticky-header-wrapper">
+                <ui:include src="/header.xhtml" /> 
+            </div>  
+            <!-- Book Details Container -->
+            <div class="book-details-container">
+                <div class="row">
+                    <!-- Left: Carousel -->
+                    <div class="col-md-6 mb-4">
+                        <div id="bookCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <h:graphicImage value="/BookStore/BookStoreUploads/#{bookBean.selectedBook.coverPhoto}"
+                                                    rendered="#{not empty bookBean.selectedBook.coverPhoto}" />
+                                </div>
+                                <div class="carousel-item">
+                                    <h:graphicImage value="/BookStore/BookStoreUploads/#{bookBean.selectedBook.frontPagePhoto}"
+                                                    rendered="#{not empty bookBean.selectedBook.frontPagePhoto}" />
+                                </div>
+                                <div class="carousel-item">
+                                    <h:graphicImage value="/BookStore/BookStoreUploads/#{bookBean.selectedBook.lastPagePhoto}"
+                                                    rendered="#{not empty bookBean.selectedBook.lastPagePhoto}" />
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#bookCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#bookCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Book Details -->
+                    <div class="col-md-6 d-flex flex-column justify-content-center">
+                        <h2 class="book-title">#{bookBean.selectedBook.bookname}</h2>
+                        <p class="book-author">by #{bookBean.selectedBook.authorname}</p>
+                        <p class="book-price">₹#{bookBean.selectedBook.price}</p>
+
+                        <p class="book-description">
+                            <!-- Example description -->
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                        </p>
+
+                        <div class="d-flex flex-wrap">
+    <h:commandLink value="Back to Books"
+                   action="UserBookList.xhtml?faces-redirect=true"
+                   styleClass="btn-back" />
+
+    <!-- Add to Cart: stay on same page -->
+    <h:commandButton value="Add to Cart"
+                     action="#{cartBean.addToCart}"
+                     styleClass="btn-cart">
+        <f:param name="bookId" value="#{bookBean.selectedBook.id}" />
+        <f:ajax render="@form" />
+    </h:commandButton>
+
+    <!-- Buy Now: add and go to cart page -->
+    <h:commandButton value="Buy Now"
+                     action="#{cartBean.addToCartAndGoToCart}"
+                     styleClass="btn-buy">
+        <f:param name="bookId" value="#{bookBean.selectedBook.id}" />
+        <f:ajax render="@form" />
+    </h:commandButton>
+</div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </h:body>
 </html>

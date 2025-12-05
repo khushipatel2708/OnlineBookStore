@@ -170,6 +170,7 @@
                                                 value="#{t.type}" />
                                             <h:outputText value="#{t.type}" />
                                         </h:commandLink>
+
                                     </ui:repeat>
 
                                 </div>
@@ -186,17 +187,13 @@
                         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
 
                             <ui:repeat value="#{bookBean.allBooks}" var="b">
-
                                 <div class="col">
                                     <div class="card book-card p-3">
-
                                         <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}"
                                                         rendered="#{not empty b.coverPhoto}"
                                                         styleClass="card-img-top"/>
-
                                         <div class="card-body p-0 d-flex flex-column">
                                             <h3 class="book-title">#{b.bookname}</h3>
-
                                             <div class="book-author">
                                                 by <span class="fw-bold">#{b.authorname}</span>
                                             </div>
@@ -213,28 +210,31 @@
                                                     <i class="bi bi-star-fill"></i>
                                                     <i class="bi bi-star-half"></i>
                                                 </span>
-                                                <!--<span class="rating-count">(#{b.rating})</span>-->
                                             </div>
 
-                                            <h:commandButton value="Add to Cart"
-                                                             styleClass="btn-add-to-cart"
-                                                             action="#{cartBean.addToCart}">
-                                                <f:param name="bookId" value="#{b.id}" />
-                                                <f:ajax render="@form" />
-                                            </h:commandButton>
+                                            <!-- Buttons in the same line -->
+                                            <div class="d-flex gap-2">
+                                                <h:commandButton value="Add to Cart"
+                                                                 styleClass="btn-add-to-cart flex-fill"
+                                                                 action="#{cartBean.addToCart}">
+                                                    <f:param name="bookId" value="#{b.id}" />
+                                                    <f:ajax render="@form" />
+                                                </h:commandButton>
 
-
+                                                <h:commandButton value="View"
+                                                                 styleClass="btn btn-outline-primary flex-fill"
+                                                                 action="#{bookBean.viewDetails}">
+                                                    <f:param name="bookId" value="#{b.id}" />
+                                                    <f:ajax render="@form" />
+                                                </h:commandButton>
+                                            </div>
 
                                         </div>
                                     </div>
                                 </div>
-
                             </ui:repeat>
-
                         </div>
-
                     </div>
-
                 </div>
             </div>
 
