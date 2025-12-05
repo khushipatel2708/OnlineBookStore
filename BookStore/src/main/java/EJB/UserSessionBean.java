@@ -177,7 +177,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
     }
 
-     @Override
+    @Override
     public void addPayment(User user, Book book, String paymentMethod, BigDecimal amount, String phone, String status) {
         Payment payment = new Payment();
         payment.setUserId(user);
@@ -190,12 +190,12 @@ public class UserSessionBean implements UserSessionBeanLocal {
         // Automatically create order after payment
         createOrderFromPayment(payment);
     }
-    
-     // Get all pending orders for admin (status != Delivered)
+
+    // Get all pending orders for admin (status != Delivered)
     @Override
     public List<Orderlist> getPendingOrders() {
         TypedQuery<Orderlist> query = em.createQuery(
-            "SELECT o FROM Orderlist o WHERE o.status <> :delivered ORDER BY o.orderDate DESC", Orderlist.class);
+                "SELECT o FROM Orderlist o WHERE o.status <> :delivered ORDER BY o.orderDate DESC", Orderlist.class);
         query.setParameter("delivered", "Delivered");
         return query.getResultList();
     }
@@ -204,7 +204,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
     @Override
     public void markAsDelivered(Integer orderId) {
         Orderlist order = em.find(Orderlist.class, orderId);
-        if(order != null){
+        if (order != null) {
             order.setStatus("Delivered");
             em.merge(order);
         }
@@ -214,7 +214,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
     @Override
     public List<Orderlist> getOrdersByUser(User user) {
         TypedQuery<Orderlist> query = em.createQuery(
-            "SELECT o FROM Orderlist o WHERE o.userId = :user ORDER BY o.orderDate DESC", Orderlist.class);
+                "SELECT o FROM Orderlist o WHERE o.userId = :user ORDER BY o.orderDate DESC", Orderlist.class);
         query.setParameter("user", user);
         return query.getResultList();
     }
@@ -230,23 +230,39 @@ public class UserSessionBean implements UserSessionBeanLocal {
         order.setStatus("Pending");
         em.persist(order);
     }
-    
-@Override
-public void addCODPayment(Integer userId, Integer bookId, BigDecimal amount) {
-    User user = em.find(User.class, userId);
-    Book book = em.find(Book.class, bookId);
 
-    Payment payment = new Payment();
-    payment.setUserId(user);
-    payment.setBookId(book);
-    payment.setAmount(amount);
-    payment.setPaymentMethod("COD");
-    payment.setPhone(user.getPhone()); // <-- Fetch user phone dynamically
-    payment.setStatus("Paid"); // COD = Paid
+    @Override
+    public void addCODPayment(Integer userId, Integer bookId, BigDecimal amount) {
+        User user = em.find(User.class, userId);
+        Book book = em.find(Book.class, bookId);
 
-    em.persist(payment);
-}
+        Payment payment = new Payment();
+        payment.setUserId(user);
+        payment.setBookId(book);
+        payment.setAmount(amount);
+        payment.setPaymentMethod("COD");
+        payment.setPhone(user.getPhone()); // <-- Fetch user phone dynamically
+        payment.setStatus("Paid"); // COD = Paid
 
+        em.persist(payment);
+    }
 
+    @Override
+    public void updatePaymentStatus(Integer userId, String oldStatus, String newStatus) {
+        TypedQuery<Payment> q = em.createQuery(
+                "SELECT p FROM Payment p WHERE p.userId.id = :uid AND p.status = :old",
+                Payment.class
+        );
+
+        q.setParameter("uid", userId);
+        q.setParameter("old", oldStatus);
+
+        List<Payment> list = q.getResultList();
+
+        for (Payment p : list) {
+            p.setStatus(newStatus);
+            em.merge(p);
+        }
+    }
 
 }

@@ -108,7 +108,7 @@ public class PaymentBean implements Serializable {
             userEJB.addPayment(
                     user,
                     c.getBookId(),
-                    "PayU",
+                    "Online Payment",
                     c.getBookId().getPrice().multiply(BigDecimal.valueOf(c.getQuantity())),
                     phone,
                     "Pending"

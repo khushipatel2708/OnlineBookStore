@@ -17,5 +17,12 @@
         <h3>Your cart items have been cleared.</h3>
 
         <h:link outcome="cartList.jsf" value="Back to Shopping"/>
+        
+        <h:form>
+
+    <h:commandButton value="Continue"
+                     action="#{paymentSuccessBean.updateAndClear}" />
+</h:form>
+        
     </h:body>
 </html>

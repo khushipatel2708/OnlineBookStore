@@ -48,5 +48,5 @@ public interface UserSessionBeanLocal {
     void createOrderFromPayment(Payment payment);
     public void addCODPayment(Integer userId, Integer bookId, BigDecimal amount);
     
-
+public void updatePaymentStatus(Integer userId, String oldStatus, String newStatus);
 }
