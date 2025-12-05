@@ -4,22 +4,107 @@
 
 <h:head>
     <title>Online Payment</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .payment-container {
+            width: 380px;
+            margin: 50px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        input[type="text"], 
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .amount-box {
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .pay-btn {
+            width: 100%;
+            background: #28a745;
+            color: white;
+            padding: 12px;
+            border: none;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .pay-btn:hover {
+            background: #218838;
+        }
+    </style>
 </h:head>
+
 <h:body>
-    <h:form>
 
-        <h2 style="text-align:center;">Online Payment</h2>
+    <div class="payment-container">
 
-        <h:panelGrid columns="2" style="margin:auto;">
-            <h:outputLabel value="Phone Number:"/>
-            <h:inputText value="#{paymentBean.phone}" required="true" />
+        <h2>Online Payment</h2>
 
-            <h:outputLabel value="Amount (₹):"/>
-            <h:outputText value="#{paymentBean.totalAmount}" />
-        </h:panelGrid>
+        <h:form>
 
-        <h:commandButton value="Pay Now" action="#{paymentBean.makePayment}" style="margin-top:20px;"/>
-        
-    </h:form>
+            <div class="form-row">
+                <label>Email:</label>
+                <h:inputText value="#{paymentBean.email}" />
+            </div>
+
+            <div class="form-row">
+                <label>Phone Number:</label>
+                <h:inputText value="#{paymentBean.phone}" required="true" />
+            </div>
+
+            <div class="form-row">
+                <label>Amount (₹):</label>
+                <div class="amount-box">
+                    <h:outputText value="#{paymentBean.totalAmount}" />
+                </div>
+            </div>
+
+            <h:commandButton value="Pay Now" 
+                             action="#{paymentBean.makePayment}" 
+                             styleClass="pay-btn" />
+
+        </h:form>
+
+    </div>
+
 </h:body>
 </html>

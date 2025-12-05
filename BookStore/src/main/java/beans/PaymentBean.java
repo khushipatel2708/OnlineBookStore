@@ -31,9 +31,10 @@ public class PaymentBean implements Serializable {
     private List<Cart> cartItems;
     private BigDecimal totalAmount;
     private String phone;
+    private String email;
     private final String firstname = "User"; // PayU requirement
-    private final String key = "BIyoWM"; // PayU key
-    private final String salt = "dj7zlIsUAs9YjjlJ8HCX3bVF6V4KtS9F"; // PayU salt
+    private final String key = "BOQDTs"; // PayU key
+    private final String salt = "s1F30l4tJHVz2MCz56FheF3gzqTbozfU"; // PayU salt
     private final String payuURL = "https://test.payu.in/_payment";
 
     // ---------------- Cart & Total ----------------
@@ -57,17 +58,28 @@ public class PaymentBean implements Serializable {
     }
 
     // ---------------- PayU Payment ----------------
+    
+    // Getters & Setters
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    
     private String formatAmount(BigDecimal amt) {
         return amt.setScale(1, BigDecimal.ROUND_HALF_UP).toPlainString();
     }
 
+//    private String generateHash(String txnid) {
+//        String hashString = key + "|" + txnid + "|" + formatAmount(totalAmount) + "|Book Purchase|"
+//                + firstname + "|" + loginBean.getLoggedInUser().getUsername()
+//                + "|||||||||||" + salt;
+//        return hashCal("SHA-512", hashString);
+//    }
+
     private String generateHash(String txnid) {
-        String hashString = key + "|" + txnid + "|" + formatAmount(totalAmount) + "|Book Purchase|"
-                + firstname + "|" + loginBean.getLoggedInUser().getUsername()
-                + "|||||||||||" + salt;
+        String hashString = key + "|" + txnid + "|" + formatAmount(totalAmount) + "|" + "Book Purchase" + "|" +
+                firstname + "|" + email + "|||||||||||" + salt;
         return hashCal("SHA-512", hashString);
     }
-
+    
     private String hashCal(String type, String str) {
         try {
             MessageDigest digest = MessageDigest.getInstance(type);
@@ -125,7 +137,7 @@ public class PaymentBean implements Serializable {
         out.println("<input type='hidden' name='amount' value='" + formatAmount(totalAmount) + "'/>");
         out.println("<input type='hidden' name='productinfo' value='Book Purchase'/>");
         out.println("<input type='hidden' name='firstname' value='" + firstname + "'/>");
-        out.println("<input type='hidden' name='email' value='" + user.getUsername() + "'/>");
+        out.println("<input type='hidden' name='email' value='" + email + "'/>");
         out.println("<input type='hidden' name='phone' value='" + phone + "'/>");
         out.println("<input type='hidden' name='surl' value='" + surl + "'/>");
         out.println("<input type='hidden' name='furl' value='" + furl + "'/>");
