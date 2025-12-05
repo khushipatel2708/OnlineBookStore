@@ -175,6 +175,12 @@ public class MyAdminClient {
         return webTarget.path(java.text.MessageFormat.format("users/{0}", new Object[]{id})).request().delete(Response.class);
     }
 
+    public <T> T getGroupById(Class<T> responseType, String id) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("groups/{0}", new Object[]{id}));
+        return resource.request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
     public <T> T searchGroup(Class<T> responseType, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("groups/search/{0}", new Object[]{name}));

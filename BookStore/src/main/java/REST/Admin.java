@@ -252,6 +252,13 @@ public class Admin {
         return adminSessionBean.findGroupByName(name);
     }
 
+    @GET
+    @Path("groups/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public GroupMaster getGroupById(@PathParam("id") Integer id) {
+        return adminSessionBean.findGroupById(id);
+    }
+
     @POST
     @Path("groups")
     @Consumes(MediaType.APPLICATION_JSON)
