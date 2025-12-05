@@ -45,19 +45,13 @@ import java.util.Collection;
     @NamedQuery(name = "Book.findByLastPagePhoto", query = "SELECT b FROM Book b WHERE b.lastPagePhoto = :lastPagePhoto")})
 public class Book implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "bookname")
     private String bookname;
     @Basic(optional = false)
-    @NotNull
+    @NotNull()
     @Size(min = 1, max = 255)
     @Column(name = "authorname")
     private String authorname;
@@ -66,8 +60,11 @@ public class Book implements Serializable {
     @NotNull
     @Column(name = "price")
     private BigDecimal price;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "available")
-    private Boolean available;
+    private int available;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Size(max = 255)
     @Column(name = "cover_photo")
     private String coverPhoto;
@@ -77,6 +74,12 @@ public class Book implements Serializable {
     @Size(max = 255)
     @Column(name = "last_page_photo")
     private String lastPagePhoto;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @OneToMany(mappedBy = "bookId")
     private Collection<Feedback> feedbackCollection;
     @JoinColumn(name = "booktype_id", referencedColumnName = "id")
@@ -107,37 +110,6 @@ public class Book implements Serializable {
         this.id = id;
     }
 
-    public String getBookname() {
-        return bookname;
-    }
-
-    public void setBookname(String bookname) {
-        this.bookname = bookname;
-    }
-
-    public String getAuthorname() {
-        return authorname;
-    }
-
-    public void setAuthorname(String authorname) {
-        this.authorname = authorname;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public Boolean getAvailable() {
-        return available;
-    }
-
-    public void setAvailable(Boolean available) {
-        this.available = available;
-    }
 
     public String getCoverPhoto() {
         return coverPhoto;
@@ -213,6 +185,38 @@ public class Book implements Serializable {
     @Override
     public String toString() {
         return "Entity.Book[ id=" + id + " ]";
+    }
+
+    public String getBookname() {
+        return bookname;
+    }
+
+    public void setBookname(String bookname) {
+        this.bookname = bookname;
+    }
+
+    public String getAuthorname() {
+        return authorname;
+    }
+
+    public void setAuthorname(String authorname) {
+        this.authorname = authorname;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public int getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(int available) {
+        this.available = available;
     }
     
 }
