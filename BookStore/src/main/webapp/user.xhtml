@@ -6,272 +6,327 @@
       xmlns:ui="jakarta.faces.facelets"
       xmlns:f="jakarta.faces.core">
 
-    <h:head>
-        <title>BookStore - Discover Your Next Great Read</title>
+<h:head>
+    <title>BookStore - Discover Your Next Great Read</title>
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"/>
 
-        <style>
-            /* Define a darker, more professional palette */
-            :root {
-                --bs-primary: #34495e; /* Dark Slate/Indigo for main elements */
-                --bs-accent: #3498db; /* Bright Blue accent for links/hovers */
-                --bs-background: #f4f6f9; /* Off-white for body background */
-                --bs-card-bg: white;
-                --bs-text-muted: #7f8c8d;
-            }
+    <style>
+        :root {
+            --bs-primary: #34495e;
+            --bs-accent: #3498db;
+            --bs-background: #f4f6f9;
+            --bs-card-bg: white;
+            --bs-text-muted: #7f8c8d;
+        }
 
-            /* Global Overrides */
-            .bg-light {
-                background-color: var(--bs-background) !important;
-            }
-            .btn-primary, .btn-primary:focus {
-                background-color: var(--bs-accent) !important;
-                border-color: var(--bs-accent) !important;
-            }
-            .btn-primary:hover {
-                background-color: #2980b9 !important;
-                border-color: #2980b9 !important;
-            }
+        .bg-light {
+            background-color: var(--bs-background) !important;
+        }
 
-            /* --- STICKY HEADER --- */
-            .sticky-header-wrapper {
-                position: sticky;
-                top: 0;
-                z-index: 1020; /* Above most other elements */
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            }
+        .btn-primary, .btn-primary:focus {
+            background-color: var(--bs-accent) !important;
+            border-color: var(--bs-accent) !important;
+        }
 
-            /* --- Hero Banner Styling --- */
-            .hero-banner {
-                background-image: url('images/bookstore_background.jpg');
-                background-size: cover;
-                background-position: center;
-                height: 550px; /* Slightly taller hero */
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                color: white;
-                position: relative;
-                margin-bottom: -50px; /* Overlap into the next section */
-            }
-            .hero-overlay {
-                /* Blurred Dark Overlay for striking effect */
-                background-color: rgba(0, 0, 0, 0.6);
-                backdrop-filter: blur(2px);
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-            }
-            .hero-content {
-                z-index: 10;
-            }
-            .hero-content h1 {
-                font-size: 4rem;
-                font-weight: 900;
-                text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
-                margin-bottom: 25px;
-            }
-            .hero-content .lead {
-                font-size: 1.5rem;
-                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
-            }
-            .hero-content .btn-lg {
-                padding: 1rem 2.5rem; /* Larger buttons */
-                font-size: 1.25rem;
-                font-weight: bold;
-            }
+        .btn-primary:hover {
+            background-color: #2980b9 !important;
+            border-color: #2980b9 !important;
+        }
 
-            /* --- Featured Books Section Container --- */
-            .featured-section {
-                background-color: var(--bs-background);
-                padding-top: 80px; /* Space from the hero overlap */
-            }
+        .sticky-header-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-            /* --- Book Card Styling --- */
-            .book-card {
-                border: none;
-                border-radius: 12px; /* Rounded corners */
-                overflow: hidden;
-                transition: transform 0.3s, box-shadow 0.3s;
-                background-color: var(--bs-card-bg);
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Stronger default shadow */
-                height: 100%;
-            }
-            .book-card:hover {
-                transform: translateY(-8px);
-                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-            }
-            .book-cover {
-                height: 300px;
-                background-color: #ecf0f1; /* Light gray cover placeholder */
-                border-bottom: 1px solid #ddd;
-            }
-            .book-cover img {
-                object-fit: contain; /* Ensure cover is fully visible */
-                padding: 10px;
-                width: 100%;
-                height: 100%;
-                border-radius: 12px 12px 0 0;
-            }
-            .book-card .card-title a {
-                color: var(--bs-primary);
-                font-weight: 600;
-            }
-            .price-sale {
-                color: var(--bs-danger, #e74c3c); /* Bold Red for primary price */
-                font-weight: bold;
-                font-size: 1.35rem;
-            }
-            .price-original {
-                text-decoration: line-through;
-                color: var(--bs-text-muted);
-                font-size: 0.95em;
-                margin-left: 8px;
-            }
+        .hero-banner {
+            background-image: url('images/bookstore_background.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 550px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            margin-bottom: -50px;
+        }
 
-            /* --- Why Choose Section --- */
-            .why-choose-section {
-                background-color: white;
-            }
-            .benefit-card {
-                background-color: var(--bs-background);
-                border-radius: 15px;
-                padding: 40px 20px;
-                height: 100%;
-                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-                transition: background-color 0.3s;
-            }
-            .benefit-card:hover {
-                background-color: #eaf0f6; /* Subtle hover effect */
-            }
-            .benefit-icon {
-                font-size: 3rem;
-                color: white;
-                background-color: var(--bs-accent); /* Use accent color for icons */
-                padding: 20px;
-                border-radius: 50%;
-                margin-bottom: 20px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            }
-            .benefit-card h5 {
-                color: var(--bs-primary);
-            }
-        </style>
-    </h:head>
+        .hero-overlay {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(2px);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
 
-    <h:body class="bg-light">
+        .hero-content {
+            z-index: 10;
+            opacity: 0; /* Start hidden for animation */
+            transform: translateY(50px);
+            transition: all 1s ease-out;
+        }
 
-        <div class="sticky-header-wrapper">
-            <ui:include src="/header.xhtml" /> 
-        </div>
+        .hero-content.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        <div class="hero-banner">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <h1>Discover Your Next Great Read</h1>
-                <p class="lead mb-5 fw-light">
-                    Explore thousands of books across all genres with fast delivery and unbeatable prices.
-                </p>
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
+            margin-bottom: 25px;
+        }
 
-                <h:form>
-                    <h:commandLink value="Browse Books" 
-                                   action="UserBookList.xhtml?faces-redirect=true" 
-                                   styleClass="btn btn-primary btn-lg me-3" />
+        .hero-content .lead {
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
 
-                   
-                </h:form>
+        .hero-content .btn-lg {
+            padding: 1rem 2.5rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
 
-            </div>
-        </div>
+        .featured-section {
+            background-color: var(--bs-background);
+            padding-top: 80px;
+        }
 
-        <div class="featured-section container py-5">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold display-5" style="color: var(--bs-primary);">📚 Featured Books</h2>
-                <p class="text-muted fs-5">Discover our handpicked selection of bestsellers and must-read titles</p>
-            </div>
+        .book-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: var(--bs-card-bg);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            height: 100%;
+        }
 
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-                <ui:repeat value="#{bookBean.allBooks.subList(0, bookBean.allBooks.size() > 8 ? 8 : bookBean.allBooks.size())}" var="book" >
-                    <div class="col d-flex">
-                        <div class="book-card w-100">
-                            <div class="book-cover">
-                                <h:graphicImage value="/BookStore/BookStoreUploads/#{book.coverPhoto}" 
-                                                alt="Cover Photo of #{book.bookname}" 
-                                                rendered="#{book.coverPhoto != null}"/>
-                                <h:panelGroup rendered="#{book.coverPhoto == null}" styleClass="d-flex align-items-center justify-content-center h-100 text-muted">
-                                    [No Cover]
-                                </h:panelGroup>
-                            </div>
+        .book-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
 
-                            <div class="p-4 d-flex flex-column flex-grow-1">
-                                <h6 class="card-title text-truncate mb-1">
-                                    <h:form> <h:commandLink value="#{book.bookname}" action="#{bookBean.viewDetails(book.id)}" styleClass="text-decoration-none"/></h:form>
-                                </h6>
-                                <p class="card-text small mb-2" style="color: var(--bs-text-muted);">by #{book.authorname}</p>
+        .book-cover {
+            height: 300px;
+            background-color: #ecf0f1;
+            border-bottom: 1px solid #ddd;
+        }
 
-                                <div class="d-flex align-items-center mb-3 mt-auto">
-                                    <span class="price-sale me-2">
-                                        <h:outputText value="#{book.price}"><f:convertNumber type="currency" currencySymbol="₹" /></h:outputText>
-                                    </span>
-                                </div>
+        .book-cover img {
+            object-fit: contain;
+            padding: 10px;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px 12px 0 0;
+        }
 
-                                <h:form>
-                                    <h:commandButton value="Add to Cart" 
-                                                     styleClass="btn btn-primary btn-sm mt-2"/>
-                                </h:form>
+        .book-card .card-title a {
+            color: var(--bs-primary);
+            font-weight: 600;
+        }
 
-                            </div>
-                        </div>
+        .price-sale {
+            color: var(--bs-danger, #e74c3c);
+            font-weight: bold;
+            font-size: 1.35rem;
+        }
+
+        .price-original {
+            text-decoration: line-through;
+            color: var(--bs-text-muted);
+            font-size: 0.95em;
+            margin-left: 8px;
+        }
+
+        .why-choose-section {
+            background-color: #f8f9fa;
+        }
+
+        .benefit-card {
+            background-color: white;
+            border-radius: 20px;
+            padding: 40px 20px;
+            height: 100%;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: default;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .benefit-icon-wrapper {
+            background-color: var(--bs-accent);
+            padding: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .benefit-card h5 {
+            color: var(--bs-primary);
+            font-size: 1.25rem;
+        }
+
+        .benefit-card p {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+    </style>
+</h:head>
+
+<h:body class="bg-light">
+
+<div class="sticky-header-wrapper">
+    <ui:include src="/header.xhtml" /> 
+</div>
+
+<div class="hero-banner">
+    <div class="hero-overlay"></div>
+    <div class="hero-content" id="heroContent">
+        <h1>Discover Your Next Great Read</h1>
+        <p class="lead mb-5 fw-light">
+            Explore thousands of books across all genres with fast delivery and unbeatable prices.
+        </p>
+
+        <h:form>
+            <h:commandLink value="Browse Books" 
+                           action="UserBookList.xhtml?faces-redirect=true" 
+                           styleClass="btn btn-primary btn-lg me-3" />
+        </h:form>
+
+    </div>
+</div>
+
+<div class="featured-section container py-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold display-5" style="color: var(--bs-primary);" data-aos="fade-up">📚 Featured Books</h2>
+        <p class="text-muted fs-5" data-aos="fade-up" data-aos-delay="100">Discover our handpicked selection of bestsellers and must-read titles</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        <ui:repeat value="#{bookBean.allBooks.subList(0, bookBean.allBooks.size() > 8 ? 8 : bookBean.allBooks.size())}" var="book" >
+            <div class="col d-flex" data-aos="zoom-in" data-aos-delay="150">
+                <div class="book-card w-100">
+                    <div class="book-cover">
+                        <h:graphicImage value="/BookStore/BookStoreUploads/#{book.coverPhoto}" 
+                                        alt="Cover Photo of #{book.bookname}" 
+                                        rendered="#{book.coverPhoto != null}"/>
+                        <h:panelGroup rendered="#{book.coverPhoto == null}" styleClass="d-flex align-items-center justify-content-center h-100 text-muted">
+                            [No Cover]
+                        </h:panelGroup>
                     </div>
-                </ui:repeat>
-            </div>
 
-            <div class="text-center mt-5">
-                <h:form>
-                    <h:commandButton value="View All Books" 
-                                     action="UserBookList.jsf?faces-redirect=true" 
-                                     styleClass="btn btn-outline-primary btn-lg px-5" />
-                </h:form>
-            </div>
+                    <div class="p-4 d-flex flex-column flex-grow-1">
+                        <h6 class="card-title text-truncate mb-1">
+                            <h:form> <h:commandLink value="#{book.bookname}" action="#{bookBean.viewDetails(book.id)}" styleClass="text-decoration-none"/></h:form>
+                        </h6>
+                        <p class="card-text small mb-2" style="color: var(--bs-text-muted);">by #{book.authorname}</p>
 
-        </div>
-
-        <div class="why-choose-section py-5 mt-5">
-            <div class="container text-center">
-                <h2 class="fw-bold display-5 mb-5" style="color: var(--bs-primary);">🚀 Why Choose BookStore?</h2>
-
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="benefit-card">
-                            <i class="bi bi-truck benefit-icon"></i>
-                            <h5 class="fw-bold">Fast Delivery</h5>
-                            <p style="color: var(--bs-text-muted);">Get your books delivered within 2-3 business days with our reliable shipping partners.</p>
+                        <div class="d-flex align-items-center mb-3 mt-auto">
+                            <span class="price-sale me-2">
+                                <h:outputText value="#{book.price}"><f:convertNumber type="currency" currencySymbol="₹" /></h:outputText>
+                            </span>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="benefit-card">
-                            <i class="bi bi-shield-lock benefit-icon"></i>
-                            <h5 class="fw-bold">Secure Payment</h5>
-                            <p style="color: var(--bs-text-muted);">Multiple payment options including online payment and cash on delivery for your convenience.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="benefit-card">
-                            <i class="bi bi-headset benefit-icon"></i>
-                            <h5 class="fw-bold">24/7 Support</h5>
-                            <p style="color: var(--bs-text-muted);">Our customer service team is always ready to help you with any questions or concerns.</p>
-                        </div>
+
+                        <h:form>
+                            <h:commandButton value="Add to Cart" 
+                                             styleClass="btn btn-primary btn-sm mt-2"/>
+                        </h:form>
+
                     </div>
                 </div>
             </div>
+        </ui:repeat>
+    </div>
+
+    <div class="text-center mt-5">
+        <h:form>
+            <h:commandButton value="View All Books" 
+                             action="UserBookList.jsf?faces-redirect=true" 
+                             styleClass="btn btn-outline-primary btn-lg px-5" />
+        </h:form>
+    </div>
+
+</div>
+
+<div class="why-choose-section py-5 mt-5">
+    <div class="container text-center">
+        <h2 class="fw-bold display-5 mb-5" style="color: var(--bs-primary);" data-aos="fade-up">
+            🚀 Why Choose BookStore?
+        </h2>
+
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-right" data-aos-delay="100">
+                <div class="benefit-card text-center p-4 h-100 d-flex flex-column align-items-center justify-content-start">
+                    <div class="benefit-icon-wrapper mb-3">
+                        <i class="bi bi-truck benefit-icon"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Fast Delivery</h5>
+                    <p class="text-muted">
+                        Get your books delivered within 2-3 business days with our reliable shipping partners.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="benefit-card text-center p-4 h-100 d-flex flex-column align-items-center justify-content-start">
+                    <div class="benefit-icon-wrapper mb-3">
+                        <i class="bi bi-shield-lock benefit-icon"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Secure Payment</h5>
+                    <p class="text-muted">
+                        Multiple payment options including online payment and cash on delivery for your convenience.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-left" data-aos-delay="300">
+                <div class="benefit-card text-center p-4 h-100 d-flex flex-column align-items-center justify-content-start">
+                    <div class="benefit-icon-wrapper mb-3">
+                        <i class="bi bi-headset benefit-icon"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">24/7 Support</h5>
+                    <p class="text-muted">
+                        Our customer service team is always ready to help you with any questions or concerns.
+                    </p>
+                </div>
+            </div>
         </div>
+    </div>
+</div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init({ duration: 1000, once: true });
 
-    </h:body>
+    // Hero banner fade-in
+    window.addEventListener('DOMContentLoaded', () => {
+        const hero = document.getElementById('heroContent');
+        setTimeout(() => {
+            hero.classList.add('show');
+        }, 200);
+    });
+</script>
+
+</h:body>
 </html>
