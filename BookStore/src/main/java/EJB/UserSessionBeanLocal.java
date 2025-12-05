@@ -46,4 +46,7 @@ public interface UserSessionBeanLocal {
     void markAsDelivered(Integer orderId);
     List<Orderlist> getOrdersByUser(User user);
     void createOrderFromPayment(Payment payment);
+    public void addCODPayment(Integer userId, Integer bookId, BigDecimal amount);
+    
+
 }

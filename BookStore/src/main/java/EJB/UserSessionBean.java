@@ -230,4 +230,23 @@ public class UserSessionBean implements UserSessionBeanLocal {
         order.setStatus("Pending");
         em.persist(order);
     }
+    
+@Override
+public void addCODPayment(Integer userId, Integer bookId, BigDecimal amount) {
+    User user = em.find(User.class, userId);
+    Book book = em.find(Book.class, bookId);
+
+    Payment payment = new Payment();
+    payment.setUserId(user);
+    payment.setBookId(book);
+    payment.setAmount(amount);
+    payment.setPaymentMethod("COD");
+    payment.setPhone(user.getPhone()); // <-- Fetch user phone dynamically
+    payment.setStatus("Paid"); // COD = Paid
+
+    em.persist(payment);
+}
+
+
+
 }

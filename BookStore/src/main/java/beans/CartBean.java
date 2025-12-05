@@ -126,9 +126,51 @@ public class CartBean implements Serializable {
         return "payment.xhtml?faces-redirect=true";
     }
 
-    public String cashOnDelivery() {
-        // any backend logic here, like saving order to DB
-        return "success.jsf?faces-redirect=true";
-    }
+   public String cashOnDelivery() {
+    try {
+        User loggedUser = loginBean.getLoggedInUser();
+        if (loggedUser == null) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, new FacesMessage("Please login first."));
+            return null;
+        }
 
+        Integer userId = loggedUser.getId();
+        List<Cart> items = cartSession.getCartItems(userId);
+
+        if (items == null || items.isEmpty()) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, new FacesMessage("Cart is empty."));
+            return null;
+        }
+
+        // Loop through cart items and create COD payment for each
+        for (Cart c : items) {
+            java.math.BigDecimal price = c.getBookId().getPrice();
+            java.math.BigDecimal qty = java.math.BigDecimal.valueOf(c.getQuantity());
+            java.math.BigDecimal amount = price.multiply(qty);
+
+            // CALL EJB METHOD TO SAVE PAYMENT
+            cartSession.addCODPayment(
+                userId,
+                c.getBookId().getId(),
+                amount
+            );
+
+            // remove from cart after payment saved
+            cartSession.removeFromCart(c.getId());
+        }
+
+        return "success.xhtml?faces-redirect=true";
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        FacesContext.getCurrentInstance()
+                .addMessage(null, new FacesMessage("COD failed: " + ex.getMessage()));
+        return null;
+    }
+}
+
+
+    
 }
