@@ -147,7 +147,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             b.setAuthorname(authorname);
             b.setPrice(BigDecimal.valueOf(price));
             b.setBooktypeId(bt);
-            b.setAvailable(Boolean.TRUE);
+            b.setAvailable(0);
             b.setCoverPhoto(coverPhoto);
             b.setFrontPagePhoto(frontPagePhoto);
             b.setLastPagePhoto(lastPagePhoto);
