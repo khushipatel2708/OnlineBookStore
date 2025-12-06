@@ -276,5 +276,20 @@ public class UserSessionBean implements UserSessionBeanLocal {
 
         return list.isEmpty() ? null : list.get(0);
     }
+    
+    @Override
+public Cart getCartById(int cartId) {
+    return em.find(Cart.class, cartId);
+}
+
+@Override
+public void updateBookStock(Integer bookId, int newAvailable) {
+    Book book = em.find(Book.class, bookId);
+    if (book != null) {
+        book.setAvailable(newAvailable);
+        em.merge(book);
+    }
+}
+
 
 }

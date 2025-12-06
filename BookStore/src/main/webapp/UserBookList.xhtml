@@ -87,7 +87,6 @@
                 margin-left: 5px;
             }
 
-            /* ✔ FIXED BUTTON  */
             .btn-add-to-cart {
                 width: 100%;
                 padding: 10px;
@@ -98,8 +97,15 @@
                 color: white;
             }
 
-            .btn-add-to-cart:hover {
-                background-color: #0056b3;
+            /* Disabled Button Look */
+            .btn-add-to-cart:disabled {
+                background-color: #a5a5a5 !important;
+                cursor: not-allowed;
+                border: none !important;
+            }
+
+            .btn-add-to-cart:hover:disabled {
+                background-color: #a5a5a5 !important;
             }
 
             .btn-view {
@@ -127,8 +133,6 @@
         </div>
 
         <h:form>
-
-
             <div class="container-fluid py-4">
 
                 <div class="row gx-5">
@@ -170,7 +174,6 @@
                                                 value="#{t.type}" />
                                             <h:outputText value="#{t.type}" />
                                         </h:commandLink>
-
                                     </ui:repeat>
 
                                 </div>
@@ -189,9 +192,11 @@
                             <ui:repeat value="#{bookBean.allBooks}" var="b">
                                 <div class="col">
                                     <div class="card book-card p-3">
+
                                         <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}"
                                                         rendered="#{not empty b.coverPhoto}"
                                                         styleClass="card-img-top"/>
+
                                         <div class="card-body p-0 d-flex flex-column">
                                             <h3 class="book-title">#{b.bookname}</h3>
                                             <div class="book-author">
@@ -200,6 +205,11 @@
 
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span class="price-new">₹#{b.price}</span>
+
+                                                <!-- Stock Status -->
+                                                <span style="font-weight:600; color: #{b.available > 0 ? 'green' : 'red'};">
+                                                    #{b.available > 0 ? 'In Stock' : 'Out of Stock'}
+                                                </span>
                                             </div>
 
                                             <div class="mb-3">
@@ -212,11 +222,14 @@
                                                 </span>
                                             </div>
 
-                                            <!-- Buttons in the same line -->
+                                            <!-- Buttons -->
                                             <div class="d-flex gap-2">
+
+                                                <!-- Add to Cart Disabled When Stock = 0 -->
                                                 <h:commandButton value="Add to Cart"
                                                                  styleClass="btn-add-to-cart flex-fill"
-                                                                 action="#{cartBean.addToCart}">
+                                                                 action="#{cartBean.addToCart}"
+                                                                 disabled="#{b.available == 0}">
                                                     <f:param name="bookId" value="#{b.id}" />
                                                     <f:ajax render="@form" />
                                                 </h:commandButton>

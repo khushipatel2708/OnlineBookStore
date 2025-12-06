@@ -33,6 +33,8 @@ public interface UserSessionBeanLocal {
     Collection<Shipping> getShippingByPincode(String pincode);
     Collection<Shipping> getShippingByUser(Integer userId);
     Shipping getLatestShippingByUser(Integer userId);
+    Cart getCartById(int cartId);
+void updateBookStock(Integer bookId, int newAvailable);
     
    //cart
     void addToCart(int userId, int bookId);

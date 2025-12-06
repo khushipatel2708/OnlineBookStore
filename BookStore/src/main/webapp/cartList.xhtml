@@ -129,11 +129,18 @@
                                     <h:outputText value="#{c.quantity}" class="mx-2"/>
 
                                     <h:commandButton value="+" styleClass="btn btn-primary qty-btn"
-                                                     action="#{cartBean.increaseQuantity(c.id)}">
+                                                     action="#{cartBean.increaseQuantity(c.id)}"
+                                                     disabled="#{c.quantity ge c.bookId.available}">
                                         <f:ajax render="@form"/>
                                     </h:commandButton>
                                 </div>
                             </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Stock Left</f:facet>
+                                    #{c.bookId.available - c.quantity}
+                            </h:column>
+
 
                             <h:column>
                                 <f:facet name="header">Total</f:facet>

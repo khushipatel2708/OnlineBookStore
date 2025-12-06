@@ -58,11 +58,15 @@ public class PaymentBean implements Serializable {
     }
 
     // ---------------- PayU Payment ----------------
-    
     // Getters & Setters
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     private String formatAmount(BigDecimal amt) {
         return amt.setScale(1, BigDecimal.ROUND_HALF_UP).toPlainString();
     }
@@ -73,13 +77,12 @@ public class PaymentBean implements Serializable {
 //                + "|||||||||||" + salt;
 //        return hashCal("SHA-512", hashString);
 //    }
-
     private String generateHash(String txnid) {
-        String hashString = key + "|" + txnid + "|" + formatAmount(totalAmount) + "|" + "Book Purchase" + "|" +
-                firstname + "|" + email + "|||||||||||" + salt;
+        String hashString = key + "|" + txnid + "|" + formatAmount(totalAmount) + "|" + "Book Purchase" + "|"
+                + firstname + "|" + email + "|||||||||||" + salt;
         return hashCal("SHA-512", hashString);
     }
-    
+
     private String hashCal(String type, String str) {
         try {
             MessageDigest digest = MessageDigest.getInstance(type);
@@ -105,16 +108,30 @@ public class PaymentBean implements Serializable {
 
         // Save payments in DB as "Pending"
         for (Cart c : getCartItems()) {
+            BigDecimal price = c.getBookId().getPrice();
+            BigDecimal qty = BigDecimal.valueOf(c.getQuantity());
+            BigDecimal amount = price.multiply(qty);
+
+            // 1️⃣ Save Online Payment
             userEJB.addPayment(
                     user,
                     c.getBookId(),
                     "Online Payment",
-                    c.getBookId().getPrice().multiply(BigDecimal.valueOf(c.getQuantity())),
+                    amount,
                     phone,
                     "Pending"
             );
-        }
 
+            // 2️⃣ Update Book stock
+            int newStock = c.getBookId().getAvailable() - c.getQuantity();
+            if (newStock < 0) {
+                newStock = 0; // prevent negative stock
+            }
+            userEJB.updateBookStock(c.getBookId().getId(), newStock);
+
+            // 3️⃣ Remove from cart
+            userEJB.removeFromCart(c.getId());
+        }
         // PayU redirect
         String txnid = "TXN" + System.currentTimeMillis();
         String hash = generateHash(txnid);

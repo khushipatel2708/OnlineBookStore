@@ -82,12 +82,21 @@ public class CartBean implements Serializable {
     }
 
     public void increaseQuantity(int cartId) {
+    Cart c = cartSession.getCartById(cartId); // you need a method to get cart by id
+    if (c != null && c.getQuantity() < c.getBookId().getAvailable()) {
         cartSession.updateQuantity(cartId, +1);
+    } else {
+        FacesContext.getCurrentInstance().addMessage(null,
+            new FacesMessage(FacesMessage.SEVERITY_WARN, "Cannot exceed available stock!", null));
     }
+}
 
-    public void decreaseQuantity(int cartId) {
+public void decreaseQuantity(int cartId) {
+    Cart c = cartSession.getCartById(cartId);
+    if (c != null && c.getQuantity() > 1) {
         cartSession.updateQuantity(cartId, -1);
     }
+}
 
     public int getCartCount() {
         User loggedUser = loginBean.getLoggedInUser();
@@ -145,21 +154,22 @@ public class CartBean implements Serializable {
         }
 
         // Loop through cart items and create COD payment for each
-        for (Cart c : items) {
-            java.math.BigDecimal price = c.getBookId().getPrice();
-            java.math.BigDecimal qty = java.math.BigDecimal.valueOf(c.getQuantity());
-            java.math.BigDecimal amount = price.multiply(qty);
+       for (Cart c : items) {
+    java.math.BigDecimal price = c.getBookId().getPrice();
+    java.math.BigDecimal qty = java.math.BigDecimal.valueOf(c.getQuantity());
+    java.math.BigDecimal amount = price.multiply(qty);
 
-            // CALL EJB METHOD TO SAVE PAYMENT
-            cartSession.addCODPayment(
-                userId,
-                c.getBookId().getId(),
-                amount
-            );
+    // 1️⃣ Save COD payment
+    cartSession.addCODPayment(userId, c.getBookId().getId(), amount);
 
-            // remove from cart after payment saved
-            cartSession.removeFromCart(c.getId());
-        }
+    // 2️⃣ Update Book stock
+    int newStock = c.getBookId().getAvailable() - c.getQuantity();
+    if (newStock < 0) newStock = 0; // prevent negative stock
+    cartSession.updateBookStock(c.getBookId().getId(), newStock);
+
+    // 3️⃣ Remove from cart
+    cartSession.removeFromCart(c.getId());
+}
 
         return "success.xhtml?faces-redirect=true";
 
@@ -171,6 +181,7 @@ public class CartBean implements Serializable {
     }
 }
 
+   
 
     
 }
