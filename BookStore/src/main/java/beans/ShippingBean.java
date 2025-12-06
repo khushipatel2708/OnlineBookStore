@@ -3,12 +3,14 @@ package beans;
 import EJB.UserSessionBeanLocal;
 import Entity.City;
 import Entity.Shipping;
+import client.MyAdminClient;
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
+import java.util.Collection;
 
 @Named("shippingBean")
 @SessionScoped
@@ -20,7 +22,9 @@ public class ShippingBean implements Serializable {
     @Inject
     private LoginBean loginBean;
     private boolean isExisting;
+    private Integer cityId;
 
+    private MyAdminClient adminClient = new MyAdminClient();
     private Shipping shipping;   // ⭐ main model
 
     // -----------------------------
@@ -36,42 +40,62 @@ public class ShippingBean implements Serializable {
         } else {
             isExisting = true;
         }
+
+        // ✅ Pre-fill cityId from saved shipping
+        if (shipping.getCityid() != null) {
+            cityId = shipping.getCityid().getId();
+        } else {
+            cityId = null; // optional
+        }
     }
 
     // -----------------------------
     // ⭐ SAVE or UPDATE SHIPPING
     // -----------------------------
-public String saveShipping() {
+    public String saveShipping() {
 
-    if (shipping.getId() == null) {
-        // Add new shipping without city
-        userSessionBean.addShipping(
-            loginBean.getLoggedInUser().getId(),
-            null, // cityId removed
-            shipping.getName(),
-            shipping.getPhone(),
-            shipping.getAddress1(),
-            shipping.getAddress2(),
-            shipping.getLandmark(),
-            shipping.getPincode()
-        );
-    } else {
-        // Update shipping without city
-        userSessionBean.updateShipping(
-            shipping.getId(),
-            loginBean.getLoggedInUser().getId(),
-            null, // cityId removed
-            shipping.getName(),
-            shipping.getPhone(),
-            shipping.getAddress1(),
-            shipping.getAddress2(),
-            shipping.getLandmark(),
-            shipping.getPincode()
-        );
+        // Attach selected city
+        if (cityId != null) {
+            City c = new City();
+            c.setId(cityId);
+            shipping.setCityid(c);
+        }
+
+        Integer selectedCityId = (shipping.getCityid() != null) ? shipping.getCityid().getId() : null;
+
+        if (shipping.getId() == null) {
+            // Add new shipping
+            userSessionBean.addShipping(
+                    loginBean.getLoggedInUser().getId(),
+                    selectedCityId,
+                    shipping.getName(),
+                    shipping.getPhone(),
+                    shipping.getAddress1(),
+                    shipping.getAddress2(),
+                    shipping.getLandmark(),
+                    shipping.getPincode()
+            );
+        } else {
+            // Update shipping
+            userSessionBean.updateShipping(
+                    shipping.getId(),
+                    loginBean.getLoggedInUser().getId(),
+                    selectedCityId,
+                    shipping.getName(),
+                    shipping.getPhone(),
+                    shipping.getAddress1(),
+                    shipping.getAddress2(),
+                    shipping.getLandmark(),
+                    shipping.getPincode()
+            );
+        }
+
+        return "UserBookList.xhtml?faces-redirect=true";
     }
 
-    return "UserBookList.xhtml?faces-redirect=true";
-}
+    public Collection<City> getAllCities() {
+        return adminClient.getAllCities(Collection.class);
+    }
 
 //    public String saveShipping() {
 //
@@ -107,7 +131,6 @@ public String saveShipping() {
 //
 //        return "confirmOrder.jsf?faces-redirect=true";
 //    }
-
     // -----------------------------
     // GETTERS & SETTERS
     // -----------------------------
@@ -140,6 +163,14 @@ public String saveShipping() {
         }
 
         return "shippingForm.xhtml?faces-redirect=true";
+    }
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
     }
 
 }

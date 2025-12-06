@@ -108,6 +108,18 @@
                                  styleClass="form-control" required="true"/>
                 </div>
 
+                <div class="form-field-group mb-3">
+                    <label class="form-label required-star">
+                        <i class="fa fa-mail-bulk me-1"></i> City
+                    </label>
+                    
+                <h:selectOneMenu value="#{shippingBean.cityId}" styleClass="form-control">
+    <f:selectItems value="#{shippingBean.allCities}" var="city"
+                   itemValue="#{city.id}" itemLabel="#{city.name}" />
+</h:selectOneMenu>
+
+
+            </div>
                 <!-- Submit Button -->
                 <h:commandButton value="Save"
                                  action="#{shippingBean.saveShipping}" 
