@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<h:head>
+    <title>User Registration</title>
+
+    <!-- Bootstrap & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+
+    <style>
+        /* BASE LAYOUT STYLES (Copied from your reference code) */
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding-top: 65px; /* Space for the sticky header */
+        }
+        .sticky-header-wrapper {
+             position: fixed;
+             top: 0;
+             left: 0;
+             right: 0;
+             z-index: 1030;
+             background-color: white;
+             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+             height: 65px;
+        }
+        .main-layout {
+            display: flex;
+            gap: 24px;
+            padding: 25px 25px 25px 25px; /* Added padding to contain content */
+        }
+
+        /* SIDEBAR STYLES */
+        .admin-sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px; /* Adjusted radius for the sidebar in the image */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 85px; /* Sticky below the header */
+            height: fit-content;
+            align-self: flex-start;
+        }
+        .sidebar-header {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+        }
+        .nav-item-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            margin: 5px 0;
+            text-decoration: none;
+            color: #495057;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        .nav-item-link.active {
+            background-color: #0d6efd; /* Blue from your reference code */
+            color: #fff;
+            font-weight: 600;
+        }
+        .nav-item-link i {
+            width: 20px;
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* MAIN CONTENT STYLES */
+        .main-content {
+            flex-grow: 1;
+        }
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        h2.page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #343a40;
+            margin: 0;
+        }
+        .form-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        label {
+            font-weight: 600;
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+    <!-- HEADER -->
+    <div class="sticky-header-wrapper">
+        <ui:include src="/adminHeader.xhtml"/>
+    </div>
+
+    <!-- LAYOUT -->
+    <div class="main-layout">
+
+        <!-- SIDEBAR -->
+        <ui:include src="sidebar.xhtml"/>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="main-content">
+
+            <div class="form-card">
+
+                <h2 class="mb-4">User Registration</h2>
+
+                <h:form>
+
+                    <div class="row g-4">
+
+                        <!-- LEFT COLUMN -->
+                        <div class="col-md-6">
+
+                            <!-- Full Name -->
+                            <div class="mb-3">
+                                <label>Full Name *</label>
+                                <h:inputText value="#{userBean.fullname}" styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="Full Name is required."/>
+                                <h:message for="@previous" styleClass="text-danger small"/>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="mb-3">
+                                <label>Phone Number *</label>
+                                <h:inputText value="#{userBean.phone}" styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="Phone is required."/>
+                                <h:message for="@previous" styleClass="text-danger small"/>
+                            </div>
+
+                            <!-- Username -->
+                            <div class="mb-3">
+                                <label>Username *</label>
+                                <h:inputText value="#{userBean.username}" styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="Username is required."/>
+                                <h:message for="@previous" styleClass="text-danger small"/>
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT COLUMN -->
+                        <div class="col-md-6">
+
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label>Email *</label>
+                                <h:inputText value="#{userBean.email}" styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="Email is required."/>
+                                <h:message for="@previous" styleClass="text-danger small"/>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="mb-3">
+                                <label>Password *</label>
+                                <h:inputSecret value="#{userBean.password}" styleClass="form-control"
+                                               required="true"
+                                               requiredMessage="Password is required."/>
+                                <h:message for="@previous" styleClass="text-danger small"/>
+                            </div>
+
+                            <!-- Status (Active/Inactive) -->
+                            <div class="mb-3">
+                                <label>Status *</label>
+                                <h:selectOneMenu value="#{userBean.status}" styleClass="form-select">
+                                    <f:selectItem itemValue="Active" itemLabel="Active"/>
+                                    <f:selectItem itemValue="Inactive" itemLabel="Inactive"/>
+                                </h:selectOneMenu>
+                            </div>
+
+                            <!-- Access Group -->
+                            <div class="mb-3">
+                                <label>Access Group *</label>
+                                <h:selectOneMenu value="#{userBean.groupId}" styleClass="form-select">
+                                    <f:selectItems value="#{userBean.allGroups}" var="g"
+                                                   itemValue="#{g.groupid}"
+                                                   itemLabel="#{g.groupname}"/>
+                                </h:selectOneMenu>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <hr/>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-end gap-3 mt-3">
+                        <h:commandButton value="Create Account"
+                                         action="#{userBean.saveUser}"
+                                         styleClass="btn btn-primary"/>
+
+                        <h:commandButton value="Clear"
+                                         action="#{userBean.clearForm}"
+                                         immediate="true"
+                                         styleClass="btn btn-secondary"/>
+                    </div>
+
+                </h:form>
+
+            </div>
+        </div>
+
+    </div>
+
+</h:body>
+</html>
