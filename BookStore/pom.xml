@@ -5,7 +5,7 @@
     <artifactId>BookStore</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
-    <name>BookStore-1.0</name>
+    <name>BookStore</name>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

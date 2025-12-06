@@ -49,6 +49,10 @@ public class ShippingBean implements Serializable {
         }
     }
 
+    public Collection<Shipping> getAllShippingList() {
+    return userSessionBean.getAllShippings();
+}
+    
     // -----------------------------
     // ⭐ SAVE or UPDATE SHIPPING
     // -----------------------------
