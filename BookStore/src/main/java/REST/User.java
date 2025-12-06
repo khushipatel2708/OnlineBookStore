@@ -82,6 +82,13 @@ public class User {
         return Response.ok("{\"status\":\"Shipping Deleted\"}").build();
     }
 
+    @GET
+@Path("shipping/user/{userId}")
+@Produces(MediaType.APPLICATION_JSON)
+public Collection<Shipping> getShippingByUser(@PathParam("userId") Integer userId) {
+    return (Collection<Shipping>) userSessionBean.getShippingByUser(userId);
+}
+
 //    // ===================== CART CRUD =====================
 //
 //    @POST

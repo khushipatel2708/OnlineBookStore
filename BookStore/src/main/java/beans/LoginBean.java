@@ -1,7 +1,9 @@
 package beans;
 
 import Entity.User;
+import Entity.Shipping;
 import EJB.AdminSessionBeanLocal;
+import EJB.UserSessionBeanLocal;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
@@ -17,6 +19,9 @@ public class LoginBean implements Serializable {
     @EJB
     private AdminSessionBeanLocal adminSessionBean;
 
+    @EJB
+private UserSessionBeanLocal userSessionBean;
+    
     @Inject
     private TokenProvider tokenProvider;
 
@@ -29,8 +34,11 @@ public class LoginBean implements Serializable {
 
     private Integer userid;
 
-    // ⭐ NEW FIELD
-    private User loggedInUser;   
+    // ⭐ STORED LOGGED USER
+    private User loggedInUser;
+
+    // ⭐ NEW: STORE USER'S LATEST SHIPPING
+    private Shipping loggedUserShipping;
 
     public String login() {
         try {
@@ -42,7 +50,10 @@ public class LoginBean implements Serializable {
                 if (user.getPassword().equals(hashedInput)) {
 
                     this.userid = user.getId();
-                    this.loggedInUser = user;   // ⭐ STORE FULL USER OBJECT
+                    this.loggedInUser = user;
+
+                    // ⭐⭐ LOAD LATEST SHIPPING ADDRESS OF THIS USER
+                    loggedUserShipping = userSessionBean.getLatestShippingByUser(user.getId());
 
                     role = (user.getGroupid() != null)
                             ? user.getGroupid().getGroupname()
@@ -90,19 +101,22 @@ public class LoginBean implements Serializable {
         message = null;
         errorStatus = null;
         userid = null;
-        loggedInUser = null;  // ⭐ CLEAR SESSION USER
+        loggedInUser = null;
+
+        // ⭐ also clear shipping
+        loggedUserShipping = null;
 
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 
         return "login.xhtml?faces-redirect=true";
     }
 
-    // ⭐ NEW METHOD: Check if user is logged in
+    // ⭐ Is user logged in?
     public boolean isLoggedIn() {
         return loggedInUser != null;
     }
 
-    // ⭐ GETTER for full user object
+    // ⭐ GET User object
     public User getLoggedInUser() {
         return loggedInUser;
     }
@@ -111,8 +125,13 @@ public class LoginBean implements Serializable {
         this.loggedInUser = loggedInUser;
     }
 
-    // -----------------------------  
-    // GETTERS - SETTERS  
+    // ⭐ NEW: Getter for shipping object
+    public Shipping getLoggedUserShipping() {
+        return loggedUserShipping;
+    }
+
+    // -----------------------------
+    // GETTERS - SETTERS
     // -----------------------------
     public Integer getUserid() { return userid; }
     public void setUserid(Integer userid) { this.userid = userid; }

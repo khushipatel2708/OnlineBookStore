@@ -260,9 +260,21 @@ public class UserSessionBean implements UserSessionBeanLocal {
             em.merge(p);
         }
     }
-@Override
-public Orderlist getOrderById(Integer orderId) {
-    return em.find(Orderlist.class, orderId);
-}
+
+    @Override
+    public Orderlist getOrderById(Integer orderId) {
+        return em.find(Orderlist.class, orderId);
+    }
+
+    @Override
+    public Shipping getLatestShippingByUser(Integer userId) {
+        List<Shipping> list = em.createQuery(
+                "SELECT s FROM Shipping s WHERE s.userid.id = :uid ORDER BY s.id DESC", Shipping.class)
+                .setParameter("uid", userId)
+                .setMaxResults(1)
+                .getResultList();
+
+        return list.isEmpty() ? null : list.get(0);
+    }
 
 }

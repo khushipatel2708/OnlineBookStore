@@ -26,7 +26,7 @@ public class CityCDIBean implements Serializable {
     }
 
     public Collection<City> getAllCities() {
-        if (!isAdmin()) return null;
+        if (isAdmin()) return null;
         return adminClient.getAllCities(Collection.class);
     }
 

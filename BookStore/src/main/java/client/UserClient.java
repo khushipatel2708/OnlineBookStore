@@ -19,7 +19,7 @@ import jakarta.ws.rs.core.Response;
  *        client.close();
  * </pre>
  *
- * @author KHUSHI PC
+ * @author 91931
  */
 public class UserClient {
 
@@ -30,6 +30,12 @@ public class UserClient {
     public UserClient() {
         client = jakarta.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(BASE_URI).path("user");
+    }
+
+    public <T> T getShippingByUser(Class<T> responseType, String userId) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("shipping/user/{0}", new Object[]{userId}));
+        return resource.request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
     public <T> T getAllShipping(Class<T> responseType) throws ClientErrorException {
@@ -46,28 +52,10 @@ public class UserClient {
         return webTarget.path("shipping").request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).post(jakarta.ws.rs.client.Entity.entity(requestEntity, jakarta.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
     }
 
-    public <T> T getCartByUser(Class<T> responseType, String userId) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("cart/{0}", new Object[]{userId}));
-        return resource.request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
-    }
-
-    public Response addToCart(Object requestEntity) throws ClientErrorException {
-        return webTarget.path("cart").request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).post(jakarta.ws.rs.client.Entity.entity(requestEntity, jakarta.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
-    }
-
     public <T> T getShippingById(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("shipping/{0}", new Object[]{id}));
         return resource.request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
-    }
-
-    public Response updateCart(Object requestEntity, String cartId) throws ClientErrorException {
-        return webTarget.path(java.text.MessageFormat.format("cart/{0}", new Object[]{cartId})).request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).put(jakarta.ws.rs.client.Entity.entity(requestEntity, jakarta.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
-    }
-
-    public Response deleteCartItem(String cartId) throws ClientErrorException {
-        return webTarget.path(java.text.MessageFormat.format("cart/{0}", new Object[]{cartId})).request().delete(Response.class);
     }
 
     public Response updateShipping(Object requestEntity, String id) throws ClientErrorException {

@@ -32,7 +32,7 @@ public interface UserSessionBeanLocal {
     Collection<Shipping> getShippingByCity(Integer cityId);
     Collection<Shipping> getShippingByPincode(String pincode);
     Collection<Shipping> getShippingByUser(Integer userId);
-    
+    Shipping getLatestShippingByUser(Integer userId);
     
    //cart
     void addToCart(int userId, int bookId);

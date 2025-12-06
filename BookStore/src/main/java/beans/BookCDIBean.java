@@ -275,36 +275,6 @@ public class BookCDIBean implements Serializable {
         return null; // stay on same page if id is null
     }
 
-    public String addToCart(Integer bookId) {
-
-        try {
-            Integer userId = loginBean.getUserid(); // logged-in user
-
-            // Create REST client call
-            client.UserClient userClient = new client.UserClient();
-
-            Cart c = new Cart();
-
-            User u = new User();
-            u.setId(userId);
-
-            Book b = new Book();
-            b.setId(bookId);
-
-            c.setUserId(u);
-            c.setBookId(b);
-            c.setQuantity(1);
-
-            userClient.addToCart(c);   // REST call
-
-            return null; // stay on same page
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     // ===== GETTERS / SETTERS =====
     public Integer getId() {
         return id;

@@ -1,93 +1,115 @@
 package beans;
 
-import Entity.Shipping;
+import EJB.UserSessionBeanLocal;
 import Entity.City;
-import Entity.User;
-import client.UserClient;
+import Entity.Shipping;
 import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
-import java.util.List;
 
 @Named("shippingBean")
 @SessionScoped
 public class ShippingBean implements Serializable {
 
+    @EJB
+    private UserSessionBeanLocal userSessionBean;
+
     @Inject
     private LoginBean loginBean;
+    private boolean isExisting;
 
-    private UserClient client = new UserClient();
-
-    private Shipping shipping = new Shipping();   // form model
-    private boolean isExisting = false;           // check if record exists
+    private Shipping shipping;   // ⭐ main model
 
     // -----------------------------
-    // INIT – load shipping if user already saved earlier
+    // ⭐ LOAD SHIPPING AFTER LOGIN
     // -----------------------------
     @PostConstruct
     public void init() {
-        loadShipping();
-    }
+        shipping = loginBean.getLoggedUserShipping();
 
-    public void loadShipping() {
-        try {
-            if (loginBean.getUserid() == null) return;
-
-            // Call API to get all shipping for this user
-            Shipping[] list = client.getAllShipping(Shipping[].class);
-
-            // Filter for logged-in user
-            for (Shipping s : list) {
-                if (s.getUserid().getId().equals(loginBean.getUserid())) {
-                    shipping = s;
-                    isExisting = true;     // user already has shipping
-                    return;
-                }
-            }
-
-            // If not found → new shipping
+        if (shipping == null) {
             shipping = new Shipping();
             isExisting = false;
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            isExisting = true;
         }
     }
 
     // -----------------------------
-    // SAVE OR UPDATE
+    // ⭐ SAVE or UPDATE SHIPPING
     // -----------------------------
-    public String saveShipping() {
+public String saveShipping() {
 
-        try {
-            // Attach current user
-            User u = new User();
-            u.setId(loginBean.getUserid());
-            shipping.setUserid(u);
-
-            if (isExisting) {
-                // update existing
-                client.updateShipping(shipping, shipping.getId().toString());
-            } else {
-                // create new
-                client.addShipping(shipping);
-            }
-
-            // reload state
-            loadShipping();
-
-            return "UserBookList.xhtml?faces-redirect=true";
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    if (shipping.getId() == null) {
+        // Add new shipping without city
+        userSessionBean.addShipping(
+            loginBean.getLoggedInUser().getId(),
+            null, // cityId removed
+            shipping.getName(),
+            shipping.getPhone(),
+            shipping.getAddress1(),
+            shipping.getAddress2(),
+            shipping.getLandmark(),
+            shipping.getPincode()
+        );
+    } else {
+        // Update shipping without city
+        userSessionBean.updateShipping(
+            shipping.getId(),
+            loginBean.getLoggedInUser().getId(),
+            null, // cityId removed
+            shipping.getName(),
+            shipping.getPhone(),
+            shipping.getAddress1(),
+            shipping.getAddress2(),
+            shipping.getLandmark(),
+            shipping.getPincode()
+        );
     }
 
+    return "UserBookList.xhtml?faces-redirect=true";
+}
+
+//    public String saveShipping() {
+//
+//        Integer cityId = null;
+//        if (shipping.getCityid() != null) {
+//            cityId = shipping.getCityid().getId();
+//        }
+//
+//        if (shipping.getId() == null) {
+//            userSessionBean.addShipping(
+//                    loginBean.getLoggedInUser().getId(),
+//                    cityId,
+//                    shipping.getName(),
+//                    shipping.getPhone(),
+//                    shipping.getAddress1(),
+//                    shipping.getAddress2(),
+//                    shipping.getLandmark(),
+//                    shipping.getPincode()
+//            );
+//        } else {
+//            userSessionBean.updateShipping(
+//                    shipping.getId(),
+//                    loginBean.getLoggedInUser().getId(),
+//                    cityId,
+//                    shipping.getName(),
+//                    shipping.getPhone(),
+//                    shipping.getAddress1(),
+//                    shipping.getAddress2(),
+//                    shipping.getLandmark(),
+//                    shipping.getPincode()
+//            );
+//        }
+//
+//        return "confirmOrder.jsf?faces-redirect=true";
+//    }
+
     // -----------------------------
-    // GETTERS - SETTERS
+    // GETTERS & SETTERS
     // -----------------------------
     public Shipping getShipping() {
         return shipping;
@@ -100,4 +122,24 @@ public class ShippingBean implements Serializable {
     public boolean isIsExisting() {
         return isExisting;
     }
+
+    public String goToShippingPage() {
+
+        shipping = loginBean.getLoggedUserShipping();
+
+        if (shipping == null) {
+            shipping = new Shipping();
+            isExisting = false;
+        } else {
+            isExisting = true;
+        }
+
+        // ⭐ IMPORTANT: initialize city object
+        if (shipping.getCityid() == null) {
+            shipping.setCityid(new City());
+        }
+
+        return "shippingForm.xhtml?faces-redirect=true";
+    }
+
 }
