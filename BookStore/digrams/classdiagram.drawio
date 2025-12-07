@@ -1,0 +1,34 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3">
+  <diagram name="Page-1" id="QiqklLe3J_McQgvRi9Nx">
+    <mxGraphModel dx="856" dy="513" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="LpfI8iqA4N_kQtA07hRP-23" value="&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;+ Groupid:int&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;+ Group_name:varchar&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="80" y="50" width="150" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="LpfI8iqA4N_kQtA07hRP-24" value="" style="endArrow=none;html=1;rounded=0;exitX=0.008;exitY=0.163;exitDx=0;exitDy=0;exitPerimeter=0;elbow=vertical;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" target="LpfI8iqA4N_kQtA07hRP-23">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="81.05000000000001" y="80.54999999999995" as="sourcePoint" />
+            <mxPoint x="218.95" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LpfI8iqA4N_kQtA07hRP-25" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Groupmaster&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="105" y="50" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="LpfI8iqA4N_kQtA07hRP-29" value="&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;+ UserId:int&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;+ groupid:int&lt;br&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;+ Fullname:varchar&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;+ Email:varchar&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;+ password:varchar&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;+ phone:int&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;+ usrname:varchar&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;+&amp;nbsp; status:varchar&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="320" y="170" width="150" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="LpfI8iqA4N_kQtA07hRP-30" value="" style="endArrow=none;html=1;rounded=0;exitX=0.008;exitY=0.163;exitDx=0;exitDy=0;exitPerimeter=0;elbow=vertical;entryX=0.993;entryY=0.153;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="LpfI8iqA4N_kQtA07hRP-29">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="321.05" y="200.54999999999995" as="sourcePoint" />
+            <mxPoint x="458.95" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LpfI8iqA4N_kQtA07hRP-31" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;User&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="345" y="170" width="90" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
