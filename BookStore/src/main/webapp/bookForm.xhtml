@@ -13,86 +13,86 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJcT2yXQo5S/A7T/o+1N4rC1J2E3r9GzC9mC81N/M5Lg2tE3r9GzC9mC81N/M5Lg2tE3H2C6eK7uM3A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
         <style>
-           /* BASE LAYOUT STYLES (Copied from your reference code) */
-        body {
-            background-color: #f0f2f5;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding-top: 65px; /* Space for the sticky header */
-        }
-        .sticky-header-wrapper {
-             position: fixed;
-             top: 0;
-             left: 0;
-             right: 0;
-             z-index: 1030;
-             background-color: white;
-             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-             height: 65px;
-        }
-        .main-layout {
-            display: flex;
-            gap: 24px;
-            padding: 25px 25px 25px 25px; /* Added padding to contain content */
-        }
+            /* BASE LAYOUT STYLES (Copied from your reference code) */
+            body {
+                background-color: #f0f2f5;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding-top: 65px; /* Space for the sticky header */
+            }
+            .sticky-header-wrapper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1030;
+                background-color: white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                height: 65px;
+            }
+            .main-layout {
+                display: flex;
+                gap: 24px;
+                padding: 25px 25px 25px 25px; /* Added padding to contain content */
+            }
 
-        /* SIDEBAR STYLES */
-        .admin-sidebar {
-            width: 250px;
-            flex-shrink: 0;
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 8px; /* Adjusted radius for the sidebar in the image */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 85px; /* Sticky below the header */
-            height: fit-content;
-            align-self: flex-start;
-        }
-        .sidebar-header {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: #333;
-            padding-bottom: 15px;
-            margin-bottom: 10px;
-        }
-        .nav-item-link {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            margin: 5px 0;
-            text-decoration: none;
-            color: #495057;
-            border-radius: 8px;
-            transition: background-color 0.2s;
-        }
-        .nav-item-link.active {
-            background-color: #0d6efd; /* Blue from your reference code */
-            color: #fff;
-            font-weight: 600;
-        }
-        .nav-item-link i {
-            width: 20px;
-            margin-right: 10px;
-            font-size: 1.1rem;
-        }
+            /* SIDEBAR STYLES */
+            .admin-sidebar {
+                width: 250px;
+                flex-shrink: 0;
+                background-color: #fff;
+                padding: 15px;
+                border-radius: 8px; /* Adjusted radius for the sidebar in the image */
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                position: sticky;
+                top: 85px; /* Sticky below the header */
+                height: fit-content;
+                align-self: flex-start;
+            }
+            .sidebar-header {
+                font-size: 1.1rem;
+                font-weight: 500;
+                color: #333;
+                padding-bottom: 15px;
+                margin-bottom: 10px;
+            }
+            .nav-item-link {
+                display: flex;
+                align-items: center;
+                padding: 10px 15px;
+                margin: 5px 0;
+                text-decoration: none;
+                color: #495057;
+                border-radius: 8px;
+                transition: background-color 0.2s;
+            }
+            .nav-item-link.active {
+                background-color: #0d6efd; /* Blue from your reference code */
+                color: #fff;
+                font-weight: 600;
+            }
+            .nav-item-link i {
+                width: 20px;
+                margin-right: 10px;
+                font-size: 1.1rem;
+            }
 
-        /* MAIN CONTENT STYLES */
-        .main-content {
-            flex-grow: 1;
-        }
-        .content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        h2.page-title {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #343a40;
-            margin: 0;
-        }
+            /* MAIN CONTENT STYLES */
+            .main-content {
+                flex-grow: 1;
+            }
+            .content-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            h2.page-title {
+                font-size: 2rem;
+                font-weight: 600;
+                color: #343a40;
+                margin: 0;
+            }
             /* JSF Component Styling to fit Bootstrap */
             .form-field-group .form-control {
                 width: 100%;
@@ -220,10 +220,8 @@
 
                                     <div class="upload-section">
                                         <h3 style="font-size:1.1rem; margin-top:0;">Cover Photo</h3>
-                                        <h:inputFile value="#{bookBean.coverPhoto}" styleClass="form-control">
-                                            <f:ajax event="change" listener="#{bookBean.setCoverPhoto(bookBean.coverPhoto)}"
-                                                    render="coverPreviewPanel"/>
-                                        </h:inputFile>
+
+                                        <h:inputFile value="#{bookBean.coverPhoto}" styleClass="form-control" />
 
                                         <h:panelGroup id="coverPreviewPanel">
                                             <h:panelGroup rendered="#{not empty bookBean.coverPreview}">
@@ -232,12 +230,11 @@
                                         </h:panelGroup>
                                     </div>
 
+
                                     <div class="upload-section">
                                         <h3 style="font-size:1.1rem;">Front Page Photo</h3>
-                                        <h:inputFile value="#{bookBean.frontPagePhoto}" styleClass="form-control">
-                                            <f:ajax event="change" listener="#{bookBean.setFrontPagePhoto(bookBean.frontPagePhoto)}"
-                                                    render="frontPreviewPanel"/>
-                                        </h:inputFile>
+
+                                        <h:inputFile value="#{bookBean.frontPagePhoto}" styleClass="form-control" />
 
                                         <h:panelGroup id="frontPreviewPanel">
                                             <h:panelGroup rendered="#{not empty bookBean.frontPreview}">
@@ -246,12 +243,11 @@
                                         </h:panelGroup>
                                     </div>
 
+
                                     <div class="upload-section">
                                         <h3 style="font-size:1.1rem;">Last Page Photo</h3>
-                                        <h:inputFile value="#{bookBean.lastPagePhoto}" styleClass="form-control">
-                                            <f:ajax event="change" listener="#{bookBean.setLastPagePhoto(bookBean.lastPagePhoto)}"
-                                                    render="lastPreviewPanel"/>
-                                        </h:inputFile>
+
+                                        <h:inputFile value="#{bookBean.lastPagePhoto}" styleClass="form-control" />
 
                                         <h:panelGroup id="lastPreviewPanel">
                                             <h:panelGroup rendered="#{not empty bookBean.lastPreview}">
@@ -259,6 +255,7 @@
                                             </h:panelGroup>
                                         </h:panelGroup>
                                     </div>
+
                                 </div>
                             </div>
                             <hr style="margin-top:20px; margin-bottom:20px;"/>

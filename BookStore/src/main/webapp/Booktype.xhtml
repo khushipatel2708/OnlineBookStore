@@ -250,7 +250,8 @@
                                         Edit Book Type (ID: #{booktypeBean.id})
                                     </h:panelGroup>
                                 </h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                               <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="FixBackdrop()"></button>
+
                             </div>
 
                             <div class="modal-body">
@@ -275,7 +276,7 @@
                                                 }"/>
                                     </h:commandButton>
 
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="FixBackdrop()">
                                         Cancel
                                     </button>
                                 </h:panelGroup>
@@ -290,7 +291,7 @@
                                                 }"/>
                                     </h:commandButton>
 
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="FixBackdrop()">
                                         Cancel
                                     </button>
                                 </h:panelGroup>
@@ -315,4 +316,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </h:body>
+    <script>
+function FixBackdrop() {
+    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('padding-right');
+}
+    </script>
 </html>
