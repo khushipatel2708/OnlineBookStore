@@ -182,12 +182,12 @@
                             <hr style="margin-top:20px; margin-bottom:20px;"/>
 
                             <h:panelGroup rendered="#{not bookBean.editMode}">
-                                <h:commandButton value="Add Book" action="#{bookBean.addBook}"/>
+                                <h:commandButton value="Add Book" styleClass="btn btn-primary" action="#{bookBean.addBook}"/>
                             </h:panelGroup>
 
                             <h:panelGroup rendered="#{bookBean.editMode}">
-                                <h:commandButton value="Update Book" action="#{bookBean.updateBook}"/>
-                                <h:commandButton value="Cancel" action="#{bookBean.cancelEdit}"/>
+                                <h:commandButton value="Update Book" styleClass="btn btn-success m-3" action="#{bookBean.updateBook}"/>
+                                <h:commandButton value="Cancel"  styleClass="btn btn-secondary" action="#{bookBean.cancelEdit}"/>
                             </h:panelGroup>
 
                         </div>
