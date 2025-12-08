@@ -1,8 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
+      xmlns:h="jakarta.faces.html">
 
 <h:head>
     <title>Payment Success</title>
@@ -92,11 +91,12 @@
             <h:commandButton value="Continue Shopping"
                              styleClass="btn-success-custom"
                              action="#{paymentSuccessBean.updateAndClear}" />
-            <br/>
+            <br/><br/>
 
-    <h:commandButton value="Give Feedback"
-                     action="#{paymentSuccessBean.goToFeedback}"
-                     styleClass="btn-success-custom"/>
+   <h:commandButton value="Give Feedback"
+                 action="#{paymentSuccessBean.goToFeedback}"
+                 style="background-color:#ff6600; color:white; padding:8px 16px; border:none; border-radius:5px;"/>
+
             
         </h:form>
 

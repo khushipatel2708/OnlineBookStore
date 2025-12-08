@@ -171,6 +171,7 @@ public class User implements Serializable {
     }
 
     @XmlTransient
+    @JsonbTransient
     public Collection<Shipping> getShippingCollection() {
         return shippingCollection;
     }
@@ -198,6 +199,7 @@ public class User implements Serializable {
     }
 
     @XmlTransient
+    @JsonbTransient
     public Collection<Orderlist> getOrderlistCollection() {
         return orderlistCollection;
     }
