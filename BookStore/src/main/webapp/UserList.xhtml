@@ -1,59 +1,224 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
       xmlns:f="jakarta.faces.core">
 
 <h:head>
     <title>User List</title>
+
+    <!-- Bootstrap & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous"/>
+
+    <style>
+        /* BASE LAYOUT STYLES */
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding-top: 65px;
+        }
+        .sticky-header-wrapper {
+             position: fixed;
+             top: 0;
+             left: 0;
+             right: 0;
+             z-index: 1030;
+             background-color: white;
+             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+             height: 65px;
+        }
+        .main-layout {
+            display: flex;
+            gap: 24px;
+            padding: 25px;
+        }
+
+        /* SIDEBAR STYLES */
+        .admin-sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 85px;
+            height: fit-content;
+            align-self: flex-start;
+        }
+        .sidebar-header {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+        }
+        .nav-item-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            margin: 5px 0;
+            text-decoration: none;
+            color: #495057;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        .nav-item-link.active {
+            background-color: #0d6efd;
+            color: #fff;
+            font-weight: 600;
+        }
+        .nav-item-link i {
+            width: 20px;
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* MAIN CONTENT STYLES */
+        .main-content {
+            flex-grow: 1;
+        }
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        h2.page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #343a40;
+            margin: 0;
+        }
+
+        /* DATA TABLE STYLES */
+        .data-table-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid #e9eef2;
+        }
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .user-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #343a40;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .user-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Action buttons */
+        .action-icon {
+            padding: 5px 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-right: 5px;
+            transition: background-color 0.2s;
+        }
+        .action-icon:hover {
+            background-color: #f0f0f0;
+        }
+        .edit-icon { color: #0d6efd; background-color: white; }
+        .delete-icon { color: #dc3545; background-color: white; }
+
+        /* Add User Button */
+        .btn-add-user {
+            background-color: #0d6efd;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </h:head>
 
 <h:body>
+    <!-- Sticky Header -->
+    <div class="sticky-header-wrapper">
+        <ui:include src="/adminHeader.xhtml" /> 
+    </div>
 
-<h:form>
+    <div class="main-layout">
 
-    <h2>All Users</h2>
+        <!-- Sidebar -->
+        <ui:include src="sidebar.xhtml"/> 
 
-    <h:dataTable value="#{userBean.allUsers}" var="u" border="1">
+        <!-- Main Content -->
+        <div class="main-content">
+            <h:form>
 
-        <h:column>
-            <f:facet name="header">Full Name</f:facet>
-            #{u.fullname}
-        </h:column>
+                <div class="content-header">
+                    <h2 class="page-title">User List</h2>
+                    <h:commandButton value="+ Add User"
+                                     action="AdminUserForm"
+                                     styleClass="btn-add-user" />
+                </div>
 
-        <h:column>
-            <f:facet name="header">Username</f:facet>
-            #{u.username}
-        </h:column>
+                <div class="data-table-container">
+                    <h:dataTable value="#{userBean.allUsers}" var="u" styleClass="user-table">
 
-        <h:column>
-            <f:facet name="header">Email</f:facet>
-            #{u.email}
-        </h:column>
+                        <h:column>
+                            <f:facet name="header">Full Name</f:facet>
+                            #{u.fullname}
+                        </h:column>
 
-        <h:column>
-            <f:facet name="header">Group</f:facet>
-            #{u.groupid.groupname}
-        </h:column>
+                        <h:column>
+                            <f:facet name="header">Username</f:facet>
+                            #{u.username}
+                        </h:column>
 
-        <h:column>
-            <f:facet name="header">Edit</f:facet>
-            <h:commandButton value="Edit" action="#{userBean.editUser(u)}"
-                              />
-        </h:column>
+                        <h:column>
+                            <f:facet name="header">Email</f:facet>
+                            #{u.email}
+                        </h:column>
 
-        <h:column>
-            <f:facet name="header">Delete</f:facet>
-            <h:commandButton value="Delete" action="#{userBean.deleteUser(u.id)}" />
-        </h:column>
+                        <h:column>
+                            <f:facet name="header">Group</f:facet>
+                            #{u.groupid.groupname}
+                        </h:column>
 
-    </h:dataTable>
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
 
-    <br/><br/>
-    <h:link value="Add New User" outcome="UserForm" />
+                            <h:commandButton value="&#x270E;" 
+                                             action="#{userBean.editUser(u)}"
+                                             styleClass="action-icon edit-icon"
+                                             title="Edit"/>
 
-</h:form>
+                            <h:commandButton value="&#x1F5D1;" 
+                                             action="#{userBean.deleteUser(u.id)}"
+                                             onclick="return confirm('Are you sure?')"
+                                             styleClass="action-icon delete-icon"
+                                             title="Delete"/>
+                        </h:column>
 
+                    </h:dataTable>
+                </div>
+
+            </h:form>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </h:body>
 </html>

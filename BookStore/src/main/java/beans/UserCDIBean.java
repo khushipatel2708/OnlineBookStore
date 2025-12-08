@@ -6,6 +6,7 @@ import client.MyAdminClient;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 @Named("userBean")
@@ -27,12 +28,12 @@ public class UserCDIBean implements Serializable {
 
     // ===================== GET LISTS ======================
 
-    public List<User> getAllUsers() {
-        return client.getAllUsers(List.class);
+    public Collection<User> getAllUsers() {
+        return client.getAllUsers(Collection.class);
     }
 
-    public List<GroupMaster> getAllGroups() {
-        return client.getAllGroups(List.class);
+    public Collection<GroupMaster> getAllGroups() {
+        return client.getAllGroups(Collection.class);
     }
 
     // ===================== EDIT USER ======================
