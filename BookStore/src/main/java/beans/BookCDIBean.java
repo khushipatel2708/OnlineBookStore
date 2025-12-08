@@ -16,7 +16,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Named("bookBean")
@@ -391,4 +394,50 @@ public class BookCDIBean implements Serializable {
     public void setSearchBooktype(String searchBooktype) {
         this.searchBooktype = searchBooktype;
     }
+         private int pageSize = 10;      // Number of rows per page
+    private int pageNumber = 1;    // Current page
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public int getTotalPages() {
+        int totalGroups = getAllBooks().size();
+        return (int) Math.ceil((double) totalGroups / pageSize);
+    }
+
+    public Collection<Book> getPagedGroups() {
+        List<Book> all = new ArrayList<>(getAllBooks());
+        int fromIndex = (pageNumber - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, all.size());
+        if (fromIndex > all.size()) {
+            return Collections.emptyList();
+        }
+        return all.subList(fromIndex, toIndex);
+    }
+
+    public void nextPage() {
+        if (pageNumber < getTotalPages()) {
+            pageNumber++;
+        }
+    }
+
+    public void previousPage() {
+        if (pageNumber > 1) {
+            pageNumber--;
+        }
+    }
+
 }
