@@ -161,6 +161,7 @@ public class User implements Serializable {
     }
 
     @XmlTransient
+    @JsonbTransient
     public Collection<Feedback> getFeedbackCollection() {
         return feedbackCollection;
     }

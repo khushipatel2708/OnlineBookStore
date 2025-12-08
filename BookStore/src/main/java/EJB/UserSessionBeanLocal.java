@@ -6,6 +6,7 @@ package EJB;
 
 import Entity.Book;
 import Entity.Cart;
+import Entity.Feedback;
 import Entity.Orderlist;
 import Entity.Payment;
 import Entity.Shipping;
@@ -51,4 +52,7 @@ void updateBookStock(Integer bookId, int newAvailable);
     public void addCODPayment(Integer userId, Integer bookId, BigDecimal amount);
     Orderlist getOrderById(Integer orderId);
     public void updatePaymentStatus(Integer userId, String oldStatus, String newStatus);
+    public void addFeedback(String comments, int rating, int bookId, int userId);
+List<Feedback> getAllFeedbacks();
+    
 }

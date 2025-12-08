@@ -29,4 +29,11 @@ public class PaymentSuccessBean {
 
         return "user.xhtml?faces-redirect=true";
     }
+
+    public String goToFeedback() {
+    // After COD, last purchased book
+    int lastBookId = paymentBean.getLastBookId();  // you already store bookId during payment
+    return "feedback.xhtml?faces-redirect=true&amp;bookId=" + lastBookId;
+}
+
 }

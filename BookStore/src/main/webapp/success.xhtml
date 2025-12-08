@@ -92,6 +92,12 @@
             <h:commandButton value="Continue Shopping"
                              styleClass="btn-success-custom"
                              action="#{paymentSuccessBean.updateAndClear}" />
+            <br/>
+
+    <h:commandButton value="Give Feedback"
+                     action="#{paymentSuccessBean.goToFeedback}"
+                     styleClass="btn-success-custom"/>
+            
         </h:form>
 
         <!-- Back Link -->

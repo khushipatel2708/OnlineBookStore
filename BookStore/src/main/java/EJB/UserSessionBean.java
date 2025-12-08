@@ -7,6 +7,7 @@ package EJB;
 import Entity.Book;
 import Entity.Cart;
 import Entity.City;
+import Entity.Feedback;
 import Entity.Orderlist;
 import Entity.Payment;
 import Entity.Shipping;
@@ -291,5 +292,22 @@ public void updateBookStock(Integer bookId, int newAvailable) {
     }
 }
 
+@Override
+public void addFeedback(String comments, int rating, int bookId, int userId) {
+
+    Feedback fb = new Feedback();
+    fb.setComments(comments);
+    fb.setRating(rating);
+    fb.setBookId(em.find(Book.class, bookId));
+    fb.setUserId(em.find(User.class, userId));
+
+    em.persist(fb);
+}
+
+@Override
+public List<Feedback> getAllFeedbacks() {
+    return em.createQuery("SELECT f FROM Feedback f", Feedback.class)
+             .getResultList();
+}
 
 }
