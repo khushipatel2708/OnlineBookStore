@@ -394,7 +394,8 @@ public class BookCDIBean implements Serializable {
     public void setSearchBooktype(String searchBooktype) {
         this.searchBooktype = searchBooktype;
     }
-         private int pageSize = 10;      // Number of rows per page
+    
+    private int pageSize = 10;      // Number of rows per page
     private int pageNumber = 1;    // Current page
 
     public int getPageSize() {
