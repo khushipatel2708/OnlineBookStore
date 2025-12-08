@@ -1,327 +1,363 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:ui="jakarta.faces.facelets"
       xmlns:f="jakarta.faces.core">
 
-<h:head>
-    <title>Manage Book Types</title>
+    <h:head>
+        <title>Manage Book Types</title>
 
-    <!-- Bootstrap & Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+        <!-- Bootstrap & Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+        <link rel="stylesheet" href="css/adminCss.css"/>
+        <!-- SAME DESIGN AS CITY PAGE -->
+        <style>
 
-    <!-- SAME DESIGN AS CITY PAGE -->
-    <style>
+            /* BASE LAYOUT STYLES (Copied from your reference code) */
+            body {
+                background-color: #f0f2f5;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding-top: 65px; /* Space for the sticky header */
+            }
+            .sticky-header-wrapper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1030;
+                background-color: white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                height: 65px;
+            }
+            .main-layout {
+                display: flex;
+                gap: 24px;
+                padding: 25px 25px 25px 25px; /* Added padding to contain content */
+            }
 
-        /* BASE LAYOUT STYLES (Copied from your reference code) */
-        body {
-            background-color: #f0f2f5;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding-top: 65px; /* Space for the sticky header */
-        }
-        .sticky-header-wrapper {
-             position: fixed;
-             top: 0;
-             left: 0;
-             right: 0;
-             z-index: 1030;
-             background-color: white;
-             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-             height: 65px;
-        }
-        .main-layout {
-            display: flex;
-            gap: 24px;
-            padding: 25px 25px 25px 25px; /* Added padding to contain content */
-        }
+            /* SIDEBAR STYLES */
+            .admin-sidebar {
+                width: 250px;
+                flex-shrink: 0;
+                background-color: #fff;
+                padding: 15px;
+                border-radius: 8px; /* Adjusted radius for the sidebar in the image */
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                position: sticky;
+                top: 85px; /* Sticky below the header */
+                height: fit-content;
+                align-self: flex-start;
+            }
+            .sidebar-header {
+                font-size: 1.1rem;
+                font-weight: 500;
+                color: #333;
+                padding-bottom: 15px;
+                margin-bottom: 10px;
+            }
+            .nav-item-link {
+                display: flex;
+                align-items: center;
+                padding: 10px 15px;
+                margin: 5px 0;
+                text-decoration: none;
+                color: #495057;
+                border-radius: 8px;
+                transition: background-color 0.2s;
+            }
+            .nav-item-link.active {
+                background-color: #0d6efd; /* Blue from your reference code */
+                color: #fff;
+                font-weight: 600;
+            }
+            .nav-item-link i {
+                width: 20px;
+                margin-right: 10px;
+                font-size: 1.1rem;
+            }
 
-        /* SIDEBAR STYLES */
-        .admin-sidebar {
-            width: 250px;
-            flex-shrink: 0;
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 8px; /* Adjusted radius for the sidebar in the image */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 85px; /* Sticky below the header */
-            height: fit-content;
-            align-self: flex-start;
-        }
-        .sidebar-header {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: #333;
-            padding-bottom: 15px;
-            margin-bottom: 10px;
-        }
-        .nav-item-link {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            margin: 5px 0;
-            text-decoration: none;
-            color: #495057;
-            border-radius: 8px;
-            transition: background-color 0.2s;
-        }
-        .nav-item-link.active {
-            background-color: #0d6efd; /* Blue from your reference code */
-            color: #fff;
-            font-weight: 600;
-        }
-        .nav-item-link i {
-            width: 20px;
-            margin-right: 10px;
-            font-size: 1.1rem;
-        }
+            /* MAIN CONTENT STYLES */
+            .main-content {
+                flex-grow: 1;
+            }
+            .content-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            h2.page-title {
+                font-size: 2rem;
+                font-weight: 600;
+                color: #343a40;
+                margin: 0;
+            }
 
-        /* MAIN CONTENT STYLES */
-        .main-content {
-            flex-grow: 1;
-        }
-        .content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        h2.page-title {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #343a40;
-            margin: 0;
-        }
+            .page-title {
+                font-size: 2rem;
+                font-weight: 600;
+                color: #343a40;
+                margin: 0;
+            }
+            .btn-add-booktype {
+                background-color: #0d6efd;
+                color: #fff;
+                border-radius: 8px;
+                border: none;
+                padding: 10px 15px;
+                font-weight: 600;
+            }
 
-        .page-title {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #343a40;
-            margin: 0;
-        }
-        .btn-add-booktype {
-            background-color: #0d6efd;
-            color: #fff;
-            border-radius: 8px;
-            border: none;
-            padding: 10px 15px;
-            font-weight: 600;
-        }
+            /* TABLE */
+            .data-table-container {
+                background: white;
+                border-radius: 8px;
+                border: 1px solid #e9eef2;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+                overflow: hidden;
+            }
 
-        /* TABLE */
-        .data-table-container {
-            background: white;
-            border-radius: 8px;
-            border: 1px solid #e9eef2;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            overflow: hidden;
-        }
+            .booktype-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .booktype-table th {
+                background: #f8f9fa;
+                padding: 12px 15px;
+                font-weight: 600;
+                border-bottom: 1px solid #dee2e6;
+            }
+            .booktype-table td {
+                padding: 12px 15px;
+                border-bottom: 1px solid #eee;
+            }
 
-        .booktype-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .booktype-table th {
-            background: #f8f9fa;
-            padding: 12px 15px;
-            font-weight: 600;
-            border-bottom: 1px solid #dee2e6;
-        }
-        .booktype-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-        }
+            .action-icon {
+                padding: 5px 8px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-right: 5px;
+            }
+            .edit-icon {
+                color: #0d6efd;
+            }
+            .delete-icon {
+                color: #dc3545;
+            }
 
-        .action-icon {
-            padding: 5px 8px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 5px;
-        }
-        .edit-icon { color: #0d6efd; }
-        .delete-icon { color: #dc3545; }
+        </style>
+    </h:head>
 
-    </style>
-</h:head>
+    <h:body>
 
-<h:body>
+        <!-- Sticky Header -->
+        <div class="sticky-header-wrapper">
+            <ui:include src="/adminHeader.xhtml"/>
+        </div>
 
-<!-- Sticky Header -->
-<div class="sticky-header-wrapper">
-    <ui:include src="/adminHeader.xhtml"/>
-</div>
+        <div class="main-layout">
 
-<div class="main-layout">
+            <!-- SIDEBAR -->
+            <ui:include src="sidebar.xhtml"/>
 
-    <!-- SIDEBAR -->
-    <ui:include src="sidebar.xhtml"/>
+            <!-- MAIN CONTENT -->
+            <div class="main-content">
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
+                <h:panelGroup rendered="#{booktypeBean.admin}">
 
-        <h:panelGroup rendered="#{booktypeBean.admin}">
+                    <h:form>
 
-            <h:form>
+                        <div class="content-header">
+                            <h2 class="page-title">Manage Book Types</h2>
 
-                <div class="content-header">
-                    <h2 class="page-title">Manage Book Types</h2>
-
-                    <h:commandButton value="+ Add Book Type"
-                                     action="#{booktypeBean.resetForm}"
-                                     styleClass="btn-add-booktype">
-                        <f:ajax render="booktypeModalForm"
-                                onevent="function(){
-                                    new bootstrap.Modal(document.getElementById('booktypeModal')).show();
-                                }"/>
-                    </h:commandButton>
-                </div>
-
-                <!-- TABLE -->
-                <div class="data-table-container">
-                    <h:dataTable value="#{booktypeBean.allBooktypes}" var="bt"
-                                 styleClass="booktype-table">
-
-                        <h:column>
-                            <f:facet name="header">ID</f:facet>
-                            #{bt.id}
-                        </h:column>
-
-                        <h:column>
-                            <f:facet name="header">Type</f:facet>
-                            #{bt.type}
-                        </h:column>
-
-                        <h:column>
-                            <f:facet name="header">Description</f:facet>
-                            #{bt.description}
-                        </h:column>
-
-                        <h:column>
-                            <f:facet name="header">Actions</f:facet>
-
-                            <!-- EDIT -->
-                            <h:commandButton value="✏"
-                                             action="#{booktypeBean.editBooktype(bt.id)}"
-                                             styleClass="action-icon edit-icon"
-                                             title="Edit">
-                                <f:ajax execute="@this" render="booktypeModalForm"
+                            <h:commandButton value="+ Add Book Type"
+                                             action="#{booktypeBean.resetForm}"
+                                             styleClass="btn-add-booktype">
+                                <f:ajax render="booktypeModalForm"
                                         onevent="function(){
-                                            new bootstrap.Modal(document.getElementById('booktypeModal')).show();
+                                        new bootstrap.Modal(document.getElementById('booktypeModal')).show();
                                         }"/>
                             </h:commandButton>
+                        </div>
 
-                            <!-- DELETE -->
-                            <h:commandButton value="🗑"
-                                             action="#{booktypeBean.deleteBooktype(bt.id)}"
-                                             onclick="return confirm('Delete this Book Type?')"
-                                             styleClass="action-icon delete-icon"
-                                             title="Delete">
-                                <f:ajax render="@form"/>
-                            </h:commandButton>
+                        <!-- TABLE -->
+                        <div class="data-table-container">
+                            <h:dataTable value="#{booktypeBean.pagedGroups}" var="bt"
+                                         styleClass="booktype-table">
 
-                        </h:column>
+                                <h:column>
+                                    <f:facet name="header">ID</f:facet>
+                                        #{(booktypeBean.pageNumber - 1) * booktypeBean.pageSize + booktypeBean.pagedGroups.indexOf(bt) + 1}
+                                </h:column>
 
-                    </h:dataTable>
-                </div>
+                                <h:column>
+                                    <f:facet name="header">Type</f:facet>
+                                        #{bt.type}
+                                </h:column>
 
-            </h:form>
+                                <h:column>
+                                    <f:facet name="header">Description</f:facet>
+                                        #{bt.description}
+                                </h:column>
 
-            <!-- MODAL -->
-            <div class="modal fade" id="booktypeModal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
+                                <h:column>
+                                    <f:facet name="header">Actions</f:facet>
 
-                        <h:form id="booktypeModalForm">
-
-                            <div class="modal-header">
-                                <h5 class="modal-title">
-                                    <h:panelGroup rendered="#{not booktypeBean.editMode}">
-                                        Add Book Type
-                                    </h:panelGroup>
-                                    <h:panelGroup rendered="#{booktypeBean.editMode}">
-                                        Edit Book Type (ID: #{booktypeBean.id})
-                                    </h:panelGroup>
-                                </h5>
-                               <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="FixBackdrop()"></button>
-
-                            </div>
-
-                            <div class="modal-body">
-                                <label>Type:</label>
-                                <h:inputText value="#{booktypeBean.type}" styleClass="form-control" required="true"/>
-
-                                <br/>
-
-                                <label>Description:</label>
-                                <h:inputText value="#{booktypeBean.description}" styleClass="form-control"/>
-                            </div>
-
-                            <div class="modal-footer">
-
-                                <!-- ADD MODE -->
-                                <h:panelGroup rendered="#{not booktypeBean.editMode}">
-                                    <h:commandButton value="Add" styleClass="btn btn-success"
-                                                     action="#{booktypeBean.addBooktype}">
-                                        <f:ajax execute="@form" render="booktypeModalForm"
+                                    <!-- EDIT -->
+                                    <h:commandButton value="✏"
+                                                     action="#{booktypeBean.editBooktype(bt.id)}"
+                                                     styleClass="action-icon edit-icon"
+                                                     title="Edit">
+                                        <f:ajax execute="@this" render="booktypeModalForm"
                                                 onevent="function(){
-                                                    bootstrap.Modal.getInstance(document.getElementById('booktypeModal')).hide();
+                                                new bootstrap.Modal(document.getElementById('booktypeModal')).show();
                                                 }"/>
                                     </h:commandButton>
 
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="FixBackdrop()">
-                                        Cancel
-                                    </button>
-                                </h:panelGroup>
-
-                                <!-- EDIT MODE -->
-                                <h:panelGroup rendered="#{booktypeBean.editMode}">
-                                    <h:commandButton value="Update" styleClass="btn btn-primary"
-                                                     action="#{booktypeBean.updateBooktype}">
-                                        <f:ajax execute="@form" render="booktypeModalForm"
-                                                onevent="function(){
-                                                    bootstrap.Modal.getInstance(document.getElementById('booktypeModal')).hide();
-                                                }"/>
+                                    <!-- DELETE -->
+                                    <h:commandButton value="🗑"
+                                                     action="#{booktypeBean.deleteBooktype(bt.id)}"
+                                                     onclick="return confirm('Delete this Book Type?')"
+                                                     styleClass="action-icon delete-icon"
+                                                     title="Delete">
+                                        <f:ajax render="@form"/>
                                     </h:commandButton>
 
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="FixBackdrop()">
-                                        Cancel
-                                    </button>
-                                </h:panelGroup>
+                                </h:column>
+
+                            </h:dataTable>
+                            <!-- Pagination Controls -->
+
+                            <div class="pagination-container d-flex justify-content-center mt-4">
+
+                                <ul class="premium-pagination">
+
+                                    <!-- Previous -->
+                                    <li class="#{booktypeBean.pageNumber == 1 ? 'disabled' : ''}">
+                                        <h:commandLink action="#{booktypeBean.previousPage}">
+                                            <f:ajax render="@form"/>
+                                            <i class="bi bi-chevron-left"></i> 
+                                        </h:commandLink>
+                                    </li>
+
+                                    <!-- Page Display -->
+                                    <li class="active">
+                                        <span>
+                                            #{booktypeBean.pageNumber} / #{booktypeBean.totalPages}
+                                        </span>
+                                    </li>
+
+                                    <!-- Next -->
+                                    <li class="#{booktypeBean.pageNumber == booktypeBean.totalPages ? 'disabled' : ''}">
+                                        <h:commandLink action="#{booktypeBean.nextPage}">
+                                            <f:ajax render="@form"/>
+                                            <i class="bi bi-chevron-right"></i>
+                                        </h:commandLink>
+                                    </li>
+
+                                </ul>
 
                             </div>
+                        </div>
 
-                        </h:form>
+                    </h:form>
 
+                    <!-- MODAL -->
+                    <div class="modal fade" id="booktypeModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <h:form id="booktypeModalForm">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">
+                                            <h:panelGroup rendered="#{not booktypeBean.editMode}">
+                                                Add Book Type
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{booktypeBean.editMode}">
+                                                Edit Book Type (ID: #{booktypeBean.id})
+                                            </h:panelGroup>
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="FixBackdrop()"></button>
+
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <label>Type:</label>
+                                        <h:inputText value="#{booktypeBean.type}" styleClass="form-control" required="true"/>
+
+                                        <br/>
+
+                                        <label>Description:</label>
+                                        <h:inputText value="#{booktypeBean.description}" styleClass="form-control"/>
+                                    </div>
+
+                                    <div class="modal-footer">
+
+                                        <!-- ADD MODE -->
+                                        <h:panelGroup rendered="#{not booktypeBean.editMode}">
+                                            <h:commandButton value="Add" styleClass="btn btn-success"
+                                                             action="#{booktypeBean.addBooktype}">
+                                                <f:ajax execute="@form" render="booktypeModalForm"
+                                                        onevent="function(){
+                                                        bootstrap.Modal.getInstance(document.getElementById('booktypeModal')).hide();
+                                                        }"/>
+                                            </h:commandButton>
+
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="FixBackdrop()">
+                                                Cancel
+                                            </button>
+                                        </h:panelGroup>
+
+                                        <!-- EDIT MODE -->
+                                        <h:panelGroup rendered="#{booktypeBean.editMode}">
+                                            <h:commandButton value="Update" styleClass="btn btn-primary"
+                                                             action="#{booktypeBean.updateBooktype}">
+                                                <f:ajax execute="@form" render="booktypeModalForm"
+                                                        onevent="function(){
+                                                        bootstrap.Modal.getInstance(document.getElementById('booktypeModal')).hide();
+                                                        }"/>
+                                            </h:commandButton>
+
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="FixBackdrop()">
+                                                Cancel
+                                            </button>
+                                        </h:panelGroup>
+
+                                    </div>
+
+                                </h:form>
+
+                            </div>
+                        </div>
                     </div>
-                </div>
+
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{not booktypeBean.admin}">
+                    <div class="alert alert-danger">Only admin can manage book types.</div>
+                </h:panelGroup>
+
             </div>
+        </div>
 
-        </h:panelGroup>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        <h:panelGroup rendered="#{not booktypeBean.admin}">
-            <div class="alert alert-danger">Only admin can manage book types.</div>
-        </h:panelGroup>
-
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-</h:body>
+    </h:body>
     <script>
-function FixBackdrop() {
-    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
-    document.body.classList.remove('modal-open');
-    document.body.style.removeProperty('overflow');
-    document.body.style.removeProperty('padding-right');
-}
+                                        function FixBackdrop() {
+                                            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+                                            document.body.classList.remove('modal-open');
+                                            document.body.style.removeProperty('overflow');
+                                            document.body.style.removeProperty('padding-right');
+                                        }
     </script>
 </html>
