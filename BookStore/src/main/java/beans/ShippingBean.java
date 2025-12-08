@@ -188,7 +188,7 @@ public void deleteShipping(Integer shippingId) {
     }
 }
 
-private int pageSize = 2;      // Number of rows per page
+private int pageSize = 5;      // Number of rows per page
     private int pageNumber = 1;    // Current page
 
     public int getPageSize() {

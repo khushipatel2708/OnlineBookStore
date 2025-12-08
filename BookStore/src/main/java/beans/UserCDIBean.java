@@ -144,7 +144,7 @@ public class UserCDIBean implements Serializable {
     public User getSelectedUser() { return selectedUser; }
     public void setSelectedUser(User selectedUser) { this.selectedUser = selectedUser; }
     
-     private int pageSize = 3;      // Number of rows per page
+     private int pageSize = 5;      // Number of rows per page
     private int pageNumber = 1;    // Current page
 
     public int getPageSize() {
