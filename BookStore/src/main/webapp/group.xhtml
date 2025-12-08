@@ -3,9 +3,9 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:ui="jakarta.faces.facelets"
-      xmlns:f="jakarta.faces.core">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <h:head>
         <title>Manage Groups</title>
@@ -153,6 +153,64 @@
             .delete-icon {
                 color: #dc3545;
             }
+           /* Premium Pagination */
+.premium-pagination {
+    display: flex;
+    list-style: none;
+    background: rgba(255, 255, 255, 0.75);
+    padding: 12px 25px;
+    border-radius: 18px;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
+    gap: 12px;
+    border: 1px solid rgba(200, 200, 200, 0.35);
+}
+
+.premium-pagination li {
+    display: flex;
+    align-items: center;
+}
+
+.premium-pagination li a,
+.premium-pagination li span {
+    padding: 10px 18px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.premium-pagination li a {
+    color: #0d6efd;
+    border: 1px solid rgba(13,110,253,0.25);
+    background: white;
+}
+
+.premium-pagination li a:hover {
+    background: linear-gradient(135deg, #0d6efd, #4aa3ff);
+    color: white;
+    /*box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);*/
+    /*transform: translateY(-2px);*/
+}
+
+.premium-pagination li.active span {
+    background: linear-gradient(135deg, #0d6efd, #4aa3ff);
+    color: white;
+    border-radius: 12px;
+    padding: 10px 20px;
+}
+
+.premium-pagination li.disabled a {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+
         </style>
     </h:head>
 
@@ -188,23 +246,28 @@
 
                     <!-- Group Table -->
                     <div class="data-table-container">
-                        <h:dataTable value="#{groupBean.allGroups}" var="g" styleClass="group-table">
 
+                        <h:dataTable value="#{groupBean.pagedGroups}" var="g" styleClass="group-table">
+
+                            <!-- ID Column -->
                             <h:column>
                                 <f:facet name="header">ID</f:facet>
-                                    #{g.groupid}
+                                    #{(groupBean.pageNumber - 1) * groupBean.pageSize + groupBean.pagedGroups.indexOf(g) + 1}
                             </h:column>
 
+                            <!-- Group Name -->
                             <h:column>
-                                <f:facet name="header">Group Name</f:facet>
+                                <f:facet name="header">Group</f:facet>
                                     #{g.groupname}
                             </h:column>
 
+                            <!-- Username -->
                             <h:column>
-                                <f:facet name="header">Username</f:facet>
+                                <f:facet name="header">Name</f:facet>
                                     #{g.username}
                             </h:column>
 
+                            <!-- Actions -->
                             <h:column>
                                 <f:facet name="header">Actions</f:facet>
 
@@ -223,11 +286,44 @@
                                                  onclick="deleteConfirm(event, this)"
                                                  styleClass="action-icon delete-icon"
                                                  title="Delete"/>
-
-
                             </h:column>
 
                         </h:dataTable>
+
+                        <!-- Pagination Controls -->
+                 <!-- Pagination Controls (Beautiful Design) -->
+<!-- Modern Premium Pagination -->
+<div class="pagination-container d-flex justify-content-center mt-4">
+
+    <ul class="premium-pagination">
+
+        <!-- Previous -->
+        <li class="#{groupBean.pageNumber == 1 ? 'disabled' : ''}">
+            <h:commandLink action="#{groupBean.previousPage}">
+                <f:ajax render="@form"/>
+                <i class="bi bi-chevron-left"></i> 
+            </h:commandLink>
+        </li>
+
+        <!-- Page Display -->
+        <li class="active">
+            <span>
+               #{groupBean.pageNumber} / #{groupBean.totalPages}
+            </span>
+        </li>
+
+        <!-- Next -->
+        <li class="#{groupBean.pageNumber == groupBean.totalPages ? 'disabled' : ''}">
+            <h:commandLink action="#{groupBean.nextPage}">
+                <f:ajax render="@form"/>
+                 <i class="bi bi-chevron-right"></i>
+            </h:commandLink>
+        </li>
+
+    </ul>
+
+</div>
+
                     </div>
 
                 </h:form>
@@ -249,10 +345,10 @@
                                 </div>
 
                                 <div class="modal-body">
-                                    <label>Group Name:</label>
+                                    <label>Group:</label>
                                     <h:inputText value="#{groupBean.groupname}" styleClass="form-control" required="true"/>
 
-                                    <label class="mt-2">Username:</label>
+                                    <label class="mt-2">Name:</label>
                                     <h:inputText value="#{groupBean.username}" styleClass="form-control" required="true"/>
                                 </div>
 
@@ -306,25 +402,25 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-                                        function deleteConfirm(event, button) {
-                                            event.preventDefault();
+                                            function deleteConfirm(event, button) {
+                                                event.preventDefault();
 
-                                            Swal.fire({
-                                                title: 'Are you sure?',
-                                                text: "This group will be permanently deleted!",
-                                                icon: 'warning',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#dc3545',
-                                                cancelButtonColor: '#6c757d',
-                                                confirmButtonText: 'Yes, delete it!',
-                                                cancelButtonText: 'Cancel'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    button.onclick = null;  // stop re-trigger
-                                                    button.click();         // JSF submit
-                                                }
-                                            });
-                                        }
+                                                Swal.fire({
+                                                    title: 'Are you sure?',
+                                                    text: "This group will be permanently deleted!",
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#dc3545',
+                                                    cancelButtonColor: '#6c757d',
+                                                    confirmButtonText: 'Yes, delete it!',
+                                                    cancelButtonText: 'Cancel'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        button.onclick = null;  // stop re-trigger
+                                                        button.click();         // JSF submit
+                                                    }
+                                                });
+                                            }
     </script>
 
 
