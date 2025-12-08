@@ -176,5 +176,15 @@ public class ShippingBean implements Serializable {
     public void setCityId(Integer cityId) {
         this.cityId = cityId;
     }
+    // -----------------------------
+// ⭐ DELETE SHIPPING
+// -----------------------------
+public void deleteShipping(Integer shippingId) {
+    if (shippingId != null) {
+        userSessionBean.removeShipping(shippingId);
+    }
+}
+
+    
 
 }
