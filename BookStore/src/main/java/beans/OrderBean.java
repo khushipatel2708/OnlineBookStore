@@ -41,7 +41,7 @@ public class OrderBean implements Serializable {
         selectedOrder = userSessionBean.getOrderById(orderId); // Use EJB method
     }
     
-     private int pageSize = 3;      // Number of rows per page
+    private int pageSize = 3;      // Number of rows per page
     private int pageNumber = 1;    // Current page
 
     public int getPageSize() {

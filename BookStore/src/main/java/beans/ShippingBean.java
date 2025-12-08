@@ -10,7 +10,10 @@ import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 @Named("shippingBean")
 @SessionScoped
@@ -184,6 +187,52 @@ public void deleteShipping(Integer shippingId) {
         userSessionBean.removeShipping(shippingId);
     }
 }
+
+private int pageSize = 2;      // Number of rows per page
+    private int pageNumber = 1;    // Current page
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public int getTotalPages() {
+        int totalGroups = getAllShippingList().size();
+        return (int) Math.ceil((double) totalGroups / pageSize);
+    }
+
+    public Collection<Shipping> getPagedGroups() {
+        List<Shipping> all = new ArrayList<>(getAllShippingList());
+        int fromIndex = (pageNumber - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, all.size());
+        if (fromIndex > all.size()) {
+            return Collections.emptyList();
+        }
+        return all.subList(fromIndex, toIndex);
+    }
+
+    public void nextPage() {
+        if (pageNumber < getTotalPages()) {
+            pageNumber++;
+        }
+    }
+
+    public void previousPage() {
+        if (pageNumber > 1) {
+            pageNumber--;
+        }
+    }
 
     
 
