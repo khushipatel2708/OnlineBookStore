@@ -21,6 +21,9 @@ public class CartBean implements Serializable {
     private UserSessionBeanLocal cartSession; // your EJB
 
     @Inject
+    private PaymentBean paymentBean;
+    
+    @Inject
     private LoginBean loginBean; // must provide getLoggedInUser() or getUserid()
 
     // --- Add to cart (reads f:param bookId) ---
@@ -82,21 +85,21 @@ public class CartBean implements Serializable {
     }
 
     public void increaseQuantity(int cartId) {
-    Cart c = cartSession.getCartById(cartId); // you need a method to get cart by id
-    if (c != null && c.getQuantity() < c.getBookId().getAvailable()) {
-        cartSession.updateQuantity(cartId, +1);
-    } else {
-        FacesContext.getCurrentInstance().addMessage(null,
-            new FacesMessage(FacesMessage.SEVERITY_WARN, "Cannot exceed available stock!", null));
+        Cart c = cartSession.getCartById(cartId); // you need a method to get cart by id
+        if (c != null && c.getQuantity() < c.getBookId().getAvailable()) {
+            cartSession.updateQuantity(cartId, +1);
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Cannot exceed available stock!", null));
+        }
     }
-}
 
-public void decreaseQuantity(int cartId) {
-    Cart c = cartSession.getCartById(cartId);
-    if (c != null && c.getQuantity() > 1) {
-        cartSession.updateQuantity(cartId, -1);
+    public void decreaseQuantity(int cartId) {
+        Cart c = cartSession.getCartById(cartId);
+        if (c != null && c.getQuantity() > 1) {
+            cartSession.updateQuantity(cartId, -1);
+        }
     }
-}
 
     public int getCartCount() {
         User loggedUser = loginBean.getLoggedInUser();
@@ -135,53 +138,55 @@ public void decreaseQuantity(int cartId) {
         return "payment.xhtml?faces-redirect=true";
     }
 
-   public String cashOnDelivery() {
-    try {
-        User loggedUser = loginBean.getLoggedInUser();
-        if (loggedUser == null) {
+    public String cashOnDelivery() {
+        try {
+            User loggedUser = loginBean.getLoggedInUser();
+            if (loggedUser == null) {
+                FacesContext.getCurrentInstance()
+                        .addMessage(null, new FacesMessage("Please login first."));
+                return null;
+            }
+
+            Integer userId = loggedUser.getId();
+            List<Cart> items = cartSession.getCartItems(userId);
+
+            if (items == null || items.isEmpty()) {
+                FacesContext.getCurrentInstance()
+                        .addMessage(null, new FacesMessage("Cart is empty."));
+                return null;
+            }
+
+            // Loop through cart items and create COD payment for each
+            for (Cart c : items) {
+                
+                 paymentBean.setLastBookId(c.getBookId().getId());
+                 
+                java.math.BigDecimal price = c.getBookId().getPrice();
+                java.math.BigDecimal qty = java.math.BigDecimal.valueOf(c.getQuantity());
+                java.math.BigDecimal amount = price.multiply(qty);
+
+                // 1️⃣ Save COD payment
+                cartSession.addCODPayment(userId, c.getBookId().getId(), amount);
+
+                // 2️⃣ Update Book stock
+                int newStock = c.getBookId().getAvailable() - c.getQuantity();
+                if (newStock < 0) {
+                    newStock = 0; // prevent negative stock
+                }
+                cartSession.updateBookStock(c.getBookId().getId(), newStock);
+
+                // 3️⃣ Remove from cart
+                cartSession.removeFromCart(c.getId());
+            }
+
+            return "success.xhtml?faces-redirect=true";
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
             FacesContext.getCurrentInstance()
-                    .addMessage(null, new FacesMessage("Please login first."));
+                    .addMessage(null, new FacesMessage("COD failed: " + ex.getMessage()));
             return null;
         }
-
-        Integer userId = loggedUser.getId();
-        List<Cart> items = cartSession.getCartItems(userId);
-
-        if (items == null || items.isEmpty()) {
-            FacesContext.getCurrentInstance()
-                    .addMessage(null, new FacesMessage("Cart is empty."));
-            return null;
-        }
-
-        // Loop through cart items and create COD payment for each
-       for (Cart c : items) {
-    java.math.BigDecimal price = c.getBookId().getPrice();
-    java.math.BigDecimal qty = java.math.BigDecimal.valueOf(c.getQuantity());
-    java.math.BigDecimal amount = price.multiply(qty);
-
-    // 1️⃣ Save COD payment
-    cartSession.addCODPayment(userId, c.getBookId().getId(), amount);
-
-    // 2️⃣ Update Book stock
-    int newStock = c.getBookId().getAvailable() - c.getQuantity();
-    if (newStock < 0) newStock = 0; // prevent negative stock
-    cartSession.updateBookStock(c.getBookId().getId(), newStock);
-
-    // 3️⃣ Remove from cart
-    cartSession.removeFromCart(c.getId());
-}
-
-        return "success.xhtml?faces-redirect=true";
-
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        FacesContext.getCurrentInstance()
-                .addMessage(null, new FacesMessage("COD failed: " + ex.getMessage()));
-        return null;
     }
-}
 
-   
-
-    
 }

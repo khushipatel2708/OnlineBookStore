@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html">
+
+<h:head>
+    <title>Give Feedback</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f5f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 450px;
+            margin: 60px auto;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            margin-top: 6px;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #4e8cff;
+            box-shadow: 0 0 5px rgba(78, 140, 255, 0.5);
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: #4e8cff;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #1e6dff;
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+<div class="container">
+    <div class="card">
+
+        <h:form>
+            <h2>Give Feedback</h2>
+
+            <!-- Hidden bookId -->
+            <h:inputHidden value="#{feedbackBean.bookId}" />
+
+            <label>Rating (1–5):</label>
+            <h:inputText value="#{feedbackBean.rating}" required="true" />
+
+            <label>Comments:</label>
+            <h:inputTextarea value="#{feedbackBean.comments}" rows="5" />
+
+            <h:commandButton value="Submit Feedback"
+                             styleClass="submit-btn"
+                             action="#{feedbackBean.submitFeedback}" />
+        </h:form>
+    </div>
+</div>
+
+</h:body>
+</html>
