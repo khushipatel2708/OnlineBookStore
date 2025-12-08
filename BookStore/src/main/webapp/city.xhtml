@@ -16,7 +16,7 @@
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
         <link rel="stylesheet" href="css/adminCss.css"/>
-         <link rel="stylesheet" href="css/sidebar_header_css.css"/>
+        <link rel="stylesheet" href="css/sidebar_header_css.css"/>
 
         <!-- Same CSS copied from your reference admin design -->
         <style>
@@ -115,7 +115,7 @@
 
                         <!-- City Table -->
                         <div class="data-table-container">
-                         <h:dataTable value="#{cityBean.pagedGroups}" var="c" styleClass="city-table">
+                            <h:dataTable value="#{cityBean.pagedGroups}" var="c" styleClass="city-table">
 
 
                                 <h:column>
@@ -150,6 +150,25 @@
                                     </h:commandButton>
 
                                 </h:column>
+                                <!--<h:column>
+                                                                <f:facet name="header">Actions</f:facet>
+                                
+                                                                 EDIT BUTTON 
+                                                                <h:commandLink  action="#{cityBean.editCity(c.id)}"
+                                                                               styleClass="btn btn-sm p-1"
+                                                                               title="Edit">
+                                                                    <i class="bi bi-pencil-square text-success fs-5"></i>
+                                                                </h:commandLink>
+                                
+                                                                 DELETE BUTTON 
+                                                                <h:commandLink   action="#{cityBean.deleteCity(c.id)}"
+                                                                                onclick="return confirm('Delete this Book Type?')"
+                                                                                styleClass="btn btn-sm p-1"
+                                                                                title="Delete">
+                                                                    <i class="bi bi-trash text-danger fs-5"></i>
+                                                                </h:commandLink>
+                                                            </h:column>-->
+
 
                             </h:dataTable>
 
@@ -263,32 +282,32 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>
-                                           function deleteConfirm(event, button) {
-                                               event.preventDefault();
+                                                function deleteConfirm(event, button) {
+                                                    event.preventDefault();
 
-                                               Swal.fire({
-                                                   title: 'Are you sure?',
-                                                   text: "This book will be permanently deleted!",
-                                                   icon: 'warning',
-                                                   showCancelButton: true,
-                                                   confirmButtonColor: '#dc3545',
-                                                   cancelButtonColor: '#6c757d',
-                                                   confirmButtonText: 'Yes, delete it!',
-                                                   cancelButtonText: 'Cancel'
-                                               }).then((result) => {
-                                                   if (result.isConfirmed) {
-                                                       button.onclick = null;  // prevent loop
-                                                       button.click();         // JSF submits properly
-                                                   }
-                                               });
-                                           }
+                                                    Swal.fire({
+                                                        title: 'Are you sure?',
+                                                        text: "This book will be permanently deleted!",
+                                                        icon: 'warning',
+                                                        showCancelButton: true,
+                                                        confirmButtonColor: '#dc3545',
+                                                        cancelButtonColor: '#6c757d',
+                                                        confirmButtonText: 'Yes, delete it!',
+                                                        cancelButtonText: 'Cancel'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            button.onclick = null;  // prevent loop
+                                                            button.click();         // JSF submits properly
+                                                        }
+                                                    });
+                                                }
 
-                                           function FixBackdrop() {
-                                               document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
-                                               document.body.classList.remove('modal-open');
-                                               document.body.style.removeProperty('overflow');
-                                               document.body.style.removeProperty('padding-right');
-                                           }
+                                                function FixBackdrop() {
+                                                    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+                                                    document.body.classList.remove('modal-open');
+                                                    document.body.style.removeProperty('overflow');
+                                                    document.body.style.removeProperty('padding-right');
+                                                }
 
         </script>
     </h:body>

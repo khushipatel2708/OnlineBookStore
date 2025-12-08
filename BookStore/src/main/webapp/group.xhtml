@@ -67,7 +67,7 @@
             .delete-icon {
                 color: #dc3545;
             }
-   
+
         </style>
     </h:head>
 
@@ -144,41 +144,59 @@
                                                  styleClass="action-icon delete-icon"
                                                  title="Delete"/>
                             </h:column>
+<!--                            <h:column>
+                                <f:facet name="header">Actions</f:facet>
+
+                                 EDIT BUTTON 
+                                <h:commandLink  action="#{groupBean.editGroup(g.groupid)}"
+                                               styleClass="btn btn-sm p-1"
+                                               title="Edit">
+                                    <i class="bi bi-pencil-square text-success fs-5"></i>
+                                </h:commandLink>
+
+                                 DELETE BUTTON 
+                                <h:commandLink  action="#{groupBean.deleteGroup(g.groupid)}"
+                                                onclick="return confirm('Delete this Book Type?')"
+                                                styleClass="btn btn-sm p-1"
+                                                title="Delete">
+                                    <i class="bi bi-trash text-danger fs-5"></i>
+                                </h:commandLink>
+                            </h:column>-->
 
                         </h:dataTable>
 
                         <!-- Pagination Controls -->
-              
-<div class="pagination-container d-flex justify-content-center mt-4">
 
-    <ul class="premium-pagination">
+                        <div class="pagination-container d-flex justify-content-center mt-4">
 
-        <!-- Previous -->
-        <li class="#{groupBean.pageNumber == 1 ? 'disabled' : ''}">
-            <h:commandLink action="#{groupBean.previousPage}">
-                <f:ajax render="@form"/>
-                <i class="bi bi-chevron-left"></i> 
-            </h:commandLink>
-        </li>
+                            <ul class="premium-pagination">
 
-        <!-- Page Display -->
-        <li class="active">
-            <span>
-               #{groupBean.pageNumber} / #{groupBean.totalPages}
-            </span>
-        </li>
+                                <!-- Previous -->
+                                <li class="#{groupBean.pageNumber == 1 ? 'disabled' : ''}">
+                                    <h:commandLink action="#{groupBean.previousPage}">
+                                        <f:ajax render="@form"/>
+                                        <i class="bi bi-chevron-left"></i> 
+                                    </h:commandLink>
+                                </li>
 
-        <!-- Next -->
-        <li class="#{groupBean.pageNumber == groupBean.totalPages ? 'disabled' : ''}">
-            <h:commandLink action="#{groupBean.nextPage}">
-                <f:ajax render="@form"/>
-                 <i class="bi bi-chevron-right"></i>
-            </h:commandLink>
-        </li>
+                                <!-- Page Display -->
+                                <li class="active">
+                                    <span>
+                                        #{groupBean.pageNumber} / #{groupBean.totalPages}
+                                    </span>
+                                </li>
 
-    </ul>
+                                <!-- Next -->
+                                <li class="#{groupBean.pageNumber == groupBean.totalPages ? 'disabled' : ''}">
+                                    <h:commandLink action="#{groupBean.nextPage}">
+                                        <f:ajax render="@form"/>
+                                        <i class="bi bi-chevron-right"></i>
+                                    </h:commandLink>
+                                </li>
 
-</div>
+                            </ul>
+
+                        </div>
 
                     </div>
 

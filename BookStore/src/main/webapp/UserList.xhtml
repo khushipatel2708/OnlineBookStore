@@ -40,39 +40,6 @@
                 padding: 12px 15px;
                 border-bottom: 1px solid #eee;
             }
-
-            /* Action buttons */
-            .action-icon {
-                padding: 5px 8px;
-                border: 1px solid #ced4da;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 0.9em;
-                margin-right: 5px;
-                transition: background-color 0.2s;
-            }
-            .action-icon:hover {
-                background-color: #f0f0f0;
-            }
-            .edit-icon {
-                color: #0d6efd;
-                background-color: white;
-            }
-            .delete-icon {
-                color: #dc3545;
-                background-color: white;
-            }
-
-            /* Add User Button */
-            .btn-add-user {
-                background-color: #0d6efd;
-                color: white;
-                padding: 10px 15px;
-                border-radius: 8px;
-                font-weight: 600;
-                border: none;
-                cursor: pointer;
-            }
         </style>
     </h:head>
 
@@ -95,7 +62,7 @@
                         <h2 class="page-title">User List</h2>
                         <h:commandButton value="+ Add User"
                                          action="AdminUserForm"
-                                         styleClass="btn-add-user" />
+                                         styleClass="btn btn-primary btn-add-user" />
                     </div>
 
                     <div class="data-table-container">
@@ -124,20 +91,24 @@
                                 <f:facet name="header">Group</f:facet>
                                     #{u.groupid.groupname}
                             </h:column>
-
+                            
                             <h:column>
                                 <f:facet name="header">Actions</f:facet>
 
-                                <h:commandButton value="&#x270E;" 
-                                                 action="#{userBean.editUser(u)}"
-                                                 styleClass="action-icon edit-icon"
-                                                 title="Edit"/>
+                                <!-- EDIT BUTTON -->
+                                <h:commandLink action="#{userBean.editUser(u)}"
+                                               styleClass="btn btn-sm p-1"
+                                               title="Edit">
+                                    <i class="bi bi-pencil-square text-success fs-5"></i>
+                                </h:commandLink>
 
-                                <h:commandButton value="&#x1F5D1;" 
-                                                 action="#{userBean.deleteUser(u.id)}"
-                                                 onclick="return confirm('Are you sure?')"
-                                                 styleClass="action-icon delete-icon"
-                                                 title="Delete"/>
+                                <!-- DELETE BUTTON -->
+                                <h:commandLink  action="#{userBean.deleteUser(u.id)}"
+                                                onclick="return confirm('Delete this Book Type?')"
+                                                styleClass="btn btn-sm p-1"
+                                                title="Delete">
+                                    <i class="bi bi-trash text-danger fs-5"></i>
+                                </h:commandLink>
                             </h:column>
 
                         </h:dataTable>

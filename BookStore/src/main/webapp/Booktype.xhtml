@@ -52,21 +52,6 @@
                 padding: 12px 15px;
                 border-bottom: 1px solid #eee;
             }
-
-            .action-icon {
-                padding: 5px 8px;
-                border: 1px solid #ced4da;
-                border-radius: 4px;
-                cursor: pointer;
-                margin-right: 5px;
-            }
-            .edit-icon {
-                color: #0d6efd;
-            }
-            .delete-icon {
-                color: #dc3545;
-            }
-
         </style>
     </h:head>
 
@@ -124,28 +109,30 @@
 
                                 <h:column>
                                     <f:facet name="header">Actions</f:facet>
+                                    <!-- EDIT BUTTON -->
+                                    <h:commandLink action="#{booktypeBean.editBooktype(bt.id)}"
+                                                   styleClass="btn btn-sm p-1"
+                                                   title="Edit">
 
-                                    <!-- EDIT -->
-                                    <h:commandButton value="✏"
-                                                     action="#{booktypeBean.editBooktype(bt.id)}"
-                                                     styleClass="action-icon edit-icon"
-                                                     title="Edit">
+                                        <i class="bi bi-pencil-square text-success fs-5"></i>
+
                                         <f:ajax execute="@this" render="booktypeModalForm"
                                                 onevent="function(){
                                                 new bootstrap.Modal(document.getElementById('booktypeModal')).show();
                                                 }"/>
-                                    </h:commandButton>
+                                    </h:commandLink>
+                                    <!-- DELETE BUTTON -->
+                                    <h:commandLink action="#{booktypeBean.deleteBooktype(bt.id)}"
+                                                   onclick="return confirm('Delete this Book Type?')"
+                                                   styleClass="btn btn-sm p-1"
+                                                   title="Delete">
 
-                                    <!-- DELETE -->
-                                    <h:commandButton value="🗑"
-                                                     action="#{booktypeBean.deleteBooktype(bt.id)}"
-                                                     onclick="return confirm('Delete this Book Type?')"
-                                                     styleClass="action-icon delete-icon"
-                                                     title="Delete">
+                                        <i class="bi bi-trash text-danger fs-5"></i>
+
                                         <f:ajax render="@form"/>
-                                    </h:commandButton>
-
+                                    </h:commandLink>
                                 </h:column>
+
 
                             </h:dataTable>
                             <!-- Pagination Controls -->
@@ -267,11 +254,11 @@
 
     </h:body>
     <script>
-                                        function FixBackdrop() {
-                                            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
-                                            document.body.classList.remove('modal-open');
-                                            document.body.style.removeProperty('overflow');
-                                            document.body.style.removeProperty('padding-right');
-                                        }
+                                                function FixBackdrop() {
+                                                    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+                                                    document.body.classList.remove('modal-open');
+                                                    document.body.style.removeProperty('overflow');
+                                                    document.body.style.removeProperty('padding-right');
+                                                }
     </script>
 </html>
