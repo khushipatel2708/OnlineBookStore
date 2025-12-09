@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous"/>
         <link rel="stylesheet" href="css/adminCss.css"/>
-         <link rel="stylesheet" href="css/sidebar_header_css.css"/>
+        <link rel="stylesheet" href="css/sidebar_header_css.css"/>
         <style>
             /* Table Styles */
             .data-table-container {
@@ -81,11 +81,19 @@
                                 <f:facet name="header">User</f:facet>#{o.userId.fullname}
                             </h:column>
                             <h:column>
-                                <f:facet name="header">Date</f:facet>#{o.orderDate}
+                                <f:facet name="header">Date</f:facet>
+                                <h:outputText value="#{o.orderDate}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
                             </h:column>
+
                             <h:column>
-                                <f:facet name="header">Time</f:facet>#{o.orderTime}
+                                <f:facet name="header">Time</f:facet>
+                                <h:outputText value="#{o.orderTime}">
+                                    <f:convertDateTime pattern="HH:mm:ss" />
+                                </h:outputText>
                             </h:column>
+
                             <h:column>
                                 <f:facet name="header">Total</f:facet>₹#{o.totalPrice + 30}
                             </h:column>
