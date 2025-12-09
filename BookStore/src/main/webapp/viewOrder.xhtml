@@ -138,8 +138,7 @@
                             <div class="order-info"><i class="bi bi-calendar-event-fill"></i> <strong>Date:</strong> #{orderBean.selectedOrder.orderDate}</div>
                             <div class="order-info"><i class="bi bi-clock-fill"></i> <strong>Time:</strong> #{orderBean.selectedOrder.orderTime}</div>
                             <div class="order-info"><i class="bi bi-currency-rupee"></i> <strong>Total:</strong> ₹#{orderBean.selectedOrder.totalPrice + 30}</div>
-                            <div class="order-info"><i class="bi bi-person-fill"></i> <strong>User:</strong> #{orderBean.selectedOrder.userId.name}</div>
-                            <div class="order-info"><i class="bi bi-geo-alt-fill"></i> <strong>Shipping Address:</strong> #{orderBean.selectedOrder.userId.address}</div>
+                            <div class="order-info"><i class="bi bi-person-fill"></i> <strong>User:</strong> #{orderBean.selectedOrder.userId.fullname}</div>
                         </div>
                     </div>
 
