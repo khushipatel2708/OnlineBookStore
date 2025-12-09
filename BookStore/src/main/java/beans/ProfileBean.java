@@ -44,7 +44,7 @@ public class ProfileBean implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "profile.xhtml?faces-redirect=true";
+        return "UserProfile.xhtml?faces-redirect=true";
     }
 
     public User getUser() {
