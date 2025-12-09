@@ -83,6 +83,12 @@ public class CartBean implements Serializable {
     public void removeFromCart(int cartId) {
         cartSession.removeFromCart(cartId);
     }
+    
+    public void deleteItem(int id) {
+     cartSession.removeFromCart(id);  // your delete logic
+}
+
+    
 
     public void increaseQuantity(int cartId) {
         Cart c = cartSession.getCartById(cartId); // you need a method to get cart by id
@@ -188,5 +194,6 @@ public class CartBean implements Serializable {
             return null;
         }
     }
+    
 
 }

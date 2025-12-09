@@ -141,14 +141,12 @@
                                                 }"/>
                                     </h:commandButton>
 
+                                    <!-- DELETE BUTTON WITH SWEETALERT2 -->
                                     <h:commandButton value="&#x1F5D1;"
                                                      action="#{cityBean.deleteCity(c.id)}"
-                                                     onclick="deleteConfirm(event, this)" 
+                                                     onclick="deleteConfirm(event, this)"
                                                      styleClass="action-icon delete-icon"
-                                                     title="Delete">
-                                        <f:ajax render="@form"/>
-                                    </h:commandButton>
-
+                                                     title="Delete"/>
                                 </h:column>
                                 <!--<h:column>
                                                                 <f:facet name="header">Actions</f:facet>
@@ -279,36 +277,33 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <script>
-                                                function deleteConfirm(event, button) {
-                                                    event.preventDefault();
-
-                                                    Swal.fire({
-                                                        title: 'Are you sure?',
-                                                        text: "This book will be permanently deleted!",
-                                                        icon: 'warning',
-                                                        showCancelButton: true,
-                                                        confirmButtonColor: '#dc3545',
-                                                        cancelButtonColor: '#6c757d',
-                                                        confirmButtonText: 'Yes, delete it!',
-                                                        cancelButtonText: 'Cancel'
-                                                    }).then((result) => {
-                                                        if (result.isConfirmed) {
-                                                            button.onclick = null;  // prevent loop
-                                                            button.click();         // JSF submits properly
-                                                        }
-                                                    });
-                                                }
-
-                                                function FixBackdrop() {
-                                                    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
-                                                    document.body.classList.remove('modal-open');
-                                                    document.body.style.removeProperty('overflow');
-                                                    document.body.style.removeProperty('padding-right');
-                                                }
-
-        </script>
     </h:body>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+                                                    function deleteConfirm(event, button) {
+                                                        event.preventDefault();
+
+                                                        Swal.fire({
+                                                            title: 'Are you sure?',
+                                                            text: "This city will be permanently deleted!",
+                                                            icon: 'warning',
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: '#dc3545',
+                                                            cancelButtonColor: '#6c757d',
+                                                            confirmButtonText: 'Yes, delete it!',
+                                                            cancelButtonText: 'Cancel'
+                                                        }).then((result) => {
+                                                            if (result.isConfirmed) {
+                                                                button.onclick = null; // prevent SweetAlert loop
+                                                                button.click();        // submit JSF delete
+                                                            }
+                                                        });
+                                                    }
+    </script>
+
+
 </html>
