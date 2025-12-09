@@ -34,20 +34,19 @@ public class AdminUserCDIBean implements Serializable {
     private String email;
     private String phone;
     private Integer groupId;
-    private Boolean active = true;
+    private String status = "Active";
 
     private boolean editMode = false;
 
     private boolean passwordDisabled = true; // default
 
-public boolean isPasswordDisabled() {
-    return passwordDisabled;
-}
+    public boolean isPasswordDisabled() {
+        return passwordDisabled;
+    }
 
-public void enablePasswordChange() {
-    this.passwordDisabled = false;
-}
-
+    public void enablePasswordChange() {
+        this.passwordDisabled = false;
+    }
 
     // search / list
     private Collection<User> searchResults = null;
@@ -57,18 +56,17 @@ public void enablePasswordChange() {
     private int pageNumber = 1;
 
     // ========== UTILITIES ==========
-
     public boolean isAdmin() {
         return "Admin".equalsIgnoreCase(loginBean != null ? loginBean.getRole() : "Admin");
     }
 
     public String saveOrUpdate() {
-    if (editMode) {
-        return updateUser();
-    } else {
-        return addUser();
+        if (editMode) {
+            return updateUser();
+        } else {
+            return addUser();
+        }
     }
-}
 
     // Converts client call to getAllUsers
     public Collection<User> getAllUsers() {
@@ -84,7 +82,6 @@ public void enablePasswordChange() {
     }
 
     // ====== Navigation / actions ======
-
     public String goToAddPage() {
         clear();
         editMode = false;
@@ -110,10 +107,10 @@ public void enablePasswordChange() {
         } else {
             this.groupId = null;
         }
-//        this.active = u.getActive();
+        this.status = u.getStatus() != null ? u.getStatus() : "Active";
 
         editMode = true;
-          passwordDisabled = true; 
+        passwordDisabled = true;
         return "AdminUserForm.xhtml?faces-redirect=true";
     }
 
@@ -141,7 +138,7 @@ public void enablePasswordChange() {
             u.setGroupid(gm);
         }
 
-//        u.setActive(active);
+        u.setStatus(status);
 
         adminClient.addUser(u);
         clear();
@@ -180,7 +177,7 @@ public void enablePasswordChange() {
             u.setGroupid(null);
         }
 
-//        u.setActive(active);
+        u.setStatus(status);
 
         adminClient.updateUser(u, id.toString());
 
@@ -209,15 +206,17 @@ public void enablePasswordChange() {
         email = "";
         phone = "";
         groupId = null;
-        active = true;
+     status = "Active";
         searchResults = null;
         pageNumber = 1;
-          passwordDisabled = false; 
+        passwordDisabled = false;
     }
 
     // ===== AJAX checks for uniqueness =====
     public void checkUsernameUnique() {
-        if (username == null || username.trim().isEmpty()) return;
+        if (username == null || username.trim().isEmpty()) {
+            return;
+        }
         try {
             Boolean exists = adminClient.checkUsername(Boolean.class, username.toString());
             if (Boolean.TRUE.equals(exists)) {
@@ -229,7 +228,9 @@ public void enablePasswordChange() {
     }
 
     public void checkEmailUnique() {
-        if (email == null || email.trim().isEmpty()) return;
+        if (email == null || email.trim().isEmpty()) {
+            return;
+        }
         try {
             Boolean exists = adminClient.checkEmail(Boolean.class, email.toString());
             if (Boolean.TRUE.equals(exists)) {
@@ -241,7 +242,9 @@ public void enablePasswordChange() {
     }
 
     public void checkPhoneUnique() {
-        if (phone == null || phone.trim().isEmpty()) return;
+        if (phone == null || phone.trim().isEmpty()) {
+            return;
+        }
         try {
             Boolean exists = adminClient.checkPhone(Boolean.class, phone.toString());
             if (Boolean.TRUE.equals(exists)) {
@@ -269,46 +272,104 @@ public void enablePasswordChange() {
     }
 
     public void nextPage() {
-        if (pageNumber < getTotalPages()) pageNumber++;
+        if (pageNumber < getTotalPages()) {
+            pageNumber++;
+        }
     }
 
     public void previousPage() {
-        if (pageNumber > 1) pageNumber--;
+        if (pageNumber > 1) {
+            pageNumber--;
+        }
     }
 
     // ===== GETTERS / SETTERS =====
+    public Integer getId() {
+        return id;
+    }
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getUsername() {
+        return username;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String getFullname() { return fullname; }
-    public void setFullname(String fullname) { this.fullname = fullname; }
+    public String getPassword() {
+        return password;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public String getFullname() {
+        return fullname;
+    }
 
-    public Integer getGroupId() { return groupId; }
-    public void setGroupId(Integer groupId) { this.groupId = groupId; }
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public String getEmail() {
+        return email;
+    }
 
-    public boolean isEditMode() { return editMode; }
-    public void setEditMode(boolean editMode) { this.editMode = editMode; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public int getPageSize() { return pageSize; }
-    public void setPageSize(int pageSize) { this.pageSize = pageSize; }
+    public String getPhone() {
+        return phone;
+    }
 
-    public int getPageNumber() { return pageNumber; }
-    public void setPageNumber(int pageNumber) { this.pageNumber = pageNumber; }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
 
 }
