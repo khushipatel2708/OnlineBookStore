@@ -203,67 +203,107 @@
                 </h:form>
 
                 <!-- MODAL FORM -->
-                <div class="modal fade" id="groupModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
+                <!-- MODAL FORM -->
+<div class="modal fade" id="groupModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-                            <h:form id="groupModalForm">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">
-                                        <h:panelGroup rendered="#{not groupBean.editMode}">Add Group</h:panelGroup>
-                                        <h:panelGroup rendered="#{groupBean.editMode}">
-                                            Edit Group (ID: #{groupBean.id})
-                                        </h:panelGroup>
-                                    </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="FixBackdrop()"></button>
-                                </div>
+            <h:form id="groupModalForm">
 
-                                <div class="modal-body">
-                                    <label>Group:</label>
-                                    <h:inputText value="#{groupBean.groupname}" styleClass="form-control" required="true"/>
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <h:panelGroup rendered="#{not groupBean.editMode}">
+                            Add Group
+                        </h:panelGroup>
 
-                                    <label class="mt-2">Name:</label>
-                                    <h:inputText value="#{groupBean.username}" styleClass="form-control" required="true"/>
-                                </div>
+                        <h:panelGroup rendered="#{groupBean.editMode}">
+                            Edit Group (ID: #{groupBean.id})
+                        </h:panelGroup>
+                    </h5>
 
-                                <div class="modal-footer">
-
-                                    <!-- Add Group Button -->
-                                    <h:panelGroup rendered="#{not groupBean.editMode}">
-                                        <h:commandButton value="Add Group" styleClass="btn btn-success"
-                                                         action="#{groupBean.addGroup}">
-                                            <f:ajax execute="@form" render="@form"
-                                                    onevent="function(){
-                                                    bootstrap.Modal.getInstance(document.getElementById('groupModal')).hide();
-                                                    }"/>
-                                        </h:commandButton>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="FixBackdrop()">
-                                            Cancel
-                                        </button>
-                                    </h:panelGroup>
-
-                                    <!-- Update Group -->
-                                    <h:panelGroup rendered="#{groupBean.editMode}">
-                                        <h:commandButton value="Update" styleClass="btn btn-primary"
-                                                         action="#{groupBean.updateGroup}">
-                                            <f:ajax execute="@form" render="@form"
-                                                    onevent="function(){
-                                                    bootstrap.Modal.getInstance(document.getElementById('groupModal')).hide();
-                                                    }"/>
-                                        </h:commandButton>
-
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="FixBackdrop()">
-                                            Cancel
-                                        </button>
-                                    </h:panelGroup>
-
-                                </div>
-
-                            </h:form>
-
-                        </div>
-                    </div>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"
+                            onclick="FixBackdrop()"></button>
                 </div>
+
+                <div class="modal-body">
+
+                    <!-- GROUP NAME -->
+                    <label>Group:</label>
+                    <h:inputText id="groupName"
+                                 value="#{groupBean.groupname}"
+                                 required="true"
+                                 requiredMessage="Group name is required"
+                                 styleClass="form-control #{not empty facesContext.messageList ? 'is-invalid' : ''}">
+                        <f:ajax event="keyup" render="groupName groupNameMsg"/>
+                    </h:inputText>
+
+                    <h:message id="groupNameMsg"
+                               for="groupName"
+                               styleClass="invalid-feedback d-block"
+                               style="color:red; font-size:14px"/>
+
+
+                    <!-- USER NAME -->
+                    <label class="mt-2">Name:</label>
+                    <h:inputText id="userName"
+                                 value="#{groupBean.username}"
+                                 required="true"
+                                 requiredMessage="Name is required"
+                                 styleClass="form-control #{not empty facesContext.messageList ? 'is-invalid' : ''}">
+                        <f:ajax event="keyup" render="userName userNameMsg"/>
+                    </h:inputText>
+
+                    <h:message id="userNameMsg"
+                               for="userName"
+                               styleClass="invalid-feedback d-block"
+                               style="color:red; font-size:14px"/>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <!-- ADD GROUP -->
+                    <h:panelGroup rendered="#{not groupBean.editMode}">
+                        <h:commandButton value="Add Group"
+                                         styleClass="btn btn-success"
+                                         action="#{groupBean.addGroup}">
+                            <f:ajax execute="groupModalForm"
+                                    render="groupModalForm"/>
+                        </h:commandButton>
+
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                                onclick="FixBackdrop()">
+                            Cancel
+                        </button>
+                    </h:panelGroup>
+
+
+                    <!-- UPDATE GROUP -->
+                    <h:panelGroup rendered="#{groupBean.editMode}">
+                        <h:commandButton value="Update"
+                                         styleClass="btn btn-primary"
+                                         action="#{groupBean.updateGroup}">
+                            <f:ajax execute="groupModalForm"
+                                    render="groupModalForm"/>
+                        </h:commandButton>
+
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                                onclick="FixBackdrop()">
+                            Cancel
+                        </button>
+                    </h:panelGroup>
+
+                </div>
+
+            </h:form>
+
+        </div>
+    </div>
+</div>
+
 
             </div>
 
