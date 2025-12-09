@@ -87,4 +87,8 @@ public class OrderBean implements Serializable {
         }
     }
 
+    public String loadAndGo(Integer orderId) {
+    loadOrderById(orderId);   // selectedOrder set thai jase
+    return "viewOrder.jsf?faces-redirect=true"; 
+}
 }

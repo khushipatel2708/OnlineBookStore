@@ -20,16 +20,16 @@
                 margin:0;
                 padding-top:70px;
             }
-             .sticky-header-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1030;
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            height: 65px;
-        }
+            .sticky-header-wrapper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1030;
+                background-color: white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                height: 65px;
+            }
             .main-layout {
                 display:flex;
                 gap:24px;
@@ -165,8 +165,7 @@
                                             <div><i class="bi bi-currency-rupee me-1"></i> #{o.totalPrice + 30}</div>
                                         </div>
 
-                                        <h:commandLink action="viewOrder.jsf">
-                                            <f:param name="id" value="#{o.orderId}"/>
+                                        <h:commandLink action="#{orderBean.loadAndGo(o.orderId)}">
                                             <span class="btn-view-order">View Order</span>
                                         </h:commandLink>
                                     </div>
