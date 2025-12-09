@@ -224,8 +224,23 @@
 
                                     <div class="modal-body">
                                         <label>City Name:</label>
-                                        <h:inputText value="#{cityBean.name}" styleClass="form-control" required="true"/>
+
+                                        <h:inputText id="cityName"
+                                                     value="#{cityBean.name}"
+                                                     required="true"
+                                                     requiredMessage="City is required"
+                                                     styleClass="form-control #{not empty facesContext.messageList ? 'is-invalid' : ''}">
+                                            <f:ajax event="keyup" render="cityName cityNameMessage"/>
+                                        </h:inputText>
+
+                                        <h:message id="cityNameMessage"
+                                                   for="cityName"
+                                                   styleClass="invalid-feedback d-block"
+                                                   style="color:red; font-size:14px;"/>
+
+
                                     </div>
+
 
                                     <div class="modal-footer">
 
@@ -233,10 +248,7 @@
                                         <h:panelGroup rendered="#{not cityBean.editMode}">
                                             <h:commandButton value="Add City" styleClass="btn btn-success"
                                                              action="#{cityBean.addCity}">
-                                                <f:ajax execute="@form" render="cityForm"
-                                                        onevent="function(){
-                                                        bootstrap.Modal.getInstance(document.getElementById('cityModal')).hide();
-                                                        }"/>
+                                                <f:ajax execute="cityModalForm" render="cityModalForm"/>
                                             </h:commandButton>
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="FixBackdrop()">
                                                 Cancel
@@ -247,11 +259,9 @@
                                         <h:panelGroup rendered="#{cityBean.editMode}">
                                             <h:commandButton value="Update" styleClass="btn btn-primary"
                                                              action="#{cityBean.updateCity}">
-                                                <f:ajax execute="@form" render="cityForm"
-                                                        onevent="function(){
-                                                        bootstrap.Modal.getInstance(document.getElementById('cityModal')).hide();
-                                                        }"/>
+                                                <f:ajax execute="cityModalForm" render="cityModalForm"/>
                                             </h:commandButton>
+
 
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="FixBackdrop()">
                                                 Cancel
@@ -284,26 +294,26 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-                                                    function deleteConfirm(event, button) {
-                                                        event.preventDefault();
+                                                function deleteConfirm(event, button) {
+                                                    event.preventDefault();
 
-                                                        Swal.fire({
-                                                            title: 'Are you sure?',
-                                                            text: "This city will be permanently deleted!",
-                                                            icon: 'warning',
-                                                            showCancelButton: true,
-                                                            confirmButtonColor: '#dc3545',
-                                                            cancelButtonColor: '#6c757d',
-                                                            confirmButtonText: 'Yes, delete it!',
-                                                            cancelButtonText: 'Cancel'
-                                                        }).then((result) => {
-                                                            if (result.isConfirmed) {
-                                                                button.onclick = null; // prevent SweetAlert loop
-                                                                button.click();        // submit JSF delete
-                                                            }
-                                                        });
-                                                    }
-                                                     function FixBackdrop() {
+                                                    Swal.fire({
+                                                        title: 'Are you sure?',
+                                                        text: "This city will be permanently deleted!",
+                                                        icon: 'warning',
+                                                        showCancelButton: true,
+                                                        confirmButtonColor: '#dc3545',
+                                                        cancelButtonColor: '#6c757d',
+                                                        confirmButtonText: 'Yes, delete it!',
+                                                        cancelButtonText: 'Cancel'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            button.onclick = null; // prevent SweetAlert loop
+                                                            button.click();        // submit JSF delete
+                                                        }
+                                                    });
+                                                }
+                                                function FixBackdrop() {
                                                     document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
                                                     document.body.classList.remove('modal-open');
                                                     document.body.style.removeProperty('overflow');

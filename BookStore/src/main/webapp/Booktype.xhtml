@@ -192,14 +192,41 @@
                                     </div>
 
                                     <div class="modal-body">
+
                                         <label>Type:</label>
-                                        <h:inputText value="#{booktypeBean.type}" styleClass="form-control" required="true"/>
+
+                                        <h:inputText id="btType"
+                                                     value="#{booktypeBean.type}"
+                                                     required="true"
+                                                     requiredMessage="Type is required"
+                                                     styleClass="form-control #{not empty facesContext.messageList ? 'is-invalid' : ''}">
+                                            <f:ajax event="keyup" render="btType btTypeMsg"/>
+                                        </h:inputText>
+
+                                        <h:message id="btTypeMsg"
+                                                   for="btType"
+                                                   style="color:red; font-size:14px;"
+                                                   styleClass="invalid-feedback d-block"/>
 
                                         <br/>
 
                                         <label>Description:</label>
-                                        <h:inputText value="#{booktypeBean.description}" styleClass="form-control"/>
+
+                                        <h:inputText id="btDesc"
+                                                     value="#{booktypeBean.description}"
+                                                     required="true"
+                                                     requiredMessage="Description is required"
+                                                     styleClass="form-control #{not empty facesContext.messageList ? 'is-invalid' : ''}">
+                                            <f:ajax event="keyup" render="btDesc btDescMsg"/>
+                                        </h:inputText>
+
+                                        <h:message id="btDescMsg"
+                                                   for="btDesc"
+                                                   style="color:red; font-size:14px;"
+                                                   styleClass="invalid-feedback d-block"/>
+
                                     </div>
+
 
                                     <div class="modal-footer">
 
@@ -207,10 +234,7 @@
                                         <h:panelGroup rendered="#{not booktypeBean.editMode}">
                                             <h:commandButton value="Add" styleClass="btn btn-success"
                                                              action="#{booktypeBean.addBooktype}">
-                                                <f:ajax execute="@form" render="booktypeModalForm"
-                                                        onevent="function(){
-                                                        bootstrap.Modal.getInstance(document.getElementById('booktypeModal')).hide();
-                                                        }"/>
+                                                <f:ajax execute="@form" render="booktypeModalForm"/>
                                             </h:commandButton>
 
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="FixBackdrop()">
@@ -222,11 +246,9 @@
                                         <h:panelGroup rendered="#{booktypeBean.editMode}">
                                             <h:commandButton value="Update" styleClass="btn btn-primary"
                                                              action="#{booktypeBean.updateBooktype}">
-                                                <f:ajax execute="@form" render="booktypeModalForm"
-                                                        onevent="function(){
-                                                        bootstrap.Modal.getInstance(document.getElementById('booktypeModal')).hide();
-                                                        }"/>
+                                                <f:ajax execute="@form" render="booktypeModalForm"/>
                                             </h:commandButton>
+
 
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="FixBackdrop()">
                                                 Cancel

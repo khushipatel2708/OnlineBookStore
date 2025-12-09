@@ -1,4 +1,4 @@
-        /* Premium Pagination */
+/* Premium Pagination */
 .premium-pagination {
     display: flex;
     list-style: none;
@@ -55,4 +55,10 @@
     pointer-events: none;
 }
 
+input:invalid {
+    border: 1px solid red !important;
+}
 
+.is-invalid {
+    border: 2px solid red !important;
+}
