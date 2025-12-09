@@ -79,6 +79,33 @@ public class Admin {
         return Response.ok("{\"status\":\"User Deleted\"}").build();
     }
 
+    // ------------------ UNIQUE CHECKS --------------------
+
+@GET
+@Path("users/check-email")
+@Produces(MediaType.APPLICATION_JSON)
+public Response checkEmail(@QueryParam("email") String email) {
+    boolean exists = adminSessionBean.isEmailExists(email);
+    return Response.ok("{\"exists\":" + exists + "}").build();
+}
+
+@GET
+@Path("users/check-phone")
+@Produces(MediaType.APPLICATION_JSON)
+public Response checkPhone(@QueryParam("phone") String phone) {
+    boolean exists = adminSessionBean.isPhoneExists(phone);
+    return Response.ok("{\"exists\":" + exists + "}").build();
+}
+
+@GET
+@Path("users/check-username")
+@Produces(MediaType.APPLICATION_JSON)
+public Response checkUsername(@QueryParam("username") String username) {
+    boolean exists = adminSessionBean.isUsernameExists(username);
+    return Response.ok("{\"exists\":" + exists + "}").build();
+}
+
+
     // ================= CITY CRUD =================
     @GET
     @Path("cities/{id}")

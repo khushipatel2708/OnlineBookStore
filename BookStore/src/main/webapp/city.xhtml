@@ -303,6 +303,12 @@
                                                             }
                                                         });
                                                     }
+                                                     function FixBackdrop() {
+                                                    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+                                                    document.body.classList.remove('modal-open');
+                                                    document.body.style.removeProperty('overflow');
+                                                    document.body.style.removeProperty('padding-right');
+                                                }
     </script>
 
 

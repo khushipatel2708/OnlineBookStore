@@ -28,7 +28,10 @@ public interface AdminSessionBeanLocal {
     User findUserByUsername(String username);
     String hashPassword(String password);
     public void resetPassword(String email, String newPassword);
-public boolean changePassword(Integer userId, String oldPassword, String newPassword);
+    public boolean changePassword(Integer userId, String oldPassword, String newPassword);
+    boolean isEmailExists(String email);
+    boolean isPhoneExists(String phone);
+    boolean isUsernameExists(String username);
 
 
 

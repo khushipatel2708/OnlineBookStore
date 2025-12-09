@@ -3,6 +3,8 @@ package beans;
 import client.MyAdminClient;
 import Entity.User;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.ws.rs.core.Response;
@@ -37,10 +39,17 @@ public class ChangePasswordBean {
             Response res = client.changePassword(u, userId);
 
             if (res.getStatus() == 200) {
-                return "profile.xhtml?faces-redirect=true";
-            } else {
-                return null;
-            }
+    FacesContext.getCurrentInstance().addMessage(null,
+        new FacesMessage(FacesMessage.SEVERITY_INFO, 
+        "Password changed successfully!", null));
+    return null; // stay on same page
+} else {
+    FacesContext.getCurrentInstance().addMessage(null,
+        new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+        "Failed to change password!", null));
+    return null;
+}
+
 
         } catch (Exception e) {
             e.printStackTrace();

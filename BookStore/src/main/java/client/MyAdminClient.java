@@ -62,6 +62,15 @@ public class MyAdminClient {
         return webTarget.path(java.text.MessageFormat.format("booktypes/{0}", new Object[]{id})).request().delete(Response.class);
     }
 
+    public <T> T checkPhone(Class<T> responseType, String phone) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (phone != null) {
+            resource = resource.queryParam("phone", phone);
+        }
+        resource = resource.path("users/check-phone");
+        return resource.request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
     public <T> T getCityById(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("cities/{0}", new Object[]{id}));
@@ -108,6 +117,15 @@ public class MyAdminClient {
         return webTarget.path("booktypes").request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).post(jakarta.ws.rs.client.Entity.entity(requestEntity, jakarta.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
     }
 
+    public <T> T checkEmail(Class<T> responseType, String email) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (email != null) {
+            resource = resource.queryParam("email", email);
+        }
+        resource = resource.path("users/check-email");
+        return resource.request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
     public Response addGroup(Object requestEntity) throws ClientErrorException {
         return webTarget.path("groups").request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).post(jakarta.ws.rs.client.Entity.entity(requestEntity, jakarta.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
     }
@@ -141,6 +159,15 @@ public class MyAdminClient {
 
     public Response updateBooktype(Object requestEntity, String id) throws ClientErrorException {
         return webTarget.path(java.text.MessageFormat.format("booktypes/{0}", new Object[]{id})).request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).put(jakarta.ws.rs.client.Entity.entity(requestEntity, jakarta.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
+    }
+
+    public <T> T checkUsername(Class<T> responseType, String username) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (username != null) {
+            resource = resource.queryParam("username", username);
+        }
+        resource = resource.path("users/check-username");
+        return resource.request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
     public Response updateUser(Object requestEntity, String id) throws ClientErrorException {

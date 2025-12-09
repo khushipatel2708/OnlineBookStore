@@ -1,29 +1,57 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<!-- AdminUserForm.xhtml -->
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="jakarta.faces.facelets">
 
 <h:head>
-    <title>User Registration</title>
+    <title>Admin - User Form</title>
 
     <!-- Bootstrap & Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous"/>
-<link rel="stylesheet" href="css/sidebar_header_css.css"/>
+    <link rel="stylesheet" href="css/adminCss.css"/>
+    <link rel="stylesheet" href="css/sidebar_header_css.css"/>
+
     <style>
         .form-card {
-            background: #fff;
-            padding: 25px;
+            background: #ffffff;
             border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e9eef2;
         }
-
-        label {
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #343a40;
+        }
+        .btn-save {
+            background-color: #0d6efd;
+            color: white;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 6px;
+        }
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+        }
+        .btn-back {
+            background-color: #198754;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+        }
+        .btn-change-password {
+            background-color: #ffc107;
+            color: black;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-left: 10px;
             font-weight: 600;
         }
     </style>
@@ -31,124 +59,143 @@
 
 <h:body>
 
-    <!-- HEADER -->
     <div class="sticky-header-wrapper">
         <ui:include src="/adminHeader.xhtml"/>
     </div>
 
-    <!-- LAYOUT -->
     <div class="main-layout">
-
-        <!-- SIDEBAR -->
         <ui:include src="sidebar.xhtml"/>
 
-        <!-- MAIN CONTENT AREA -->
         <div class="main-content">
 
-            <div class="form-card">
+            <h:form id="userForm">
 
-                <h2 class="mb-4">User Registration</h2>
+                <!-- Page Title -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="page-title">
+                        <h:outputText value="#{adminUserBean.editMode ? 'Edit User' : 'Add User'}"/>
+                    </h2>
+                </div>
 
-                <h:form>
 
-                    <div class="row g-4">
+                <!-- Form Card -->
+                <div class="form-card">
 
-                        <!-- LEFT COLUMN -->
-                        <div class="col-md-6">
-
-                            <!-- Full Name -->
-                            <div class="mb-3">
-                                <label>Full Name *</label>
-                                <h:inputText value="#{userBean.fullname}" styleClass="form-control"
-                                             required="true"
-                                             requiredMessage="Full Name is required."/>
-                                <h:message for="@previous" styleClass="text-danger small"/>
-                            </div>
-
-                            <!-- Phone -->
-                            <div class="mb-3">
-                                <label>Phone Number *</label>
-                                <h:inputText value="#{userBean.phone}" styleClass="form-control"
-                                             required="true"
-                                             requiredMessage="Phone is required."/>
-                                <h:message for="@previous" styleClass="text-danger small"/>
-                            </div>
-
-                            <!-- Username -->
-                            <div class="mb-3">
-                                <label>Username *</label>
-                                <h:inputText value="#{userBean.username}" styleClass="form-control"
-                                             required="true"
-                                             requiredMessage="Username is required."/>
-                                <h:message for="@previous" styleClass="text-danger small"/>
-                            </div>
-
-                        </div>
-
-                        <!-- RIGHT COLUMN -->
-                        <div class="col-md-6">
-
-                            <!-- Email -->
-                            <div class="mb-3">
-                                <label>Email *</label>
-                                <h:inputText value="#{userBean.email}" styleClass="form-control"
-                                             required="true"
-                                             requiredMessage="Email is required."/>
-                                <h:message for="@previous" styleClass="text-danger small"/>
-                            </div>
-
-                            <!-- Password -->
-                            <div class="mb-3">
-                                <label>Password *</label>
-                                <h:inputSecret value="#{userBean.password}" styleClass="form-control"
-                                               required="true"
-                                               requiredMessage="Password is required."/>
-                                <h:message for="@previous" styleClass="text-danger small"/>
-                            </div>
-
-                            <!-- Status (Active/Inactive) -->
-                            <div class="mb-3">
-                                <label>Status *</label>
-                                <h:selectOneMenu value="#{userBean.status}" styleClass="form-select">
-                                    <f:selectItem itemValue="Active" itemLabel="Active"/>
-                                    <f:selectItem itemValue="Inactive" itemLabel="Inactive"/>
-                                </h:selectOneMenu>
-                            </div>
-
-                            <!-- Access Group -->
-                            <div class="mb-3">
-                                <label>Access Group *</label>
-                                <h:selectOneMenu value="#{userBean.groupId}" styleClass="form-select">
-                                    <f:selectItems value="#{userBean.allGroups}" var="g"
-                                                   itemValue="#{g.groupid}"
-                                                   itemLabel="#{g.groupname}"/>
-                                </h:selectOneMenu>
-                            </div>
-
-                        </div>
-
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <h:inputText value="#{adminUserBean.username}" 
+                                     required="true"
+                                     maxlength="100"
+                                     styleClass="form-control">
+                            <f:ajax event="blur" 
+                                    listener="#{adminUserBean.checkUsernameUnique}" 
+                                    render="usernameMsg"/>
+                        </h:inputText>
+                        <h:message id="usernameMsg" for="username" styleClass="text-danger"/>
                     </div>
 
-                    <hr/>
+                    <!-- Password + Change Password -->
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <div class="d-flex">
+
+                            <h:inputSecret id="password"
+                                           value="#{adminUserBean.password}"
+                                           required="#{!adminUserBean.editMode}"
+                                           maxlength="100"
+                                           disabled="#{adminUserBean.passwordDisabled}"
+                                           styleClass="form-control"/>
+
+                            <!-- SHOW ONLY IN EDIT MODE -->
+                            <h:commandButton value="Change Password"
+                                             rendered="#{adminUserBean.editMode}"
+                                             action="AdminChangePassword.xhtml?faces-redirect=true"
+                                             styleClass="btn-change-password"
+                                             style="margin-left:10px;"/>
+                        </div>
+
+                        <h:message for="password" styleClass="text-danger"/>
+                    </div>
+
+                    <!-- Full Name -->
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <h:inputText value="#{adminUserBean.fullname}" 
+                                     maxlength="200"
+                                     styleClass="form-control"/>
+                        <h:message for="fullname" styleClass="text-danger"/>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <h:inputText value="#{adminUserBean.email}"
+                                     styleClass="form-control">
+                            <f:ajax event="blur"
+                                    listener="#{adminUserBean.checkEmailUnique}"
+                                    render="emailMsg"/>
+                        </h:inputText>
+                        <h:message id="emailMsg" for="email" styleClass="text-danger"/>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        <h:inputText value="#{adminUserBean.phone}"
+                                     styleClass="form-control">
+                            <f:ajax event="blur"
+                                    listener="#{adminUserBean.checkPhoneUnique}"
+                                    render="phoneMsg"/>
+                        </h:inputText>
+                        <h:message id="phoneMsg" for="phone" styleClass="text-danger"/>
+                    </div>
+
+                    <!-- Group -->
+                    <div class="mb-3">
+                        <label class="form-label">Group</label>
+                        <h:selectOneMenu value="#{adminUserBean.groupId}" styleClass="form-select">
+                            <f:selectItem itemLabel="-- Select group --" itemValue="#{null}" />
+                            <f:selectItems value="#{adminUserBean.allGroups}" var="g"
+                                           itemValue="#{g.groupid}" itemLabel="#{g.groupname}" />
+                        </h:selectOneMenu>
+                    </div>
+
+                    <!-- Active -->
+                    <div class="mb-3 form-check">
+                        <h:selectBooleanCheckbox value="#{adminUserBean.active}" 
+                                                 styleClass="form-check-input"
+                                                 id="active"/>
+                        <label class="form-check-label" for="active">Active</label>
+                    </div>
 
                     <!-- Buttons -->
-                    <div class="d-flex justify-content-end gap-3 mt-3">
-                        <h:commandButton value="Create Account"
-                                         action="#{userBean.saveUser}"
-                                         styleClass="btn btn-primary"/>
+                    <div class="mt-3">
 
-                        <h:commandButton value="Clear"
-                                         action="#{userBean.clearForm}"
+                        <h:commandButton value="#{adminUserBean.editMode ? 'Update' : 'Save'}"
+                                         action="#{adminUserBean.saveOrUpdate}"
+                                         styleClass="btn-save"/>
+
+                        <h:commandButton value="Cancel"
+                                         action="#{adminUserBean.cancelEdit}"
                                          immediate="true"
-                                         styleClass="btn btn-secondary"/>
+                                         styleClass="btn-cancel ms-2"/>
+
+                        <h:commandButton value="Back to List"
+                                         action="AdminUserList.xhtml?faces-redirect=true"
+                                         immediate="true"
+                                         styleClass="btn-back ms-2"/>
+
                     </div>
 
-                </h:form>
+                </div>
 
-            </div>
+            </h:form>
+
         </div>
 
     </div>
 
 </h:body>
 </html>
+    

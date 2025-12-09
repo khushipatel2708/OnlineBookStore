@@ -380,4 +380,40 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
         return true;
     }
 
+    @Override
+    public boolean isEmailExists(String email) {
+        try {
+            User u = em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+            return u != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isPhoneExists(String phone) {
+        try {
+            User u = em.createQuery("SELECT u FROM User u WHERE u.phone = :phone", User.class)
+                    .setParameter("phone", phone)
+                    .getSingleResult();
+            return u != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isUsernameExists(String username) {
+        try {
+            User u = em.createQuery("SELECT u FROM User u WHERE u.username = :uname", User.class)
+                    .setParameter("uname", username)
+                    .getSingleResult();
+            return u != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
