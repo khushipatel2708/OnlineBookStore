@@ -14,9 +14,10 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
- <link rel="stylesheet" href="css/sidebar_header_css.css"/>
+        <link rel="stylesheet" href="css/adminCss.css"/>
+        <link rel="stylesheet" href="css/sidebar_header_css.css"/>
         <style>
-            
+
             /* TABLE STYLING */
             .data-table-container {
                 background-color: white;
@@ -62,36 +63,67 @@
 
                     <div class="data-table-container">
 
-                        <h:dataTable value="#{feedbackListBean.feedbackList}" 
+                        <h:dataTable value="#{feedbackListBean.pagedFeedbacks}" 
                                      var="f" 
                                      styleClass="fb-table">
 
                             <h:column>
                                 <f:facet name="header">ID</f:facet>
-                                #{f.id}
+                                    #{(feedbackListBean.pageNumber - 1) * feedbackListBean.pageSize 
+                                      + feedbackListBean.pagedFeedbacks.indexOf(f) + 1}
                             </h:column>
 
                             <h:column>
                                 <f:facet name="header">User Name</f:facet>
-                                #{f.userId.fullname}
+                                    #{f.userId.fullname}
                             </h:column>
 
                             <h:column>
                                 <f:facet name="header">Book Name</f:facet>
-                                #{f.bookId.bookname}
+                                    #{f.bookId.bookname}
                             </h:column>
 
                             <h:column>
                                 <f:facet name="header">Rating</f:facet>
-                                #{f.rating}
+                                    #{f.rating}
                             </h:column>
 
                             <h:column>
                                 <f:facet name="header">Comments</f:facet>
-                                #{f.comments}
+                                    #{f.comments}
                             </h:column>
 
                         </h:dataTable>
+
+                        <div class="pagination-container d-flex justify-content-center mt-4">
+                            <ul class="premium-pagination">
+
+                                <!-- Previous -->
+                                <li class="#{feedbackListBean.pageNumber == 1 ? 'disabled' : ''}">
+                                    <h:commandLink action="#{feedbackListBean.previousPage}">
+                                        <f:ajax render="@form"/>
+                                        <i class="bi bi-chevron-left"></i>
+                                    </h:commandLink>
+                                </li>
+
+                                <!-- Page Display -->
+                                <li class="active">
+                                    <span>
+                                        #{feedbackListBean.pageNumber} / #{feedbackListBean.totalPages}
+                                    </span>
+                                </li>
+
+                                <!-- Next -->
+                                <li class="#{feedbackListBean.pageNumber == feedbackListBean.totalPages ? 'disabled' : ''}">
+                                    <h:commandLink action="#{feedbackListBean.nextPage}">
+                                        <f:ajax render="@form"/>
+                                        <i class="bi bi-chevron-right"></i>
+                                    </h:commandLink>
+                                </li>
+
+                            </ul>
+                        </div>
+
 
                     </div>
 

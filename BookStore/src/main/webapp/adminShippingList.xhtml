@@ -73,7 +73,8 @@
                         <h:dataTable value="#{shippingBean.pagedGroups}" var="s" styleClass="ship-table">
 
                             <h:column>
-                                <f:facet name="header">ID</f:facet>#{(shippingBean.pageNumber - 1) * shippingBean.pageSize + shippingBean.pagedGroups.indexOf(s) + 1}
+                                <f:facet name="header">ID</f:facet>
+                                #{(shippingBean.pageNumber - 1) * shippingBean.pageSize + shippingBean.pagedGroups.indexOf(s) + 1}
                             </h:column>
 
                             <h:column>
@@ -106,16 +107,16 @@
                                     #{s.cityid.name}
                             </h:column>
 
-                            <h:column>
+<!--                            <h:column>
                                 <f:facet name="header">Actions</f:facet>
-                                <!-- DELETE BUTTON -->
+                                 DELETE BUTTON 
                                 <h:commandLink  action="#{shippingBean.deleteShipping(s.id)}"
                                                 onclick="return confirm('Delete this Book Type?')"
                                                 styleClass="btn btn-sm p-1"
                                                 title="Delete">
                                     <i class="bi bi-trash text-danger fs-5"></i>
                                 </h:commandLink>
-                            </h:column>
+                            </h:column>-->
                         </h:dataTable>
                         <!-- Pagination Controls -->
 
