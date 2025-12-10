@@ -61,31 +61,7 @@
             border-bottom: 1px solid #eee;
         }
 
-        /* Pagination */
-        .premium-pagination {
-            list-style: none;
-            display: flex;
-            gap: 10px;
-            padding-left: 0;
-        }
-        .premium-pagination li {
-            padding: 6px 12px;
-            border-radius: 6px;
-            background: #f1f1f1;
-        }
-        .premium-pagination li.active {
-            background: #0d6efd;
-            color: white;
-            font-weight: bold;
-        }
-        .premium-pagination li.disabled {
-            opacity: 0.4;
-            pointer-events: none;
-        }
-        .premium-pagination li a {
-            text-decoration: none;
-            color: inherit;
-        }
+       
 
     </style>
 
@@ -114,6 +90,7 @@
                                      styleClass="btn-add-user"/>
                 </div>
 
+                
                 <!-- TABLE -->
                 <div class="data-table-container">
 
@@ -175,34 +152,38 @@
                     </h:dataTable>
 
                     <!-- PAGINATION -->
-                    <div class="pagination-container d-flex justify-content-center mt-4">
+                    
+                        <div class="pagination-container d-flex justify-content-center mt-4">
 
-                        <ul class="premium-pagination">
+                            <ul class="premium-pagination">
 
-                            <!-- Prev -->
-                            <li class="#{adminUserBean.pageNumber == 1 ? 'disabled' : ''}">
-                                <h:commandLink action="#{adminUserBean.previousPage}">
-                                    <f:ajax render="@form"/>
-                                    <i class="bi bi-chevron-left"></i>
-                                </h:commandLink>
-                            </li>
+                                <!-- Previous -->
+                                <li class="#{adminUserBean.pageNumber == 1 ? 'disabled' : ''}">
+                                    <h:commandLink action="#{adminUserBean.previousPage}">
+                                        <f:ajax render="@form"/>
+                                        <i class="bi bi-chevron-left"></i> 
+                                    </h:commandLink>
+                                </li>
 
-                            <!-- Page display -->
-                            <li class="active">
-                                #{adminUserBean.pageNumber} / #{adminUserBean.totalPages}
-                            </li>
+                                <!-- Page Display -->
+                                <li class="active">
+                                    <span>
+                                        #{adminUserBean.pageNumber} / #{adminUserBean.totalPages}
+                                    </span>
+                                </li>
 
-                            <!-- Next -->
-                            <li class="#{adminUserBean.pageNumber == adminUserBean.totalPages ? 'disabled' : ''}">
-                                <h:commandLink action="#{adminUserBean.nextPage}">
-                                    <f:ajax render="@form"/>
-                                    <i class="bi bi-chevron-right"></i>
-                                </h:commandLink>
-                            </li>
+                                <!-- Next -->
+                                <li class="#{adminUserBean.pageNumber == adminUserBean.totalPages ? 'disabled' : ''}">
+                                    <h:commandLink action="#{adminUserBean.nextPage}">
+                                        <f:ajax render="@form"/>
+                                        <i class="bi bi-chevron-right"></i>
+                                    </h:commandLink>
+                                </li>
 
-                        </ul>
+                            </ul>
 
-                    </div>
+                        </div>
+                    
                 </div>
 
             </h:form>
