@@ -22,6 +22,16 @@
                 font-family: 'Segoe UI', sans-serif;
             }
 
+             .sticky-header-wrapper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1030;
+                background-color: white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                height: 65px;
+            }
             .sidebar-card {
                 padding: 20px;
                 border-radius: 12px;
@@ -124,6 +134,46 @@
                 color: #6c757d;
                 margin-bottom: 10px;
             }
+
+            .search-container {
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                padding: 15px;
+                margin-bottom: 20px;
+                margin-top:70px;
+            }
+            .search-container input[type="text"] {
+                padding: 8px 10px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                width: 150px; /* Making input boxes smaller */
+                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            }
+            .search-container .btn-search, .search-container .btn-clear {
+                padding: 8px 15px;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                cursor: pointer;
+                margin-right: 5px;
+            }
+            .search-container .btn-search {
+                background-color: #0d6efd;
+            }
+            .search-container .btn-clear {
+                background-color: #6c757d;
+            }
+
+            /* h:panelGrid layout adjustment for the search fields */
+            .search-grid-panel td {
+                padding: 5px 10px 5px 0; /* Adjust padding for a tighter layout */
+            }
+            .search-grid-panel h:outputLabel {
+                font-weight: 600;
+                color: #495057;
+            }
+
         </style>
     </h:head>
 
@@ -133,50 +183,88 @@
         </div>
 
         <h:form>
+
+            <!-- ========================= -->
+            <!-- TOP SEARCH BAR (WORKING) -->
+            <!-- ========================= -->
+            <div class="search-container">
+                <h:panelGrid columns="8" cellpadding="5" styleClass="search-grid-panel">
+
+                    <h:outputLabel value="Book Name:" />
+                    <h:inputText value="#{bookBean.searchBookname}" >
+                        <f:passThroughAttribute name="placeholder" value="Search" />
+                    </h:inputText>
+
+                    <h:outputLabel value="Author:" />
+                    <h:inputText value="#{bookBean.searchAuthor}"  >
+                        <f:passThroughAttribute name="placeholder" value="Search" />
+                    </h:inputText>
+
+                    <h:commandButton value="Search"
+                                     action="#{bookBean.searchBooks}"
+                                     styleClass="btn-search" />
+
+                    <h:commandButton value="Clear"
+                                     action="#{bookBean.clearSearch}"
+                                     styleClass="btn-clear" />
+
+                </h:panelGrid>
+            </div>
+
+
             <div class="container-fluid py-4">
 
                 <div class="row gx-5">
 
+                    <!-- ===================== -->
+                    <!-- LEFT SIDEBAR FILTERS -->
+                    <!-- ===================== -->
                     <div class="col-lg-3">
                         <div class="sidebar-card sticky-top" style="top: 20px;">
 
                             <h5 class="fw-bold mb-3 text-muted">Filters</h5>
 
+                            <!-- Search Box -->
                             <div class="mb-4">
                                 <label class="form-label fw-bold">Search</label>
                                 <div class="input-group">
+
                                     <span class="input-group-text bg-white border-end-0">
                                         <i class="bi bi-search"></i>
                                     </span>
 
                                     <h:inputText id="searchBook"
-                                                 value="#{bookBean.searchBookname}"
-                                                 styleClass="form-control border-start-0"
-                                                 title="Press Enter to search" />
+                                                 value="#{bookBean.searchBooktype}"
+                                                 styleClass="form-control border-start-0"  >
+                        <f:passThroughAttribute name="placeholder" value="Search by category" />
+                    </h:inputText>
+
                                 </div>
                             </div>
 
-                            <div class="mb-4">
-                                <h5 class="fw-bold mb-3 text-muted">Category</h5>
+                            <!-- Category List -->
+                            <h5 class="fw-bold mb-3 text-muted">Category</h5>
 
-                                <div class="list-group list-group-flush">
+                            <div class="list-group list-group-flush">
 
-                                    <h:commandLink action="#{bookBean.clearSearch}"
-                                                   styleClass="list-group-item active-category">
-                                        <i class="bi bi-list me-2"></i> All Categories
+                                <h:commandLink
+                                    action="#{bookBean.clearSearch}"
+                                    styleClass="list-group-item active-category">
+                                    <i class="bi bi-list me-2"></i> All Categories
+                                </h:commandLink>
+
+                                <ui:repeat value="#{bookBean.allBooktypes}" var="t">
+
+                                    <h:commandLink styleClass="list-group-item list-group-item-action"
+                                                   action="#{bookBean.searchBooks}">
+                                        <f:setPropertyActionListener
+                                            target="#{bookBean.searchBooktype}"
+                                            value="#{t.type}" />
+                                        <h:outputText value="#{t.type}" />
                                     </h:commandLink>
 
-                                    <ui:repeat value="#{bookBean.allBooktypes}" var="t">
-                                        <h:commandLink styleClass="list-group-item list-group-item-action"
-                                                       action="#{bookBean.searchBooks}">
-                                            <f:setPropertyActionListener
-                                                target="#{bookBean.searchBooktype}"
-                                                value="#{t.type}" />
-                                            <h:outputText value="#{t.type}" />
-                                        </h:commandLink>
-                                    </ui:repeat>
+                                </ui:repeat>
 
-                                </div>
                             </div>
 
                             <h:commandLink value="Clear Filter"
@@ -186,19 +274,45 @@
                         </div>
                     </div>
 
+
+                    <!-- ====================== -->
+                    <!-- BOOK CARDS RIGHT SIDE -->
+                    <!-- ====================== -->
                     <div class="col-lg-9">
+
                         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
+                            <!-- ===== SHOW WHEN NO BOOKS FOUND ===== -->
+                            <!-- ===== SHOW WHEN NO BOOKS FOUND ===== -->
+                            <h:panelGroup rendered="#{empty bookBean.allBooks}">
+                                <div class="col-12 d-flex justify-content-center align-items-center flex-column py-5"
+                                     style="min-height: 300px;">
+
+                                    <img src="images/b2.png"
+                                         style="width:180px; opacity:0.8; margin-bottom:20px;" />
+
+                                    <h3 class="text-muted text-center">No books found</h3>
+
+                                    <p class="text-secondary text-center">
+                                        Try searching with a different name or author.
+                                    </p>
+
+                                </div>
+                            </h:panelGroup>
+
 
                             <ui:repeat value="#{bookBean.allBooks}" var="b">
+
                                 <div class="col">
                                     <div class="card book-card p-3">
 
                                         <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}"
                                                         rendered="#{not empty b.coverPhoto}"
-                                                        styleClass="card-img-top"/>
+                                                        styleClass="card-img-top" />
 
                                         <div class="card-body p-0 d-flex flex-column">
+
                                             <h3 class="book-title">#{b.bookname}</h3>
+
                                             <div class="book-author">
                                                 by <span class="fw-bold">#{b.authorname}</span>
                                             </div>
@@ -206,26 +320,13 @@
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span class="price-new">₹#{b.price}</span>
 
-                                                <!-- Stock Status -->
                                                 <span style="font-weight:600; color: #{b.available > 0 ? 'green' : 'red'};">
                                                     #{b.available > 0 ? 'In Stock' : 'Out of Stock'}
                                                 </span>
                                             </div>
 
-                                            <div class="mb-3">
-                                                <span class="rating-stars">
-                                                    <i class="bi bi-star-fill"></i>
-                                                    <i class="bi bi-star-fill"></i>
-                                                    <i class="bi bi-star-fill"></i>
-                                                    <i class="bi bi-star-fill"></i>
-                                                    <i class="bi bi-star-half"></i>
-                                                </span>
-                                            </div>
-
-                                            <!-- Buttons -->
                                             <div class="d-flex gap-2">
 
-                                                <!-- Add to Cart Disabled When Stock = 0 -->
                                                 <h:commandButton value="Add to Cart"
                                                                  styleClass="btn-add-to-cart flex-fill"
                                                                  action="#{cartBean.addToCart}"
@@ -238,16 +339,19 @@
                                                                  styleClass="btn btn-outline-primary flex-fill"
                                                                  action="#{bookBean.viewDetails}">
                                                     <f:param name="bookId" value="#{b.id}" />
-                                                    <f:ajax render="@form" />
                                                 </h:commandButton>
+
                                             </div>
 
                                         </div>
                                     </div>
                                 </div>
+
                             </ui:repeat>
+
                         </div>
                     </div>
+
                 </div>
             </div>
 
