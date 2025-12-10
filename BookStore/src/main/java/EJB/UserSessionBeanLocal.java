@@ -54,5 +54,7 @@ void updateBookStock(Integer bookId, int newAvailable);
     public void updatePaymentStatus(Integer userId, String oldStatus, String newStatus);
     public void addFeedback(String comments, int rating, int bookId, int userId);
 List<Feedback> getAllFeedbacks();
+List<Payment> getAllPayments();
+
     
 }

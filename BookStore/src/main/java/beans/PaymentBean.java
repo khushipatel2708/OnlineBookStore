@@ -2,6 +2,7 @@ package beans;
 
 import EJB.UserSessionBeanLocal;
 import Entity.Cart;
+import Entity.Payment;
 import Entity.User;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
@@ -199,6 +200,24 @@ public class PaymentBean implements Serializable {
             e.printStackTrace();
         }
     }
+    public List<Payment> getAllPayments() {
+        return userEJB.getAllPayments();
+    }
+  // Method to calculate total amount with +30 for each payment
+public BigDecimal getListTotalAmount() {
+    BigDecimal total = BigDecimal.ZERO;
+    for (Payment p : getAllPayments()) {
+        if (p.getAmount() != null) {
+            total = total.add(p.getAmount().add(BigDecimal.valueOf(30))); // add 30 to each amount
+        } else {
+            total = total.add(BigDecimal.valueOf(30)); // if amount null, still add 30
+        }
+    }
+    return total;
+}
+
+    
+    
 
     // ----------------- Getters & Setters -----------------
 

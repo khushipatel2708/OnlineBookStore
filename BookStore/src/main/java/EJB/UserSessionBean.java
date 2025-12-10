@@ -29,6 +29,13 @@ public class UserSessionBean implements UserSessionBeanLocal {
 
     @PersistenceContext(unitName = "my_pu")
     EntityManager em;
+    
+    @Override
+public List<Payment> getAllPayments() {
+    return em.createNamedQuery("Payment.findAll", Payment.class)
+             .getResultList();
+}
+
 
     // ✅ Get all shippings
     @Override
