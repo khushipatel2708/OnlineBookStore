@@ -3,63 +3,66 @@
                 xmlns:ui="jakarta.faces.facelets">
     
     <div class="admin-sidebar">
-        <div class="sidebar-header">
-            Admin Panel ⚙️
-        </div>
-
         <h:form>
 
             <!-- Dashboard -->
             <h:link outcome="admin" styleClass="nav-item-link active">
-                <i class="fas fa-th-large"></i>
+                <i class="fas fa-tachometer-alt"></i>
                 <span>Dashboard</span>
             </h:link>
 
             <!-- Books -->
             <h:link outcome="BookList" styleClass="nav-item-link">
-                <i class="far fa-book-open"></i>
+                <i class="fas fa-book"></i>
                 <span>Books</span>
             </h:link>
 
             <!-- Categories -->
             <h:link outcome="Booktype" styleClass="nav-item-link">
-                <i class="far fa-bookmark"></i>
+                <i class="fas fa-tags"></i>
                 <span>Categories</span>
             </h:link>
 
             <!-- Users -->
             <h:link outcome="AdminUserList" styleClass="nav-item-link">
-                 <i class="far fa-users"></i>
+                <i class="fas fa-users"></i>
                 <span>Users</span>
             </h:link>
 
             <!-- Orders -->
             <h:link outcome="adminOrders" styleClass="nav-item-link">
-                <i class="fas fa-lock"></i>
+                <i class="fas fa-shopping-cart"></i>
                 <span>Orders</span>
             </h:link>
 
             <!-- Shipping -->
             <h:link outcome="adminShippingList" styleClass="nav-item-link">
-                <i class="bi bi-buildings-fill"></i>
+                <i class="fas fa-truck"></i>
                 <span>Shipping</span>
             </h:link>
 
             <!-- City Management -->
             <h:link outcome="city" styleClass="nav-item-link">
-                <i class="bi bi-buildings-fill"></i>
+                <i class="fas fa-city"></i>
                 <span>City Management</span>
             </h:link>
 
             <!-- Group Management -->
             <h:link outcome="group" styleClass="nav-item-link">
-                <i class="bi bi-buildings-fill"></i>
+                <i class="fas fa-users-cog"></i>
                 <span>Group Management</span>
             </h:link>
 
+            <!-- Feedback -->
             <h:link outcome="feedbackList" styleClass="nav-item-link">
-                <i class="bi bi-buildings-fill"></i>
+                <i class="fas fa-comment-dots"></i>
                 <span>Feedback</span>
+            </h:link>
+            
+            <!-- Payment List -->
+            <h:link outcome="PaymentList" styleClass="nav-item-link">
+                <i class="fas fa-credit-card"></i>
+                <span>Payment List</span>
             </h:link>
             
         </h:form>

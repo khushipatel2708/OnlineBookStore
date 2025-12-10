@@ -20,32 +20,58 @@
     <style>
         .data-table-container {
             background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            border: 1px solid #e9eef2;
-            margin-top: 20px;
+            border: 1px solid #e0e0e0;
+            margin-top: 25px;
+            padding: 20px;
         }
         .payment-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0 8px;
         }
         .payment-table th {
-            background-color: #f8f9fa;
+            background-color: #0d6efd;
+            color: #fff;
             font-weight: 600;
-            color: #343a40;
             padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #dee2e6;
+            border-radius: 8px 8px 0 0;
         }
         .payment-table td {
+            background-color: #f8f9fa;
             padding: 12px 15px;
-            border-bottom: 1px solid #eee;
+            border-radius: 8px;
+            vertical-align: middle;
         }
+        .payment-amount {
+            font-weight: 700;
+            color: #198754; /* green for positive amounts */
+            font-size: 1.05em;
+        }
+        .status-badge {
+            padding: 0.4em 0.7em;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        .status-pending { background-color: #ffc107; color: #212529; }
+        .status-completed { background-color: #198754; color: #fff; }
+        .status-failed { background-color: #dc3545; color: #fff; }
+
         .total-amount {
             margin-top: 15px;
-            font-weight: bold;
-            font-size: 1.1em;
+            font-weight: 700;
+            font-size: 1.2em;
+            color: #0d6efd;
+            text-align: right;
+        }
+
+        /* Hover effect for table rows */
+        .payment-table tbody tr:hover td {
+            background-color: #e9f5ff;
+            transition: 0.3s;
         }
     </style>
 </h:head>
@@ -62,7 +88,7 @@
         <div class="main-content">
             <h:form>
 
-                <div class="content-header">
+                <div class="content-header mb-3">
                     <h2 class="page-title">Payment List</h2>
                 </div>
 
@@ -70,13 +96,13 @@
                     <h:dataTable value="#{paymentBean.allPayments}" var="p" styleClass="payment-table">
 
                         <h:column>
-                            <f:facet name="header">ID</f:facet>
+                            <f:facet name="header">#</f:facet>
                             #{(paymentBean.allPayments.indexOf(p) + 1)}
                         </h:column>
 
                         <h:column>
                             <f:facet name="header">Payment Method</f:facet>
-                            #{p.paymentMethod}
+                            <i class="bi bi-credit-card"></i> #{p.paymentMethod}
                         </h:column>
 
                         <h:column>
@@ -86,29 +112,34 @@
 
                         <h:column>
                             <f:facet name="header">Amount</f:facet>
-                            ₹ #{p.amount + 30} 
+                            <span class="payment-amount">₹ #{p.amount + 30}</span>
                         </h:column>
 
                         <h:column>
                             <f:facet name="header">Status</f:facet>
-                            #{p.status}
+                            <span class="status-badge
+                                #{p.status eq 'Pending' ? 'status-pending' : ''}
+                                #{p.status eq 'Completed' ? 'status-completed' : ''}
+                                #{p.status eq 'Failed' ? 'status-failed' : ''}">
+                                #{p.status}
+                            </span>
                         </h:column>
 
                         <h:column>
                             <f:facet name="header">User</f:facet>
-                            #{p.userId.fullname}
+                            <i class="bi bi-person-circle"></i> #{p.userId.fullname}
                         </h:column>
 
                         <h:column>
                             <f:facet name="header">Book</f:facet>
-                            #{p.bookId.bookname}
+                            <i class="bi bi-journal-bookmark"></i> #{p.bookId.bookname}
                         </h:column>
 
                     </h:dataTable>
 
                     <!-- Total Amount -->
                     <div class="total-amount">
-                        Total Amount: ₹ #{paymentBean.listTotalAmount}
+                        Total Amount: ₹ #{paymentBean.listTotalAmount + (30 * paymentBean.allPayments.size())}
                     </div>
                 </div>
 
