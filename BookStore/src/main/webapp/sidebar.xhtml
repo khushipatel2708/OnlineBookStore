@@ -1,70 +1,100 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="jakarta.faces.html"
                 xmlns:ui="jakarta.faces.facelets">
-    
+
     <div class="admin-sidebar">
         <h:form>
 
             <!-- Dashboard -->
-            <h:link outcome="admin" styleClass="nav-item-link active">
+            <h:link outcome="admin"
+                    styleClass="#{facesContext.viewRoot.viewId eq '/admin.xhtml' 
+                                 ? 'nav-item-link active' 
+                                 : 'nav-item-link'}">
                 <i class="fas fa-tachometer-alt"></i>
                 <span>Dashboard</span>
             </h:link>
 
             <!-- Books -->
-            <h:link outcome="BookList" styleClass="nav-item-link">
+            <h:link outcome="BookList"
+                    styleClass="#{facesContext.viewRoot.viewId eq '/BookList.xhtml' 
+                                 ? 'nav-item-link active' 
+                                 : 'nav-item-link'}">
                 <i class="fas fa-book"></i>
                 <span>Books</span>
             </h:link>
 
             <!-- Categories -->
-            <h:link outcome="Booktype" styleClass="nav-item-link">
+            <h:link outcome="Booktype"
+                    styleClass="#{facesContext.viewRoot.viewId eq '/Booktype.xhtml' 
+                                 ? 'nav-item-link active' 
+                                 : 'nav-item-link'}">
                 <i class="fas fa-tags"></i>
                 <span>Categories</span>
             </h:link>
 
             <!-- Users -->
-            <h:link outcome="AdminUserList" styleClass="nav-item-link">
+            <h:link outcome="AdminUserList"
+                    styleClass="#{facesContext.viewRoot.viewId eq '/AdminUserList.xhtml' 
+                                 ? 'nav-item-link active' 
+                                 : 'nav-item-link'}">
                 <i class="fas fa-users"></i>
                 <span>Users</span>
             </h:link>
 
             <!-- Orders -->
-            <h:link outcome="adminOrders" styleClass="nav-item-link">
+            <h:link outcome="adminOrders"
+                    styleClass="#{facesContext.viewRoot.viewId eq '/adminOrders.xhtml' 
+                                 ? 'nav-item-link active' 
+                                 : 'nav-item-link'}">
                 <i class="fas fa-shopping-cart"></i>
                 <span>Orders</span>
             </h:link>
 
             <!-- Shipping -->
-            <h:link outcome="adminShippingList" styleClass="nav-item-link">
+            <h:link outcome="adminShippingList"
+                    styleClass="#{facesContext.viewRoot.viewId eq '/adminShippingList.xhtml' 
+                                 ? 'nav-item-link active' 
+                                 : 'nav-item-link'}">
                 <i class="fas fa-truck"></i>
                 <span>Shipping</span>
             </h:link>
 
             <!-- City Management -->
-            <h:link outcome="city" styleClass="nav-item-link">
+            <h:link outcome="city"
+                    styleClass="#{facesContext.viewRoot.viewId eq '/city.xhtml' 
+                                 ? 'nav-item-link active' 
+                                 : 'nav-item-link'}">
                 <i class="fas fa-city"></i>
                 <span>City Management</span>
             </h:link>
 
             <!-- Group Management -->
-            <h:link outcome="group" styleClass="nav-item-link">
+            <h:link outcome="group"
+                    styleClass="#{facesContext.viewRoot.viewId eq '/group.xhtml' 
+                                 ? 'nav-item-link active' 
+                                 : 'nav-item-link'}">
                 <i class="fas fa-users-cog"></i>
                 <span>Group Management</span>
             </h:link>
 
             <!-- Feedback -->
-            <h:link outcome="feedbackList" styleClass="nav-item-link">
+            <h:link outcome="feedbackList"
+                    styleClass="#{facesContext.viewRoot.viewId eq '/feedbackList.xhtml' 
+                                 ? 'nav-item-link active' 
+                                 : 'nav-item-link'}">
                 <i class="fas fa-comment-dots"></i>
                 <span>Feedback</span>
             </h:link>
-            
+
             <!-- Payment List -->
-            <h:link outcome="PaymentList" styleClass="nav-item-link">
+            <h:link outcome="PaymentList"
+                    styleClass="#{facesContext.viewRoot.viewId eq '/PaymentList.xhtml' 
+                                 ? 'nav-item-link active' 
+                                 : 'nav-item-link'}">
                 <i class="fas fa-credit-card"></i>
                 <span>Payment List</span>
             </h:link>
-            
+
         </h:form>
     </div>
 </ui:composition>
