@@ -67,202 +67,207 @@
             <ui:include src="/adminHeader.xhtml"/>
         </div>
 
-  <div class="main-layout">
-        <ui:include src="sidebar.xhtml"/>
+        <div class="main-layout">
+            <ui:include src="sidebar.xhtml"/>
 
-        <div class="main-content">
+            <div class="main-content">
 
-            <!-- CARD WRAPPER -->
-            <div class="form-card">
+                <!-- CARD WRAPPER -->
+                <div class="form-card">
 
-                <!-- TITLE -->
-                <div class="page-title">
-                    #{adminUserBean.editMode ? 'Edit User' : 'Add User'}
-                </div>
-
-                <!-- FORM -->
-                <h:form id="userForm">
-
-                    <div class="row">
-
-                        <!-- LEFT COLUMN -->
-                        <div class="col-md-6">
-
-                            <!-- USERNAME -->
-                            <div class="mb-3">
-                                <label class="form-label">Username</label>
-
-                                <h:inputText id="username"
-                                             value="#{adminUserBean.username}"
-                                             required="true"
-                                             requiredMessage="Username is required"
-                                             maxlength="100"
-                                             styleClass="form-control">
-                                    <f:ajax event="keyup"
-                                            listener="#{adminUserBean.checkUsernameUnique}"
-                                            render="username usernameMsg"/>
-                                </h:inputText>
-
-                                <h:message id="usernameMsg"
-                                           for="username"
-                                           styleClass="invalid-feedback d-block"
-                                           style="color:red; font-size:14px"/>
-                            </div>
-
-                            <!-- FULL NAME -->
-                            <div class="mb-3">
-                                <label class="form-label">Full Name</label>
-
-                                <h:inputText id="fullname"
-                                             value="#{adminUserBean.fullname}"
-                                             required="true"
-                                             requiredMessage="Full name is required"
-                                             maxlength="200"
-                                             styleClass="form-control">
-                                    <f:ajax event="keyup" render="fullname fullnameMsg"/>
-                                </h:inputText>
-
-                                <h:message id="fullnameMsg"
-                                           for="fullname"
-                                           styleClass="invalid-feedback d-block"
-                                           style="color:red; font-size:14px"/>
-                            </div>
-
-                            <!-- EMAIL -->
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-
-                                <h:inputText id="email"
-                                             value="#{adminUserBean.email}"
-                                             required="true"
-                                             requiredMessage="Email is required"
-                                             styleClass="form-control">
-                                    <f:ajax event="keyup"
-                                            listener="#{adminUserBean.checkEmailUnique}"
-                                            render="email emailMsg"/>
-                                </h:inputText>
-
-                                <h:message id="emailMsg"
-                                           for="email"
-                                           styleClass="invalid-feedback d-block"
-                                           style="color:red; font-size:14px"/>
-                            </div>
-
-                        </div>
-
-                        <!-- RIGHT COLUMN -->
-                        <div class="col-md-6">
-
-                            <!-- PASSWORD -->
-                            <div class="mb-3">
-                                <label class="form-label">Password</label>
-
-                                <h:inputSecret id="password"
-                                               value="#{adminUserBean.password}"
-                                               required="#{!adminUserBean.editMode}"
-                                               requiredMessage="Password is required"
-                                               disabled="#{adminUserBean.passwordDisabled}"
-                                               styleClass="form-control">
-                                    <f:ajax event="blur" render="passwordMsg"/>
-                                </h:inputSecret>
-
-                                <h:commandButton value="Change Password"
-                                                 rendered="#{adminUserBean.editMode}"
-                                                 action="AdminChangePassword.xhtml?faces-redirect=true"
-                                                 styleClass="btn btn-warning btn-sm mt-2"/>
-
-                                <h:message id="passwordMsg"
-                                           for="password"
-                                           styleClass="invalid-feedback d-block"
-                                           style="color:red; font-size:14px"/>
-                            </div>
-
-                            <!-- PHONE -->
-                            <div class="mb-3">
-                                <label class="form-label">Phone</label>
-
-                                <h:inputText id="phone"
-                                             value="#{adminUserBean.phone}"
-                                             required="true"
-                                             requiredMessage="Phone number is required"
-                                             styleClass="form-control">
-                                    <f:ajax event="keyup"
-                                            listener="#{adminUserBean.checkPhoneUnique}"
-                                            render="phone phoneMsg"/>
-                                </h:inputText>
-
-                                <h:message id="phoneMsg"
-                                           for="phone"
-                                           styleClass="invalid-feedback d-block"
-                                           style="color:red; font-size:14px"/>
-                            </div>
-
-                            <!-- GROUP -->
-                            <div class="mb-3">
-                                <label class="form-label">Group</label>
-
-                                <h:selectOneMenu id="groupId"
-                                                 value="#{adminUserBean.groupId}"
-                                                 required="true"
-                                                 requiredMessage="Group is required"
-                                                 styleClass="form-select">
-                                    <f:selectItem itemLabel="-- Select group --" itemValue="" />
-                                    <f:selectItems value="#{adminUserBean.allGroups}"
-                                                   var="g"
-                                                   itemValue="#{g.groupid}"
-                                                   itemLabel="#{g.groupname}"/>
-                                </h:selectOneMenu>
-
-                                <h:message for="groupId"
-                                           styleClass="invalid-feedback d-block"
-                                           style="color:red; font-size:14px"/>
-                            </div>
-
-                            <!-- STATUS -->
-                            <div class="mb-3">
-                                <label class="form-label">Status</label>
-
-                                <h:selectOneMenu id="status"
-                                                 value="#{adminUserBean.status}"
-                                                 required="true"
-                                                 requiredMessage="Status is required"
-                                                 styleClass="form-select">
-                                    <f:selectItem itemLabel="-- Select Status --" itemValue="" />
-                                    <f:selectItem itemLabel="Active" itemValue="Active"/>
-                                    <f:selectItem itemLabel="Inactive" itemValue="Inactive"/>
-                                </h:selectOneMenu>
-
-                                <h:message for="status"
-                                           styleClass="invalid-feedback d-block"
-                                           style="color:red; font-size:14px"/>
-                            </div>
-
-                        </div>
+                    <!-- TITLE -->
+                    <div class="page-title">
+                        #{adminUserBean.editMode ? 'Edit User' : 'Add User'}
                     </div>
 
-                    <!-- BUTTONS -->
-                    <div class="mt-4">
-                        <h:commandButton value="#{adminUserBean.editMode ? 'Update' : 'Save'}"
-                                         action="#{adminUserBean.saveOrUpdate}"
-                                         styleClass="btn btn-primary"/>
+                    <!-- FORM -->
+                    <h:form id="userForm">
 
-                        <h:commandButton value="Cancel"
-                                         action="#{adminUserBean.cancelEdit}"
-                                         immediate="true"
-                                         styleClass="btn btn-secondary ms-2"/>
+                        <div class="row">
 
-                        <h:commandButton value="Back to List"
-                                         action="AdminUserList.xhtml?faces-redirect=true"
-                                         immediate="true"
-                                         styleClass="btn btn-success ms-2"/>
-                    </div>
+                            <!-- LEFT COLUMN -->
+                            <div class="col-md-6">
 
-                </h:form>
+                                <!-- USERNAME -->
+                                <div class="mb-3">
+                                    <label class="form-label">Username</label>
 
-            </div> <!-- end card -->
+                                    <h:inputText id="username"
+                                                 value="#{adminUserBean.username}"
+                                                 required="true"
+                                                 requiredMessage="Username is required"
+                                                 maxlength="100"
+                                                 styleClass="form-control">
+                                        <f:ajax event="keyup"
+                                                listener="#{adminUserBean.checkUsernameUnique}"
+                                                render="username usernameMsg"/>
+                                    </h:inputText>
 
+                                    <h:message id="usernameMsg"
+                                               for="username"
+                                               styleClass="invalid-feedback d-block"
+                                               style="color:red; font-size:14px"/>
+                                </div>
+
+                                <!-- FULL NAME -->
+                                <div class="mb-3">
+                                    <label class="form-label">Full Name</label>
+
+                                    <h:inputText id="fullname"
+                                                 value="#{adminUserBean.fullname}"
+                                                 required="true"
+                                                 requiredMessage="Full name is required"
+                                                 maxlength="200"
+                                                 styleClass="form-control">
+                                        <f:ajax event="keyup" render="fullname fullnameMsg"/>
+                                    </h:inputText>
+
+                                    <h:message id="fullnameMsg"
+                                               for="fullname"
+                                               styleClass="invalid-feedback d-block"
+                                               style="color:red; font-size:14px"/>
+                                </div>
+
+                                <!-- EMAIL -->
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+
+                                    <h:inputText id="email"
+                                                 value="#{adminUserBean.email}"
+                                                 required="true"
+                                                 requiredMessage="Email is required"
+                                                 styleClass="form-control">
+                                        <f:ajax event="keyup"
+                                                listener="#{adminUserBean.checkEmailUnique}"
+                                                render="email emailMsg"/>
+                                    </h:inputText>
+
+                                    <h:message id="emailMsg"
+                                               for="email"
+                                               styleClass="invalid-feedback d-block"
+                                               style="color:red; font-size:14px"/>
+                                </div>
+
+                            </div>
+
+                            <!-- RIGHT COLUMN -->
+                            <div class="col-md-6">
+
+                                <!-- PASSWORD -->
+                                <div class="mb-3">
+                                    <label class="form-label">Password</label>
+
+                                    <h:inputSecret id="password"
+                                                   value="#{adminUserBean.password}"
+                                                   required="#{!adminUserBean.editMode}"
+                                                   requiredMessage="Password is required"
+                                                   disabled="#{adminUserBean.passwordDisabled}"
+                                                   styleClass="form-control">
+                                        <f:ajax event="blur" render="passwordMsg"/>
+                                    </h:inputSecret>
+
+                                    <h:commandButton value="Change Password"
+                                                     rendered="#{adminUserBean.editMode}"
+                                                     action="AdminChangePassword.xhtml?faces-redirect=true"
+                                                     styleClass="btn btn-warning btn-sm mt-2"/>
+
+                                    <h:message id="passwordMsg"
+                                               for="password"
+                                               styleClass="invalid-feedback d-block"
+                                               style="color:red; font-size:14px"/>
+                                </div>
+
+                                <!-- PHONE -->
+                                <div class="mb-3">
+                                    <label class="form-label">Phone</label>
+
+                                    <h:inputText id="phone"
+                                                 value="#{adminUserBean.phone}"
+                                                 required="true"
+                                                 requiredMessage="Phone number is required"
+                                                 styleClass="form-control">
+                                        <f:ajax event="keyup"
+                                                listener="#{adminUserBean.checkPhoneUnique}"
+                                                render="phone phoneMsg"/>
+                                    </h:inputText>
+
+                                    <h:message id="phoneMsg"
+                                               for="phone"
+                                               styleClass="invalid-feedback d-block"
+                                               style="color:red; font-size:14px"/>
+                                </div>
+
+                                <!-- GROUP -->
+                                <div class="mb-3">
+                                    <label class="form-label">Group</label>
+
+                                    <!-- When edit mode = true → dropdown disabled -->
+                                    <h:selectOneMenu id="groupId"
+                                                     value="#{adminUserBean.groupId}"
+                                                     required="true"
+                                                     requiredMessage="Group is required"
+                                                     styleClass="form-select"
+                                                     disabled="#{adminUserBean.editMode}">
+                                        <f:selectItem itemLabel="-- Select group --" itemValue="" />
+                                        <f:selectItems value="#{adminUserBean.allGroups}"
+                                                       var="g"
+                                                       itemValue="#{g.groupid}"
+                                                       itemLabel="#{g.groupname}"/>
+                                    </h:selectOneMenu>
+
+                                    <!-- Hidden field → ensures value is submitted even when disabled -->
+                                    <h:inputHidden value="#{adminUserBean.groupId}" />
+
+                                    <h:message for="groupId"
+                                               styleClass="invalid-feedback d-block"
+                                               style="color:red; font-size:14px"/>
+                                </div>
+
+                                <!-- STATUS -->
+                                <div class="mb-3">
+                                    <label class="form-label">Status</label>
+
+                                    <h:selectOneMenu id="status"
+                                                     value="#{adminUserBean.status}"
+                                                     required="true"
+                                                     requiredMessage="Status is required"
+                                                     styleClass="form-select">
+                                        <f:selectItem itemLabel="-- Select Status --" itemValue="" />
+                                        <f:selectItem itemLabel="Active" itemValue="Active"/>
+                                        <f:selectItem itemLabel="Inactive" itemValue="Inactive"/>
+                                    </h:selectOneMenu>
+
+                                    <h:message for="status"
+                                               styleClass="invalid-feedback d-block"
+                                               style="color:red; font-size:14px"/>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- BUTTONS -->
+                        <div class="mt-4">
+                            <h:commandButton value="#{adminUserBean.editMode ? 'Update' : 'Save'}"
+                                             action="#{adminUserBean.saveOrUpdate}"
+                                             styleClass="btn btn-primary"/>
+
+                            <h:commandButton value="Cancel"
+                                             action="#{adminUserBean.cancelEdit}"
+                                             immediate="true"
+                                             styleClass="btn btn-secondary ms-2"/>
+
+                            <h:commandButton value="Back to List"
+                                             action="AdminUserList.xhtml?faces-redirect=true"
+                                             immediate="true"
+                                             styleClass="btn btn-success ms-2"/>
+                        </div>
+
+                    </h:form>
+
+                </div> <!-- end card -->
+
+            </div>
         </div>
-    </div>
 
-</h:body>
+    </h:body>
 </html>
