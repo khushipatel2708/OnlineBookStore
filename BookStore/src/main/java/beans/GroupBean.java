@@ -100,38 +100,51 @@ public class GroupBean implements Serializable {
     public boolean isEditMode() { return editMode; }
     public void setEditMode(boolean editMode) { this.editMode = editMode; }
     
-    
     private int pageSize = 5;      // Number of rows per page
-private int pageNumber = 1;    // Current page
+    private int pageNumber = 1;    // Current page
 
-public int getPageSize() { return pageSize; }
-public void setPageSize(int pageSize) { this.pageSize = pageSize; }
-
-public int getPageNumber() { return pageNumber; }
-public void setPageNumber(int pageNumber) { this.pageNumber = pageNumber; }
-
-public int getTotalPages() {
-    int totalGroups = getAllGroups().size();
-    return (int) Math.ceil((double) totalGroups / pageSize);
-}
-
-public Collection<GroupMaster> getPagedGroups() {
-    List<GroupMaster> all = new ArrayList<>(getAllGroups());
-    int fromIndex = (pageNumber - 1) * pageSize;
-    int toIndex = Math.min(fromIndex + pageSize, all.size());
-    if(fromIndex > all.size()) {
-        return Collections.emptyList();
+    public int getPageSize() {
+        return pageSize;
     }
-    return all.subList(fromIndex, toIndex);
-}
 
-public void nextPage() {
-    if (pageNumber < getTotalPages()) pageNumber++;
-}
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 
-public void previousPage() {
-    if (pageNumber > 1) pageNumber--;
-}
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public int getTotalPages() {
+        int totalGroups = getAllGroups().size();
+        return (int) Math.ceil((double) totalGroups / pageSize);
+    }
+
+    public Collection<GroupMaster> getPagedGroups() {
+        List<GroupMaster> all = new ArrayList<>(getAllGroups());
+        int fromIndex = (pageNumber - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, all.size());
+        if (fromIndex > all.size()) {
+            return Collections.emptyList();
+        }
+        return all.subList(fromIndex, toIndex);
+    }
+
+    public void nextPage() {
+        if (pageNumber < getTotalPages()) {
+            pageNumber++;
+        }
+    }
+
+    public void previousPage() {
+        if (pageNumber > 1) {
+            pageNumber--;
+        }
+    }
 
 
 }

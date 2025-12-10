@@ -46,7 +46,6 @@ public class PaymentBean implements Serializable {
     private final String payuURL = "https://test.payu.in/_payment";
 
     // ----------------- Cart Items -----------------
-
     public List<Cart> getCartItems() {
         if (cartItems == null && loginBean.isLoggedIn()) {
             cartItems = userEJB.getCartItems(loginBean.getLoggedInUser().getId());
@@ -55,7 +54,6 @@ public class PaymentBean implements Serializable {
     }
 
     // ----------------- Total Amount -----------------
-
     public BigDecimal getTotalAmount() {
         if (totalAmount == null && getCartItems() != null) {
 
@@ -75,14 +73,13 @@ public class PaymentBean implements Serializable {
     }
 
     // ----------------- HASH GENERATION -----------------
-
     private String generateHash(String txnid) {
 
-        String hashString = key + "|" + txnid + "|" +
-                formatAmount(totalAmount) + "|" +
-                "Book Purchase" + "|" +
-                firstname + "|" +
-                email + "|||||||||||" + salt;
+        String hashString = key + "|" + txnid + "|"
+                + formatAmount(totalAmount) + "|"
+                + "Book Purchase" + "|"
+                + firstname + "|"
+                + email + "|||||||||||" + salt;
 
         return hashCal("SHA-512", hashString);
     }
@@ -106,7 +103,6 @@ public class PaymentBean implements Serializable {
     }
 
     // ----------------- MAKE PAYMENT (MAIN LOGIC) -----------------
-
     public void makePayment() throws IOException {
 
         User user = loginBean.getLoggedInUser();
@@ -136,7 +132,9 @@ public class PaymentBean implements Serializable {
 
             // Update Stock
             int newStock = c.getBookId().getAvailable() - c.getQuantity();
-            if (newStock < 0) newStock = 0;
+            if (newStock < 0) {
+                newStock = 0;
+            }
 
             userEJB.updateBookStock(c.getBookId().getId(), newStock);
 
@@ -152,10 +150,9 @@ public class PaymentBean implements Serializable {
         String hash = generateHash(txnid);
 
         // 3️⃣ Redirect to PayU with auto-submit form
-        HttpServletResponse response = (HttpServletResponse)
-                FacesContext.getCurrentInstance()
-                        .getExternalContext()
-                        .getResponse();
+        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getResponse();
 
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
@@ -183,7 +180,6 @@ public class PaymentBean implements Serializable {
     }
 
     // ----------------- Clear Cart After Payment Success -----------------
-
     public void clearCartAfterSuccess() {
 
         try {
@@ -200,33 +196,183 @@ public class PaymentBean implements Serializable {
             e.printStackTrace();
         }
     }
-    public List<Payment> getAllPayments() {
-        return userEJB.getAllPayments();
-    }
-  // Method to calculate total amount with +30 for each payment
-public BigDecimal getListTotalAmount() {
-    BigDecimal total = BigDecimal.ZERO;
-    for (Payment p : getAllPayments()) {
-        if (p.getAmount() != null) {
-            total = total.add(p.getAmount().add(BigDecimal.valueOf(30))); // add 30 to each amount
-        } else {
-            total = total.add(BigDecimal.valueOf(30)); // if amount null, still add 30
-        }
-    }
-    return total;
-}
 
-    
-    
+    public List<Payment> getAllPayments() {
+
+        List<Payment> list = userEJB.getAllPayments();
+
+        // Search by phone
+        if (searchPhone != null && !searchPhone.trim().isEmpty()) {
+            list = list.stream()
+                    .filter(p -> p.getPhone() != null
+                    && p.getPhone().toLowerCase().contains(searchPhone.toLowerCase()))
+                    .toList();
+        }
+
+        // Filter by payment method
+        if (searchMethod != null && !searchMethod.equals("All") && !searchMethod.isEmpty()) {
+            list = list.stream()
+                    .filter(p -> p.getPaymentMethod().equalsIgnoreCase(searchMethod))
+                    .toList();
+        }
+
+        // 🔥 Search by Username
+        if (searchUser != null && !searchUser.trim().isEmpty()) {
+            list = list.stream()
+                    .filter(p -> p.getUserId() != null
+                    && p.getUserId().getFullname().toLowerCase().contains(searchUser.toLowerCase()))
+                    .toList();
+        }
+
+        // 🔥 Search by Book Name
+        if (searchBook != null && !searchBook.trim().isEmpty()) {
+            list = list.stream()
+                    .filter(p -> p.getBookId() != null
+                    && p.getBookId().getBookname().toLowerCase().contains(searchBook.toLowerCase()))
+                    .toList();
+        }
+
+        return list;
+    }
+
+    // Method to calculate total amount with +30 for each payment
+    public BigDecimal getListTotalAmount() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Payment p : getAllPayments()) {
+            if (p.getAmount() != null) {
+                total = total.add(p.getAmount().add(BigDecimal.valueOf(30))); // add 30 to each amount
+            } else {
+                total = total.add(BigDecimal.valueOf(30)); // if amount null, still add 30
+            }
+        }
+        return total;
+    }
 
     // ----------------- Getters & Setters -----------------
+    public String getPhone() {
+        return phone;
+    }
 
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getEmail() {
+        return email;
+    }
 
-    public int getLastBookId() { return lastBookId; }
-    public void setLastBookId(int lastBookId) { this.lastBookId = lastBookId; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getLastBookId() {
+        return lastBookId;
+    }
+
+    public void setLastBookId(int lastBookId) {
+        this.lastBookId = lastBookId;
+    }
+
+    private int pageSize = 5;      // rows per page
+    private int pageNumber = 1;
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public int getTotalPages() {
+        int total = getAllPayments().size();
+        return (int) Math.ceil((double) total / pageSize);
+    }
+
+    public List<Payment> getPagedPayments() {
+
+        List<Payment> all = getAllPayments();
+
+        int fromIndex = (pageNumber - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, all.size());
+
+        if (fromIndex > all.size()) {
+            return java.util.Collections.emptyList();
+        }
+
+        return all.subList(fromIndex, toIndex);
+    }
+
+    public void nextPage() {
+        if (pageNumber < getTotalPages()) {
+            pageNumber++;
+        }
+    }
+
+    public void previousPage() {
+        if (pageNumber > 1) {
+            pageNumber--;
+        }
+    }
+
+    //Search
+    private String searchPhone = "";
+    private String searchMethod = "";
+
+    public String getSearchPhone() {
+        return searchPhone;
+    }
+
+    public void setSearchPhone(String searchPhone) {
+        this.searchPhone = searchPhone;
+    }
+
+    public String getSearchMethod() {
+        return searchMethod;
+    }
+
+    public void setSearchMethod(String searchMethod) {
+        this.searchMethod = searchMethod;
+    }
+
+    public void searchPayments() {
+        pageNumber = 1; // reset pagination
+    }
+
+    private String searchUser = "";
+    private String searchBook = "";
+
+    public String getSearchUser() {
+        return searchUser;
+    }
+
+    public void setSearchUser(String searchUser) {
+        this.searchUser = searchUser;
+    }
+
+    public String getSearchBook() {
+        return searchBook;
+    }
+
+    public void setSearchBook(String searchBook) {
+        this.searchBook = searchBook;
+    }
+
+    public String clearSearch() {
+    searchPhone = "";
+    searchMethod = "All"; // default value
+    searchUser = "";
+    searchBook = "";
+    pageNumber = 1;       // reset pagination
+    return null;           // stay on same page
+}
+
 }
