@@ -372,4 +372,9 @@ public class AdminUserCDIBean implements Serializable {
         this.pageNumber = pageNumber;
     }
 
+    public int getTotalUsers() {
+    Collection<User> list = adminClient.getAllUsers(Collection.class);
+    return list != null ? list.size() : 0;
+}
+
 }

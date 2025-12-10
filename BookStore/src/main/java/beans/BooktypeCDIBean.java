@@ -44,6 +44,10 @@ public class BooktypeCDIBean implements Serializable {
         editMode = false;
         return null;
     }
+      public int getTotalBooktype() {
+    Collection<Booktype> list = adminClient.getAllBooktypes(Collection.class);
+    return list != null ? list.size() : 0;
+}
 
     // ADD
     public String addBooktype() {

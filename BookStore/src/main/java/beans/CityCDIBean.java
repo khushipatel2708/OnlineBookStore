@@ -1,7 +1,9 @@
 package beans;
 
+import EJB.AdminSessionBeanLocal;
 import Entity.City;
 import client.MyAdminClient;
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -16,13 +18,20 @@ import java.util.List;
 public class CityCDIBean implements Serializable {
 
     private MyAdminClient adminClient = new MyAdminClient();
-
+    
+    @EJB
+    private AdminSessionBeanLocal admin;
+    
     @Inject
     private LoginBean loginBean;
 
     private Integer id;
     private String name;
+    private String searchName = "";
     private boolean editMode = false;
+
+    private int pageSize = 5;
+    private int pageNumber = 1;
 
     public boolean isAdmin() {
         return "Admin".equalsIgnoreCase(loginBean.getRole());
@@ -32,7 +41,54 @@ public class CityCDIBean implements Serializable {
         return adminClient.getAllCities(Collection.class);
     }
 
-    // RESET FORM FOR ADD CITY
+    // PARTIAL SEARCH
+    public Collection<City> getFilteredCities() {
+        if (searchName == null || searchName.trim().isEmpty()) {
+            return getAllCities();
+        }
+
+        String search = searchName.trim().toLowerCase();
+        List<City> filtered = new ArrayList<>();
+        for (City c : getAllCities()) {
+            if (c.getName() != null && c.getName().toLowerCase().contains(search)) {
+                filtered.add(c);
+            }
+        }
+        return filtered;
+    }
+
+    // PAGINATION
+    public Collection<City> getPagedGroups() {
+        List<City> all = new ArrayList<>(getFilteredCities());
+        int fromIndex = (pageNumber - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, all.size());
+        if (fromIndex > all.size()) return Collections.emptyList();
+        return all.subList(fromIndex, toIndex);
+    }
+
+    public int getTotalPages() {
+        int total = getFilteredCities().size();
+        return (int) Math.ceil((double) total / pageSize);
+    }
+
+    public void nextPage() {
+        if (pageNumber < getTotalPages()) pageNumber++;
+    }
+
+    public void previousPage() {
+        if (pageNumber > 1) pageNumber--;
+    }
+
+    public void resetPagination() {
+        pageNumber = 1;
+    }
+
+    public void clearSearch() {
+        searchName = "";
+        pageNumber = 1;
+    }
+
+    // RESET FORM FOR ADD
     public String resetForm() {
         id = null;
         name = "";
@@ -44,21 +100,17 @@ public class CityCDIBean implements Serializable {
     public String addCity() {
         City city = new City();
         city.setName(name);
-
         adminClient.addCity(city);
-
         resetForm();
-        return "/city.xhtml?faces-redirect=true";  // FIX
+        return "/city.xhtml?faces-redirect=true";
     }
 
-    // LOAD CITY FOR EDIT
+    // EDIT CITY
     public String editCity(Integer cityId) {
         City c = adminClient.getCityById(City.class, cityId.toString());
-
         this.id = c.getId();
         this.name = c.getName();
         this.editMode = true;
-
         return null;
     }
 
@@ -66,93 +118,33 @@ public class CityCDIBean implements Serializable {
     public String updateCity() {
         City city = new City();
         city.setName(name);
-
         adminClient.updateCity(city, id.toString());
-
         resetForm();
-        return "/city.xhtml?faces-redirect=true";  // FIX
+        return "/city.xhtml?faces-redirect=true";
     }
 
-    // CANCEL EDIT
-    public void cancelEdit() {
-        resetForm();
-    }
-
-    // DELETE
+    // DELETE CITY
     public String deleteCity(Integer cityId) {
         adminClient.deleteCity(cityId.toString());
         return null;
     }
 
-    // GETTERS/SETTERS
-    public Integer getId() {
-        return id;
-    }
+    // GETTERS & SETTERS
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public boolean isEditMode() { return editMode; }
+    public void setEditMode(boolean editMode) { this.editMode = editMode; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getSearchName() { return searchName; }
+    public void setSearchName(String searchName) { this.searchName = searchName; }
 
-    public boolean isEditMode() {
-        return editMode;
-    }
+    public int getPageSize() { return pageSize; }
+    public void setPageSize(int pageSize) { this.pageSize = pageSize; }
 
-    public void setEditMode(boolean editMode) {
-        this.editMode = editMode;
-    }
-
-    private int pageSize = 5;      // Number of rows per page
-    private int pageNumber = 1;    // Current page
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getPageNumber() {
-        return pageNumber;
-    }
-
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
-    }
-
-    public int getTotalPages() {
-        int totalGroups = getAllCities().size();
-        return (int) Math.ceil((double) totalGroups / pageSize);
-    }
-
-    public Collection<City> getPagedGroups() {
-        List<City> all = new ArrayList<>(getAllCities());
-        int fromIndex = (pageNumber - 1) * pageSize;
-        int toIndex = Math.min(fromIndex + pageSize, all.size());
-        if (fromIndex > all.size()) {
-            return Collections.emptyList();
-        }
-        return all.subList(fromIndex, toIndex);
-    }
-
-    public void nextPage() {
-        if (pageNumber < getTotalPages()) {
-            pageNumber++;
-        }
-    }
-
-    public void previousPage() {
-        if (pageNumber > 1) {
-            pageNumber--;
-        }
-    }
-
+    public int getPageNumber() { return pageNumber; }
+    public void setPageNumber(int pageNumber) { this.pageNumber = pageNumber; }
 }

@@ -18,7 +18,8 @@ public class OrderBean implements Serializable {
 
     @EJB
     private UserSessionBeanLocal userSessionBean;
- private Orderlist selectedOrder;
+    private Orderlist selectedOrder;
+
     // ---------------- Admin ----------------
     public List<Orderlist> getPendingOrders() {
         return userSessionBean.getPendingOrders();
@@ -32,15 +33,21 @@ public class OrderBean implements Serializable {
     public List<Orderlist> getUserOrders(User user) {
         return userSessionBean.getOrdersByUser(user);
     }
-     // Getter & Setter
-    public Orderlist getSelectedOrder() { return selectedOrder; }
-    public void setSelectedOrder(Orderlist selectedOrder) { this.selectedOrder = selectedOrder; }
+    // Getter & Setter
+
+    public Orderlist getSelectedOrder() {
+        return selectedOrder;
+    }
+
+    public void setSelectedOrder(Orderlist selectedOrder) {
+        this.selectedOrder = selectedOrder;
+    }
 
     // Load order by ID
     public void loadOrderById(Integer orderId) {
         selectedOrder = userSessionBean.getOrderById(orderId); // Use EJB method
     }
-    
+
     private int pageSize = 5;      // Number of rows per page
     private int pageNumber = 1;    // Current page
 
@@ -88,7 +95,13 @@ public class OrderBean implements Serializable {
     }
 
     public String loadAndGo(Integer orderId) {
-    loadOrderById(orderId);   // selectedOrder set thai jase
-    return "viewOrder.jsf?faces-redirect=true"; 
+        loadOrderById(orderId);   // selectedOrder set thai jase
+        return "viewOrder.jsf?faces-redirect=true";
+    }
+
+    public int getTotalOrders() {
+    List<Orderlist> allOrders = userSessionBean.getPendingOrders();
+    return allOrders != null ? allOrders.size() : 0;
 }
+
 }

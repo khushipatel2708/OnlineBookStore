@@ -440,5 +440,10 @@ public class BookCDIBean implements Serializable {
             pageNumber--;
         }
     }
+    public int getTotalBooks() {
+    Collection<Book> list = adminClient.getAllBooks(Collection.class);
+    return list != null ? list.size() : 0;
+}
+
 
 }
