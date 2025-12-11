@@ -129,13 +129,20 @@
                     <div class="search-container">
                         <h:panelGrid columns="8" cellpadding="5" styleClass="search-grid-panel">
                             <h:outputLabel value="Book Name:" />
-                            <h:inputText value="#{bookBean.searchBookname}" />
+                            <h:inputText value="#{bookBean.searchBookname}" >
+                                <f:passThroughAttribute name="placeholder" value="Search" />
+                            </h:inputText>
+
 
                             <h:outputLabel value="Author:" />
-                            <h:inputText value="#{bookBean.searchAuthor}" />
+                            <h:inputText value="#{bookBean.searchAuthor}" >
+                                <f:passThroughAttribute name="placeholder" value="Search" />
+                            </h:inputText>
 
                             <h:outputLabel value="Book Type:" />
-                            <h:inputText value="#{bookBean.searchBooktype}" />
+                            <h:inputText value="#{bookBean.searchBooktype}" >
+                                <f:passThroughAttribute name="placeholder" value="Search" />
+                            </h:inputText>
 
                             <h:commandButton value="Search" action="#{bookBean.searchBooks}" styleClass="btn-search" />
                             <h:commandButton value="Clear" action="#{bookBean.clearSearch}" styleClass="btn-clear" />
