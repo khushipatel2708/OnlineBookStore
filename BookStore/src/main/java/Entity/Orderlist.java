@@ -17,16 +17,15 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
  *
- * @author KHUSHI PC
+ * @author 91931
  */
 @Entity
 @Table(name = "orderlist")
@@ -36,8 +35,8 @@ import java.util.Date;
     @NamedQuery(name = "Orderlist.findByOrderId", query = "SELECT o FROM Orderlist o WHERE o.orderId = :orderId"),
     @NamedQuery(name = "Orderlist.findByOrderDate", query = "SELECT o FROM Orderlist o WHERE o.orderDate = :orderDate"),
     @NamedQuery(name = "Orderlist.findByOrderTime", query = "SELECT o FROM Orderlist o WHERE o.orderTime = :orderTime"),
-    @NamedQuery(name = "Orderlist.findByTotalPrice", query = "SELECT o FROM Orderlist o WHERE o.totalPrice = :totalPrice"),
-    @NamedQuery(name = "Orderlist.findByStatus", query = "SELECT o FROM Orderlist o WHERE o.status = :status")})
+    @NamedQuery(name = "Orderlist.findByStatus", query = "SELECT o FROM Orderlist o WHERE o.status = :status"),
+    @NamedQuery(name = "Orderlist.findByTotalPrice", query = "SELECT o FROM Orderlist o WHERE o.totalPrice = :totalPrice")})
 public class Orderlist implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,26 +45,22 @@ public class Orderlist implements Serializable {
     @Basic(optional = false)
     @Column(name = "orderId")
     private Integer orderId;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "orderDate")
     @Temporal(TemporalType.DATE)
     private Date orderDate;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "orderTime")
     @Temporal(TemporalType.TIME)
     private Date orderTime;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "totalPrice")
-    private BigDecimal totalPrice;
-    @Size(max = 50)
+    @Size(max = 255)
     @Column(name = "status")
     private String status;
+    @Column(name = "totalPrice")
+    private BigInteger totalPrice;
+    @JoinColumn(name = "bookId", referencedColumnName = "id")
+    @ManyToOne
+    private Book bookId;
     @JoinColumn(name = "userId", referencedColumnName = "Id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private User userId;
 
     public Orderlist() {
@@ -73,13 +68,6 @@ public class Orderlist implements Serializable {
 
     public Orderlist(Integer orderId) {
         this.orderId = orderId;
-    }
-
-    public Orderlist(Integer orderId, Date orderDate, Date orderTime, BigDecimal totalPrice) {
-        this.orderId = orderId;
-        this.orderDate = orderDate;
-        this.orderTime = orderTime;
-        this.totalPrice = totalPrice;
     }
 
     public Integer getOrderId() {
@@ -106,20 +94,28 @@ public class Orderlist implements Serializable {
         this.orderTime = orderTime;
     }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public BigInteger getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigInteger totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public Book getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(Book bookId) {
+        this.bookId = bookId;
     }
 
     public User getUserId() {
