@@ -143,7 +143,8 @@
                     </div>
 
                     <div class="data-table-container">
-                        <h:dataTable value="#{bookBean.pagedGroups}" var="b" styleClass="book-table">
+                        <h:dataTable value="#{bookBean.pagedGroups}" var="b" styleClass="book-table"
+                                     rendered="#{not empty bookBean.pagedGroups}">
 
                             <h:column>
                                 <f:facet name="header">ID</f:facet>
@@ -200,6 +201,14 @@
                             </h:column>
 
                         </h:dataTable>
+
+                        <!-- If no books, show a message -->
+                        <h:panelGroup rendered="#{empty bookBean.pagedGroups}" layout="block" styleClass="text-center p-4">
+                            <h:graphicImage value="images/b2.png" style="width:150px; margin-bottom:15px;" />
+                            <div style="font-size:18px; font-weight:600; color:#6c757d;">
+                                No books available
+                            </div>
+                        </h:panelGroup>
                         <!-- Pagination Controls -->
 
                         <div class="pagination-container d-flex justify-content-center mt-4">
@@ -243,25 +252,25 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>
-                           function deleteConfirm(event, button) {
-                               event.preventDefault();
+                                                   function deleteConfirm(event, button) {
+                                                       event.preventDefault();
 
-                               Swal.fire({
-                                   title: 'Are you sure?',
-                                   text: "This book will be permanently deleted!",
-                                   icon: 'warning',
-                                   showCancelButton: true,
-                                   confirmButtonColor: '#dc3545',
-                                   cancelButtonColor: '#6c757d',
-                                   confirmButtonText: 'Yes, delete it!',
-                                   cancelButtonText: 'Cancel'
-                               }).then((result) => {
-                                   if (result.isConfirmed) {
-                                       button.onclick = null;  // prevent loop
-                                       button.click();         // JSF submits properly
-                                   }
-                               });
-                           }
+                                                       Swal.fire({
+                                                           title: 'Are you sure?',
+                                                           text: "This book will be permanently deleted!",
+                                                           icon: 'warning',
+                                                           showCancelButton: true,
+                                                           confirmButtonColor: '#dc3545',
+                                                           cancelButtonColor: '#6c757d',
+                                                           confirmButtonText: 'Yes, delete it!',
+                                                           cancelButtonText: 'Cancel'
+                                                       }).then((result) => {
+                                                           if (result.isConfirmed) {
+                                                               button.onclick = null;  // prevent loop
+                                                               button.click();         // JSF submits properly
+                                                           }
+                                                       });
+                                                   }
         </script>
 
     </h:body>

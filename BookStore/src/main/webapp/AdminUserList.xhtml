@@ -168,7 +168,9 @@
 
 
 
-                        <h:dataTable value="#{adminUserBean.pagedUsers}" var="u" styleClass="user-table">
+                       <!-- If users exist, show the table -->
+    <h:dataTable value="#{adminUserBean.pagedUsers}" var="u" styleClass="user-table"
+                 rendered="#{not empty adminUserBean.pagedUsers}">
 
                             <h:column>
                                 <f:facet name="header">ID</f:facet>
@@ -225,6 +227,14 @@
 
                         </h:dataTable>
 
+                        <!-- If no users, show a message -->
+    <h:panelGroup rendered="#{empty adminUserBean.pagedUsers}" layout="block" styleClass="text-center p-4">
+        <h:graphicImage value="images/u2.png" style="width:150px; margin-bottom:15px;" />
+        <div style="font-size:18px; font-weight:600; color:#6c757d;">
+            No user available
+        </div>
+    </h:panelGroup>
+                        
                         <!-- PAGINATION -->
 
                         <div class="pagination-container d-flex justify-content-center mt-4">

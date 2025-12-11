@@ -115,7 +115,7 @@
 
                         <!-- City Table -->
                         <div class="data-table-container">
-                            <h:dataTable value="#{cityBean.pagedGroups}" var="c" styleClass="city-table">
+                            <h:dataTable value="#{cityBean.pagedGroups}" var="c" styleClass="city-table"  rendered="#{not empty cityBean.pagedGroups}">
 
 
                                 <h:column>
@@ -169,7 +169,13 @@
 
 
                             </h:dataTable>
-
+                     <!-- If no orders, show a message -->
+                        <h:panelGroup rendered="#{empty cityBean.pagedGroups}" layout="block" styleClass="text-center p-4">
+                            <h:graphicImage value="images/city.png" style="width:150px; margin-bottom:15px;" />
+                            <div style="font-size:18px; font-weight:600; color:#6c757d;">
+                                No City available
+                            </div>
+                        </h:panelGroup>
                             <!-- Pagination Controls -->
 
                             <div class="pagination-container d-flex justify-content-center mt-4">

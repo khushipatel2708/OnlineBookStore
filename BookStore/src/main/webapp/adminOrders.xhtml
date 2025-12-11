@@ -73,7 +73,8 @@
                     </div>
 
                     <div class="data-table-container">
-                        <h:dataTable value="#{orderBean.pagedGroups}" var="o" styleClass="order-table">
+                        <h:dataTable value="#{orderBean.pagedGroups}" var="o" styleClass="order-table"
+                                     rendered="#{not empty orderBean.pagedGroups}">
                             <h:column>
                                 <f:facet name="header">Order ID</f:facet>#{(orderBean.pageNumber - 1) * orderBean.pageSize + orderBean.pagedGroups.indexOf(o) + 1}
                             </h:column>
@@ -109,6 +110,14 @@
                                 </h:commandButton>
                             </h:column>
                         </h:dataTable>
+                        <!-- If no orders, show a message -->
+                        <h:panelGroup rendered="#{empty orderBean.pagedGroups}" layout="block" styleClass="text-center p-4">
+                            <h:graphicImage value="images/order.png" style="width:150px; margin-bottom:15px;" />
+                            <div style="font-size:18px; font-weight:600; color:#6c757d;">
+                                No pending orders available
+                            </div>
+                        </h:panelGroup>
+
                         <!-- Pagination Controls -->
 
                         <div class="pagination-container d-flex justify-content-center mt-4">

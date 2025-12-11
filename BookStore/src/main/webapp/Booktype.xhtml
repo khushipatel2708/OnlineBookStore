@@ -90,7 +90,8 @@
                         <!-- TABLE -->
                         <div class="data-table-container">
                             <h:dataTable value="#{booktypeBean.pagedGroups}" var="bt"
-                                         styleClass="booktype-table">
+                                         styleClass="booktype-table"
+                                         rendered="#{not empty booktypeBean.pagedGroups}">
 
                                 <h:column>
                                     <f:facet name="header">ID</f:facet>
@@ -135,6 +136,15 @@
 
 
                             </h:dataTable>
+
+                            <!-- If no book types, show a message -->
+                            <h:panelGroup rendered="#{empty booktypeBean.pagedGroups}" layout="block" styleClass="text-center p-4">
+                                <h:graphicImage value="images/b2.png" style="width:150px; margin-bottom:15px;" />
+                                <div style="font-size:18px; font-weight:600; color:#6c757d;">
+                                    No book types available
+                                </div>
+                            </h:panelGroup>
+
                             <!-- Pagination Controls -->
 
                             <div class="pagination-container d-flex justify-content-center mt-4">

@@ -70,7 +70,7 @@
                     </div>
 
                     <div class="data-table-container">
-                        <h:dataTable value="#{shippingBean.pagedGroups}" var="s" styleClass="ship-table">
+                        <h:dataTable value="#{shippingBean.pagedGroups}" var="s" styleClass="ship-table"  rendered="#{not empty shippingBean.pagedGroups}">
 
                             <h:column>
                                 <f:facet name="header">ID</f:facet>
@@ -118,6 +118,14 @@
                                 </h:commandLink>
                             </h:column>-->
                         </h:dataTable>
+                        <!-- If no orders, show a message -->
+                        <h:panelGroup rendered="#{empty shippingBean.pagedGroups}" layout="block" styleClass="text-center p-4">
+                            <h:graphicImage value="images/shipping.png" style="width:150px; margin-bottom:15px;" />
+                            <div style="font-size:18px; font-weight:600; color:#6c757d;">
+                                No shipping available
+                            </div>
+                        </h:panelGroup>
+                        
                         <!-- Pagination Controls -->
 
                         <div class="pagination-container d-flex justify-content-center mt-4">
