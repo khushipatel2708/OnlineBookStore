@@ -75,13 +75,30 @@
                 margin-top: 20px;
             }
 
-            .empty-message {
-                text-align: center;
-                font-size: 22px;
-                font-weight: 600;
-                color: #dc3545;
-                padding: 40px 0;
+            .empty-cart-box {
+                background: #ffffff;
+                border-radius: 15px;
+
+                max-width: 600px;
+                margin: 40px auto;
             }
+
+            .empty-cart-img {
+                width: 160px;
+                opacity: 0.85;
+            }
+
+            .empty-cart-title {
+                font-size: 28px;
+                font-weight: 700;
+                color: #333;
+            }
+
+            .empty-cart-text {
+                font-size: 18px;
+                color: #777;
+            }
+
         </style>
     </h:head>
 
@@ -97,11 +114,23 @@
                     <div class="cart-header">My Cart</div>
 
                     <!-- Empty Cart -->
+                    <!-- Empty Cart -->
                     <h:panelGroup rendered="#{empty cartBean.cartItems}">
-                        <div class="empty-message">
-                            Your cart is empty!
+                        <div class="empty-cart-box text-center p-0">
+
+                            <img src="images/cart1.png" 
+                                 alt="Empty Cart"
+                                 class="empty-cart-img mb-4"/>
+
+                            <h3 class="empty-cart-title">Your Cart is Empty!</h3>
+                            <p class="empty-cart-text">Looks like you haven’t added anything yet.</p>
+
+                            <a href="UserBookList.jsf" class="btn btn-primary mt-3 px-4 py-2">
+                                <i class="bi bi-shop"></i> Continue Shopping
+                            </a>
                         </div>
                     </h:panelGroup>
+
 
                     <!-- Cart Table -->
                     <h:panelGroup rendered="#{not empty cartBean.cartItems}">
@@ -185,25 +214,25 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-                             function deleteConfirm(event, button) {
-                                 event.preventDefault();
+                                                     function deleteConfirm(event, button) {
+                                                         event.preventDefault();
 
-                                 Swal.fire({
-                                     title: 'Are you sure?',
-                                     text: "This item will be removed from your cart!",
-                                     icon: 'warning',
-                                     showCancelButton: true,
-                                     confirmButtonColor: '#dc3545',
-                                     cancelButtonColor: '#6c757d',
-                                     confirmButtonText: 'Yes, delete it!',
-                                     cancelButtonText: 'Cancel'
-                                 }).then((result) => {
-                                     if (result.isConfirmed) {
-                                         button.onclick = null;  // avoid loop
-                                         button.click();         // submit JSF action
-                                     }
-                                 });
-                             }
+                                                         Swal.fire({
+                                                             title: 'Are you sure?',
+                                                             text: "This item will be removed from your cart!",
+                                                             icon: 'warning',
+                                                             showCancelButton: true,
+                                                             confirmButtonColor: '#dc3545',
+                                                             cancelButtonColor: '#6c757d',
+                                                             confirmButtonText: 'Yes, delete it!',
+                                                             cancelButtonText: 'Cancel'
+                                                         }).then((result) => {
+                                                             if (result.isConfirmed) {
+                                                                 button.onclick = null;  // avoid loop
+                                                                 button.click();         // submit JSF action
+                                                             }
+                                                         });
+                                                     }
     </script>
 
 
