@@ -415,5 +415,32 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             return false;
         }
     }
+    
+        @Override
+public Collection<User> searchUsers(String username, Integer groupId) {
+
+    String jpql = "SELECT u FROM User u WHERE 1=1";
+
+    if (username != null && !username.isEmpty()) {
+        jpql += " AND LOWER(u.username) LIKE LOWER(:uname)";
+    }
+
+    if (groupId != null && groupId > 0) {
+        jpql += " AND u.groupid.group_id = :gid";
+    }
+
+    var q = em.createQuery(jpql, User.class);
+
+    if (username != null && !username.isEmpty()) {
+        q.setParameter("uname", "%" + username + "%");
+    }
+
+    if (groupId != null && groupId > 0) {
+        q.setParameter("gid", groupId);
+    }
+
+    return q.getResultList();
+}
+
 
 }

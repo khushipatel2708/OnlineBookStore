@@ -33,6 +33,7 @@ public interface AdminSessionBeanLocal {
     boolean isPhoneExists(String phone);
     boolean isUsernameExists(String username);
 
+    Collection<User> searchUsers(String username, Integer groupId);
 
 
 

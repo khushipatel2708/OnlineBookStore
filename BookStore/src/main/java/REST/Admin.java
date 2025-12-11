@@ -80,31 +80,29 @@ public class Admin {
     }
 
     // ------------------ UNIQUE CHECKS --------------------
+    @GET
+    @Path("users/check-email")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkEmail(@QueryParam("email") String email) {
+        boolean exists = adminSessionBean.isEmailExists(email);
+        return Response.ok("{\"exists\":" + exists + "}").build();
+    }
 
-@GET
-@Path("users/check-email")
-@Produces(MediaType.APPLICATION_JSON)
-public Response checkEmail(@QueryParam("email") String email) {
-    boolean exists = adminSessionBean.isEmailExists(email);
-    return Response.ok("{\"exists\":" + exists + "}").build();
-}
+    @GET
+    @Path("users/check-phone")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkPhone(@QueryParam("phone") String phone) {
+        boolean exists = adminSessionBean.isPhoneExists(phone);
+        return Response.ok("{\"exists\":" + exists + "}").build();
+    }
 
-@GET
-@Path("users/check-phone")
-@Produces(MediaType.APPLICATION_JSON)
-public Response checkPhone(@QueryParam("phone") String phone) {
-    boolean exists = adminSessionBean.isPhoneExists(phone);
-    return Response.ok("{\"exists\":" + exists + "}").build();
-}
-
-@GET
-@Path("users/check-username")
-@Produces(MediaType.APPLICATION_JSON)
-public Response checkUsername(@QueryParam("username") String username) {
-    boolean exists = adminSessionBean.isUsernameExists(username);
-    return Response.ok("{\"exists\":" + exists + "}").build();
-}
-
+    @GET
+    @Path("users/check-username")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkUsername(@QueryParam("username") String username) {
+        boolean exists = adminSessionBean.isUsernameExists(username);
+        return Response.ok("{\"exists\":" + exists + "}").build();
+    }
 
     // ================= CITY CRUD =================
     @GET
@@ -357,6 +355,16 @@ public Response checkUsername(@QueryParam("username") String username) {
                     .entity("{\"error\":\"Old password incorrect\"}")
                     .build();
         }
+    }
+
+    @GET
+    @Path("users/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<User> searchUsers(
+            @QueryParam("username") String username,
+            @QueryParam("groupId") Integer groupId
+    ) {
+        return adminSessionBean.searchUsers(username, groupId);
     }
 
 }

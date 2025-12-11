@@ -54,6 +54,37 @@ public class AdminUserCDIBean implements Serializable {
     // pagination (optional, similar to BookCDIBean)
     private int pageSize = 10;
     private int pageNumber = 1;
+    
+    // === Search fields ===
+private String searchUsername;
+
+public void searchUsers() {
+    try {
+        // If empty → load all users
+        if (searchUsername == null || searchUsername.isEmpty()) {
+            searchResults = adminClient.getAllUsers(Collection.class);
+            return;
+        }
+
+        // Only username search now
+        searchResults = adminClient.searchUsers(
+                Collection.class,
+                null, // no group filter
+                searchUsername
+        );
+
+    } catch (Exception e) {
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Search failed", null));
+    }
+}
+
+
+public void clearSearch() {
+    searchUsername = "";
+    searchResults = null;
+}
+
 
     // ========== UTILITIES ==========
     public boolean isAdmin() {
@@ -69,12 +100,13 @@ public class AdminUserCDIBean implements Serializable {
     }
 
     // Converts client call to getAllUsers
-    public Collection<User> getAllUsers() {
-        if (searchResults != null) {
-            return searchResults;
-        }
-        return adminClient.getAllUsers(Collection.class);
+   public Collection<User> getAllUsers() {
+    if (searchResults != null) {
+        return searchResults;
     }
+    return adminClient.getAllUsers(Collection.class);
+}
+
 
     // Groups for dropdown
     public Collection<GroupMaster> getAllGroups() {
@@ -375,6 +407,14 @@ public class AdminUserCDIBean implements Serializable {
     public int getTotalUsers() {
     Collection<User> list = adminClient.getAllUsers(Collection.class);
     return list != null ? list.size() : 0;
+}
+
+    public String getSearchUsername() {
+    return searchUsername;
+}
+
+public void setSearchUsername(String searchUsername) {
+    this.searchUsername = searchUsername;
 }
 
 }

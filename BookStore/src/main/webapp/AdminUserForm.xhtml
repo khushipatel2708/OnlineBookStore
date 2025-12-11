@@ -208,7 +208,7 @@
                                                      required="true"
                                                      requiredMessage="Group is required"
                                                      styleClass="form-select"
-                                                     disabled="#{adminUserBean.editMode}">
+                                                     >
                                         <f:selectItem itemLabel="-- Select group --" itemValue="" />
                                         <f:selectItems value="#{adminUserBean.allGroups}"
                                                        var="g"
@@ -217,7 +217,7 @@
                                     </h:selectOneMenu>
 
                                     <!-- Hidden field → ensures value is submitted even when disabled -->
-                                    <h:inputHidden value="#{adminUserBean.groupId}" />
+                                    <!--<h:inputHidden value="#{adminUserBean.groupId}" />-->
 
                                     <h:message for="groupId"
                                                styleClass="invalid-feedback d-block"

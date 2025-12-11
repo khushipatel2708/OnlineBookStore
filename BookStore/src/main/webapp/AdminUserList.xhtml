@@ -6,153 +6,227 @@
       xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets">
 
-<h:head>
-    <title>Manage Users</title>
+    <h:head>
+        <title>Manage Users</title>
 
-    <!-- Bootstrap & Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-    <link rel="stylesheet" href="css/adminCss.css"/>
-    <link rel="stylesheet" href="css/sidebar_header_css.css"/>
+        <!-- Bootstrap & Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+        <link rel="stylesheet" href="css/adminCss.css"/>
+        <link rel="stylesheet" href="css/sidebar_header_css.css"/>
 
-    <style>
-        /* Page Title */
-        .page-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-        }
+        <style>
+            /* Page Title */
+            .page-title {
+                font-size: 24px;
+                font-weight: 700;
+                color: #333;
+            }
 
-        /* Add User Button */
-        .btn-add-user {
-            background-color: #0d6efd;
-            color: #fff;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            border: none;
-        }
+            /* Add User Button */
+            .btn-add-user {
+                background-color: #0d6efd;
+                color: #fff;
+                padding: 10px 16px;
+                border-radius: 8px;
+                font-weight: 600;
+                border: none;
+            }
 
-        /* Table Container */
-        .data-table-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-            overflow: hidden;
-            border: 1px solid #e9eef2;
-            margin-top: 20px;
-        }
+            /* Table Container */
+            .data-table-container {
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+                overflow: hidden;
+                border: 1px solid #e9eef2;
+                margin-top: 20px;
+            }
 
-        /* Table */
-        .user-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .user-table th {
-            background-color: #f8f9fa;
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #dee2e6;
-            font-weight: 600;
-        }
-        .user-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-        }
+            /* Table */
+            .user-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .user-table th {
+                background-color: #f8f9fa;
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid #dee2e6;
+                font-weight: 600;
+            }
+            .user-table td {
+                padding: 12px 15px;
+                border-bottom: 1px solid #eee;
+            }
 
-       
+   .search-container {
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            .search-container input[type="text"] {
+                padding: 8px 10px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                width: 150px; /* Making input boxes smaller */
+                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            }
+            .search-container .btn-search, .search-container .btn-clear {
+                padding: 8px 15px;
+                border: none;
+                border-radius: 4px;
+                color: white;
+                cursor: pointer;
+                margin-right: 5px;
+            }
+            .search-container .btn-search {
+                background-color: #0d6efd;
+            }
+            .search-container .btn-clear {
+                background-color: #6c757d;
+            }
 
-    </style>
+            /* h:panelGrid layout adjustment for the search fields */
+            .search-grid-panel td {
+                padding: 5px 10px 5px 0; /* Adjust padding for a tighter layout */
+            }
+            .search-grid-panel h:outputLabel {
+                font-weight: 600;
+                color: #495057;
+            }
+.btn-search {
+    background-color: #0d6efd;
+}
 
-</h:head>
+.btn-clear {
+    background-color: #6c757d;
+}
 
-<h:body>
 
-    <div class="sticky-header-wrapper">
-        <ui:include src="/adminHeader.xhtml" />
-    </div>
+        </style>
 
-    <div class="main-layout">
+    </h:head>
 
-        <ui:include src="sidebar.xhtml"/>
+    <h:body>
 
-        <div class="main-content">
+        <div class="sticky-header-wrapper">
+            <ui:include src="/adminHeader.xhtml" />
+        </div>
 
-            <h:form id="listForm">
+        <div class="main-layout">
 
-                <!-- HEADER -->
-                <div class="content-header d-flex justify-content-between align-items-center">
-                    <h2 class="page-title">Manage Users</h2>
+            <ui:include src="sidebar.xhtml"/>
 
-                    <h:commandButton value="+ Add User"
-                                     action="#{adminUserBean.goToAddPage}"
-                                     styleClass="btn-add-user"/>
-                </div>
+            <div class="main-content">
 
-                
-                <!-- TABLE -->
-                <div class="data-table-container">
+                <h:form id="listForm">
 
-                    <h:dataTable value="#{adminUserBean.pagedUsers}" var="u" styleClass="user-table">
+                    <!-- HEADER -->
+                    <div class="content-header d-flex justify-content-between align-items-center">
+                        <h2 class="page-title">Manage Users</h2>
 
-                        <h:column>
-                            <f:facet name="header">ID</f:facet>
-                            #{u.id}
-                        </h:column>
+                        <h:commandButton value="+ Add User"
+                                         action="#{adminUserBean.goToAddPage}"
+                                         styleClass="btn-add-user"/>
+                    </div>
 
-                        <h:column>
-                            <f:facet name="header">Username</f:facet>
-                            #{u.username}
-                        </h:column>
 
-                        <h:column>
-                            <f:facet name="header">Full name</f:facet>
-                            #{u.fullname}
-                        </h:column>
+                    <!-- TABLE -->
+                    <div class="data-table-container">
+                      <div class="search-container">
 
-                        <h:column>
-                            <f:facet name="header">Email</f:facet>
-                            #{u.email}
-                        </h:column>
+    <h:form id="searchForm">
 
-                        <h:column>
-                            <f:facet name="header">Phone</f:facet>
-                            #{u.phone}
-                        </h:column>
+        <div class="d-flex align-items-end gap-3">
 
-                        <h:column>
-                            <f:facet name="header">Group</f:facet>
-                            #{u.groupid != null ? u.groupid.groupname : ''}
-                        </h:column>
+            <!-- Username -->
+            <div class="d-flex flex-column">
+                <label class="fw-semibold">Username:</label>
+                <h:inputText value="#{adminUserBean.searchUsername}" styleClass="form-control form-control-sm"
+                             style="width:160px;" />
+            </div>
 
-                        <h:column>
-                            <f:facet name="header">Active</f:facet>
-                            #{u.status}
-                        </h:column>
+            <!-- Search Button -->
+            <h:commandButton value="Search"
+                             action="#{adminUserBean.searchUsers}"
+                             styleClass="btn btn-search" />
 
-                        <h:column>
-                            <f:facet name="header">Actions</f:facet>
+            <!-- Clear Button -->
+            <h:commandButton value="Clear"
+                             action="#{adminUserBean.clearSearch}"
+                             styleClass="btn btn-clear" />
 
-                            <!-- EDIT -->
-                            <h:commandLink action="#{adminUserBean.editUser(u.id)}" title="Edit"
-                                           styleClass="btn btn-sm p-1">
-                                <i class="bi bi-pencil-square text-success fs-5"></i>
-                            </h:commandLink>
+        </div>
 
-                            <!-- DELETE -->
-                            <h:commandLink action="#{adminUserBean.deleteUser(u.id)}"
-                                           onclick="return confirm('Delete user #{u.username}?')"
-                                           title="Delete" styleClass="btn btn-sm p-1">
-                                <i class="bi bi-trash text-danger fs-5"></i>
-                            </h:commandLink>
+    </h:form>
 
-                        </h:column>
+</div>
 
-                    </h:dataTable>
 
-                    <!-- PAGINATION -->
-                    
+
+                        <h:dataTable value="#{adminUserBean.pagedUsers}" var="u" styleClass="user-table">
+
+                            <h:column>
+                                <f:facet name="header">ID</f:facet>
+                                    #{u.id}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Username</f:facet>
+                                    #{u.username}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Full name</f:facet>
+                                    #{u.fullname}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Email</f:facet>
+                                    #{u.email}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Phone</f:facet>
+                                    #{u.phone}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Group</f:facet>
+                                    #{u.groupid != null ? u.groupid.groupname : ''}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Active</f:facet>
+                                    #{u.status}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Actions</f:facet>
+
+                                <!-- EDIT -->
+                                <h:commandLink action="#{adminUserBean.editUser(u.id)}" title="Edit"
+                                               styleClass="btn btn-sm p-1">
+                                    <i class="bi bi-pencil-square text-success fs-5"></i>
+                                </h:commandLink>
+
+                                <!-- DELETE -->
+                                <h:commandLink action="#{adminUserBean.deleteUser(u.id)}"
+                                               onclick="return confirm('Delete user #{u.username}?')"
+                                               title="Delete" styleClass="btn btn-sm p-1">
+                                    <i class="bi bi-trash text-danger fs-5"></i>
+                                </h:commandLink>
+
+                            </h:column>
+
+                        </h:dataTable>
+
+                        <!-- PAGINATION -->
+
                         <div class="pagination-container d-flex justify-content-center mt-4">
 
                             <ul class="premium-pagination">
@@ -183,16 +257,16 @@
                             </ul>
 
                         </div>
-                    
-                </div>
 
-            </h:form>
+                    </div>
+
+                </h:form>
+
+            </div>
 
         </div>
 
-    </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-</h:body>
+    </h:body>
 </html>

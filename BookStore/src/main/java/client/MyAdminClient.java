@@ -89,6 +89,18 @@ public class MyAdminClient {
         return webTarget.path(java.text.MessageFormat.format("groups/{0}", new Object[]{id})).request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).put(jakarta.ws.rs.client.Entity.entity(requestEntity, jakarta.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
     }
 
+    public <T> T searchUsers(Class<T> responseType, String groupId, String username) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (groupId != null) {
+            resource = resource.queryParam("groupId", groupId);
+        }
+        if (username != null) {
+            resource = resource.queryParam("username", username);
+        }
+        resource = resource.path("users/search");
+        return resource.request(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
     public <T> T getAllBooks(Class<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path("books");
