@@ -298,16 +298,21 @@
                         </div>
 
                         <div class="col-auto">
-                            <h:commandButton value="Search"
-                                             action="#{bookBean.searchBooks}"
-                                             styleClass="btn btn-primary small-btn"/>
+                            <h:commandLink action="#{bookBean.searchBooks}"
+                                           styleClass="btn btn-primary small-btn d-inline-flex align-items-center">
+                                <i class="bi bi-search me-1"></i>
+                                <span>Search</span>
+                            </h:commandLink>
                         </div>
 
                         <div class="col-auto">
-                            <h:commandButton value="Clear"
-                                             action="#{bookBean.clearSearch}"
-                                             styleClass="btn btn-secondary small-btn"/>
+                            <h:commandLink action="#{bookBean.clearSearch}"
+                                           styleClass="btn btn-secondary small-btn d-inline-flex align-items-center">
+                                <i class="bi bi-x-circle me-1"></i>
+                                <span>Clear</span>
+                            </h:commandLink>
                         </div>
+
 
 
                     </div>
