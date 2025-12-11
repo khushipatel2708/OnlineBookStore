@@ -20,7 +20,7 @@ import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -55,7 +55,7 @@ public class Orderlist implements Serializable {
     @Column(name = "status")
     private String status;
     @Column(name = "totalPrice")
-    private BigInteger totalPrice;
+    private BigDecimal  totalPrice;
     @JoinColumn(name = "bookId", referencedColumnName = "id")
     @ManyToOne
     private Book bookId;
@@ -102,11 +102,11 @@ public class Orderlist implements Serializable {
         this.status = status;
     }
 
-    public BigInteger getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(BigInteger totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 
