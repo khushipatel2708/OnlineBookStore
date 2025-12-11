@@ -200,32 +200,48 @@ public List<Payment> getAllPayments() {
     }
 
     @Override
-    public void addCODPayment(Integer userId, Integer bookId, BigDecimal amount) {
-        User user = em.find(User.class, userId);
-        Book book = em.find(Book.class, bookId);
+public void addCODPayment(Integer userId, Integer bookId, BigDecimal amount) {
 
-        Payment payment = new Payment();
-        payment.setUserId(user);
-        payment.setBookId(book);
-        payment.setAmount(amount);
-        payment.setPaymentMethod("COD");
-        payment.setPhone(user.getPhone());
-        payment.setStatus("Paid"); // COD auto-paid
+    User user = em.find(User.class, userId);
+    Book book = em.find(Book.class, bookId);
 
-        em.persist(payment);
-        createOrderFromPayment(payment);
-    }
+    Payment payment = new Payment();
+    payment.setUserId(user);
+    payment.setBookId(book);
+
+    // Safe: amount null hoy to 0
+    BigDecimal originalAmount = (amount == null ? BigDecimal.ZERO : amount);
+
+    // Add ₹30 COD charge
+    BigDecimal finalAmount = originalAmount.add(BigDecimal.valueOf(30));
+
+    payment.setAmount(finalAmount);
+
+    payment.setPaymentMethod("COD");
+    payment.setPhone(user.getPhone());
+    payment.setStatus("Paid");
+
+    em.persist(payment);
+    createOrderFromPayment(payment);
+}
+
 
     @Override
-    public void createOrderFromPayment(Payment payment) {
-        Orderlist order = new Orderlist();
-        order.setUserId(payment.getUserId());
-        order.setOrderDate(new java.util.Date());
-        order.setOrderTime(new java.util.Date());
-        order.setTotalPrice(payment.getAmount());
-        order.setStatus(payment.getPaymentMethod().equals("COD") ? "Pending" : "Pending"); // Always Pending initially
-        em.persist(order);
-    }
+public void createOrderFromPayment(Payment payment) {
+
+    Orderlist order = new Orderlist();
+
+    order.setUserId(payment.getUserId());
+    order.setBookId(payment.getBookId());
+     order.setPaymentId(payment);
+    order.setOrderDate(new java.util.Date());
+    order.setOrderTime(new java.util.Date());
+     order.setTotalPrice(payment.getAmount()); 
+    order.setStatus("Pending");
+
+    em.persist(order);
+}
+
 
     @Override
     public List<Orderlist> getOrdersByUser(User user) {

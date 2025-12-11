@@ -55,10 +55,13 @@ public class Orderlist implements Serializable {
     @Column(name = "status")
     private String status;
     @Column(name = "totalPrice")
-    private BigDecimal  totalPrice;
+    private BigDecimal totalPrice;
     @JoinColumn(name = "bookId", referencedColumnName = "id")
     @ManyToOne
     private Book bookId;
+    @JoinColumn(name = "paymentId", referencedColumnName = "Id")
+    @ManyToOne
+    private Payment paymentId;
     @JoinColumn(name = "userId", referencedColumnName = "Id")
     @ManyToOne
     private User userId;
@@ -116,6 +119,14 @@ public class Orderlist implements Serializable {
 
     public void setBookId(Book bookId) {
         this.bookId = bookId;
+    }
+
+    public Payment getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(Payment paymentId) {
+        this.paymentId = paymentId;
     }
 
     public User getUserId() {
