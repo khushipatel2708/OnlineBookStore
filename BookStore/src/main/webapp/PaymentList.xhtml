@@ -159,7 +159,7 @@
                     <!-- TABLE -->
                     <div class="data-table-container">
 
-                        <h:dataTable value="#{paymentBean.pagedPayments}" var="p" styleClass="pm-table">
+                        <h:dataTable value="#{paymentBean.pagedPayments}" var="p" styleClass="pm-table" rendered="#{not empty paymentBean.pagedPayments}">
 
                             <!-- Row Index -->
                             <h:column>
@@ -202,13 +202,21 @@
                                 <f:facet name="header">Book</f:facet>
                                 <i class="bi bi-journal-bookmark"></i> #{p.bookId.bookname}
                             </h:column>
-
-                        </h:dataTable>
-
-                        <!-- Total Amount -->
+  <!-- Total Amount -->
                         <div class="total-amount">
                             Total Amount: ₹ #{paymentBean.listTotalAmount}
                         </div>
+                        </h:dataTable>
+
+                      
+                         <!-- If no orders, show a message -->
+                        <h:panelGroup rendered="#{empty paymentBean.pagedPayments}" layout="block" styleClass="text-center p-4">
+                            <h:graphicImage value="images/p.png" style="width:150px; margin-bottom:15px;" />
+                            <div style="font-size:18px; font-weight:600; color:#6c757d;">
+                                No Payment available
+                            </div>
+                        </h:panelGroup>
+
 
                         <!-- PAGINATION -->
                         <div class="pagination-container d-flex justify-content-center mt-3">
