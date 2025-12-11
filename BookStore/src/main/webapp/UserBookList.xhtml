@@ -122,7 +122,13 @@
                 background: white;
                 box-shadow: 0 5px 18px rgba(0,0,0,0.06);
                 transition: 0.25s;
+
+                display: flex;
+                flex-direction: column;   /* Stack content vertically */
+                justify-content: space-between;  /* Push buttons to bottom */
+                height: 420px;  /* Adjust as per your need */
             }
+
 
             .book-card:hover {
                 transform: translateY(-5px);
@@ -131,10 +137,11 @@
 
             .book-card img {
                 border-radius: 10px;
-                height: 240px;
+                height: 240px;   /* Fixed height for all images */
                 object-fit: cover;
                 width: 100%;
             }
+
 
             .book-title {
                 font-size: 1.15rem;
@@ -154,6 +161,12 @@
                 font-weight: 700;
             }
 
+            .book-card .book-title, .book-card .book-author {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
             .btn-add-to-cart {
                 background: #0d6efd;
                 border-radius: 6px;
@@ -282,7 +295,9 @@
                                     <i class="bi bi-book"></i>
                                 </span>
                                 <h:inputText value="#{bookBean.searchBookname}" styleClass="form-control"
-                                             />
+                                           >
+                        <f:passThroughAttribute name="placeholder" value="Search" />
+                    </h:inputText>
                             </div>
                         </div>
 
@@ -293,7 +308,9 @@
                                     <i class="bi bi-person"></i>
                                 </span>
                                 <h:inputText value="#{bookBean.searchAuthor}" styleClass="form-control"
-                                             />
+                                            >
+                        <f:passThroughAttribute name="placeholder" value="Search" />
+                    </h:inputText>
                             </div>
                         </div>
 

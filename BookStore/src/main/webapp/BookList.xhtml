@@ -160,7 +160,18 @@
                             <h:column>
                                 <f:facet name="header">Book</f:facet>
                                 <div style="display:flex; align-items:center;">
-                                    <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}" width="50" rendered="#{not empty b.coverPhoto}" style="margin-right:10px; border-radius:4px;"/>
+                                    <!-- If coverPhoto exists: show image -->
+                                    <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}"
+                                                    width="50"
+                                                    rendered="#{b.coverPhoto != null and b.coverPhoto != ''}"
+                                                    style="margin-right:10px; border-radius:4px;" />
+
+                                    <!-- If no image: show default -->
+                                    <h:graphicImage value="images/b2.png"
+                                                    width="50"
+                                                    rendered="#{b.coverPhoto == null or b.coverPhoto == ''}"
+                                                    style="margin-right:10px; border-radius:4px;" />
+
                                     <div>
                                         <div style="font-weight:600; color:#343a40;">#{b.bookname}</div>
                                     </div>

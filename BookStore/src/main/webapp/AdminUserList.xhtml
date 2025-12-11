@@ -147,7 +147,9 @@
             <div class="d-flex flex-column">
                 <label class="fw-semibold">Username:</label>
                 <h:inputText value="#{adminUserBean.searchUsername}" styleClass="form-control form-control-sm"
-                             style="width:160px;" />
+                             style="width:160px;" >
+                        <f:passThroughAttribute name="placeholder" value="Search" />
+                    </h:inputText>
             </div>
 
             <!-- Search Button -->
