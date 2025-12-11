@@ -129,6 +129,23 @@
             z-index: 1020;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+        @media print {
+        body * {
+            visibility: hidden;
+        }
+        #invoice-section, #invoice-section * {
+            visibility: visible;
+        }
+        #invoice-section {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+        .back-btn {
+            display: none;
+        }
+    }
     </style>
 </h:head>
 
@@ -140,6 +157,7 @@
 
 <div class="main-container">
     <h:form>
+        <div id="invoice-section">
         <div class="order-card">
 
             <div class="row g-4">
@@ -151,7 +169,6 @@
 
                     <div class="book-card">
                         <div class="book-cover">
-                            <!-- Book Image -->
                             <h:graphicImage value="/BookStore/BookStoreUploads/#{orderBean.selectedOrder.bookId.coverPhoto}"
                                             rendered="#{orderBean.selectedOrder.bookId.coverPhoto != null and orderBean.selectedOrder.bookId.coverPhoto != ''}" />
 
@@ -239,9 +256,25 @@
                     <i class="bi bi-arrow-left"></i> Back to Orders
                 </span>
             </h:commandLink>
+            <br/>
+            <h:commandButton value="Print Invoice" styleClass="back-btn"
+                 onclick="printInvoice(); return false;">
+    <i class="bi bi-printer-fill"></i>
+</h:commandButton>
+        </div>
         </div>
     </h:form>
 </div>
 
+    <script>
+    function printInvoice() {
+        var printContents = document.getElementById('invoice-section').innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        location.reload();
+    }
+</script>
 </h:body>
 </html>
