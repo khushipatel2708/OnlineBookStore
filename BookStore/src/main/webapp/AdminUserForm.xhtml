@@ -131,23 +131,31 @@
 
                                 <!-- EMAIL -->
                                 <div class="mb-3">
-                                    <label class="form-label">Email</label>
+    <label class="form-label">Email</label>
 
-                                    <h:inputText id="email"
-                                                 value="#{adminUserBean.email}"
-                                                 required="true"
-                                                 requiredMessage="Email is required"
-                                                 styleClass="form-control">
-                                        <f:ajax event="keyup"
-                                                listener="#{adminUserBean.checkEmailUnique}"
-                                                render="email emailMsg"/>
-                                    </h:inputText>
+    <h:inputText id="email"
+                 value="#{adminUserBean.email}"
+                 required="true"
+                 requiredMessage="Email is required"
+                 validatorMessage="Enter a valid email address"
+                 styleClass="form-control">
 
-                                    <h:message id="emailMsg"
-                                               for="email"
-                                               styleClass="invalid-feedback d-block"
-                                               style="color:red; font-size:14px"/>
-                                </div>
+        <!-- EMAIL FORMAT VALIDATION -->
+        <f:validateRegex 
+            pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" />
+
+        <!-- AJAX FOR LIVE CHECK + UNIQUE CHECK -->
+        <f:ajax event="keyup"
+                listener="#{adminUserBean.checkEmailUnique}"
+                render="email emailMsg"/>
+    </h:inputText>
+
+    <h:message id="emailMsg"
+               for="email"
+               styleClass="invalid-feedback d-block"
+               style="color:red; font-size:14px"/>
+</div>
+
 
                             </div>
 
@@ -155,7 +163,7 @@
                             <div class="col-md-6">
 
                                 <!-- PASSWORD -->
-                                <div class="mb-3">
+<!--                                <div class="mb-3">
                                     <label class="form-label">Password</label>
 
                                     <h:inputSecret id="password"
@@ -176,27 +184,69 @@
                                                for="password"
                                                styleClass="invalid-feedback d-block"
                                                style="color:red; font-size:14px"/>
-                                </div>
+                                </div>-->
+<div class="mb-3">
+    <label class="form-label">Password</label>
+
+    <h:inputSecret id="password"
+                   value="#{adminUserBean.password}"
+                   required="#{!adminUserBean.editMode}"
+                   requiredMessage="Password is required"
+                   disabled="#{adminUserBean.passwordDisabled}"
+                   validatorMessage="Password must be at least 8 characters, include uppercase, lowercase, number, and special character"
+                   styleClass="form-control">
+
+        <!-- 🔹 Only 8 Character Minimum Validation -->
+        <f:validateRegex pattern=".{8,}" />
+
+        <f:ajax event="blur" render="passwordMsg"/>
+    </h:inputSecret>
+
+    <h:commandButton value="Change Password"
+                     rendered="#{adminUserBean.editMode}"
+                     action="AdminChangePassword.xhtml?faces-redirect=true"
+                     styleClass="btn btn-warning btn-sm mt-2"/>
+
+    <h:message id="passwordMsg"
+               for="password"
+               styleClass="invalid-feedback d-block"
+               style="color:red; font-size:14px"/>
+</div>
+
+
 
                                 <!-- PHONE -->
-                                <div class="mb-3">
-                                    <label class="form-label">Phone</label>
+                                <!-- PHONE -->
+                              <!-- PHONE -->
+<div class="mb-3">
+    <label class="form-label">Phone</label>
 
-                                    <h:inputText id="phone"
-                                                 value="#{adminUserBean.phone}"
-                                                 required="true"
-                                                 requiredMessage="Phone number is required"
-                                                 styleClass="form-control">
-                                        <f:ajax event="keyup"
-                                                listener="#{adminUserBean.checkPhoneUnique}"
-                                                render="phone phoneMsg"/>
-                                    </h:inputText>
+    <h:inputText id="phone"
+                 value="#{adminUserBean.phone}"
+                 required="true"
+                 requiredMessage="Phone number is required"
+                 maxlength="10"
+                 validatorMessage="Phone number must be exactly 10 digits."
+                 styleClass="form-control"
+                 >
 
-                                    <h:message id="phoneMsg"
-                                               for="phone"
-                                               styleClass="invalid-feedback d-block"
-                                               style="color:red; font-size:14px"/>
-                                </div>
+        <!-- ensure only digits and exactly 10 of them -->
+        <f:validateRegex pattern="[0-9]{10}" />
+
+        <!-- optional: reinforce exact length (server-side) -->
+        <f:validateLength minimum="10" maximum="10" />
+
+        <!-- ajax to re-render message while typing -->
+        <f:ajax event="keyup" render="phone phoneMsg"/>
+    </h:inputText>
+
+    <h:message id="phoneMsg"
+               for="phone"
+               style="color:red; font-size:14px"
+               styleClass="invalid-feedback d-block"/>
+</div>
+
+
 
                                 <!-- GROUP -->
                                 <div class="mb-3">
