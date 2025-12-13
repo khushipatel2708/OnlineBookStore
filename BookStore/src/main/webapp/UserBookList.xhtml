@@ -126,7 +126,7 @@
                 display: flex;
                 flex-direction: column;   /* Stack content vertically */
                 justify-content: space-between;  /* Push buttons to bottom */
-                height: 420px;  /* Adjust as per your need */
+                height: 435px;  /* Adjust as per your need */
             }
 
 
@@ -166,7 +166,7 @@
                 text-overflow: ellipsis;
                 white-space: nowrap;
             }
-            
+
             .btn-add-to-cart {
                 background: #0d6efd;
                 border-radius: 6px;
@@ -268,6 +268,29 @@
                 border-radius: 6px !important;
             }
 
+            /* STOCK STATUS BADGES */
+            .stock-badge {
+                padding: 5px 12px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 700;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .in-stock {
+                background: #e6f7ef;
+                color: #198754;
+                border: 1px solid #b7e4c7;
+            }
+
+            .out-stock {
+                background: #fdecea;
+                color: #dc3545;
+                border: 1px solid #f5c2c7;
+            }
+
 
         </style>
     </h:head>
@@ -295,9 +318,9 @@
                                     <i class="bi bi-book"></i>
                                 </span>
                                 <h:inputText value="#{bookBean.searchBookname}" styleClass="form-control"
-                                           >
-                        <f:passThroughAttribute name="placeholder" value="Search" />
-                    </h:inputText>
+                                             >
+                                    <f:passThroughAttribute name="placeholder" value="Search" />
+                                </h:inputText>
                             </div>
                         </div>
 
@@ -308,9 +331,9 @@
                                     <i class="bi bi-person"></i>
                                 </span>
                                 <h:inputText value="#{bookBean.searchAuthor}" styleClass="form-control"
-                                            >
-                        <f:passThroughAttribute name="placeholder" value="Search" />
-                    </h:inputText>
+                                             >
+                                    <f:passThroughAttribute name="placeholder" value="Search" />
+                                </h:inputText>
                             </div>
                         </div>
 
@@ -378,9 +401,7 @@
 
                             </div>
 
-                            <h:commandLink value="Clear Filter"
-                                           action="#{bookBean.clearSearch}"
-                                           styleClass="clear-filter-btn mt-3"/>
+
 
                         </div>
                     </div>
@@ -404,9 +425,16 @@
                                 <div class="col-sm-6 col-md-4 col-xl-3">
                                     <div class="book-card">
 
+                                        <!-- If cover photo exists -->
                                         <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}"
-                                                        rendered="#{not empty b.coverPhoto}"
+                                                        rendered="#{b.coverPhoto != null and b.coverPhoto != ''}"
                                                         styleClass="w-100"/>
+
+                                        <!-- If cover photo NOT exists -->
+                                        <h:graphicImage value="images/b2.png"
+                                                        rendered="#{b.coverPhoto == null or b.coverPhoto == ''}"
+                                                        styleClass="w-100"/>
+
 
                                         <div class="mt-2">
                                             <div class="book-title">#{b.bookname}</div>
@@ -414,9 +442,11 @@
 
                                             <div class="d-flex justify-content-between mt-2">
                                                 <span class="price-new">₹#{b.price}</span>
-                                                <span style="color:#{b.available>0?'green':'red'}; font-weight:600;">
+                                                <span class="stock-badge #{b.available > 0 ? 'in-stock' : 'out-stock'}">
+                                                    <i class="bi #{b.available > 0 ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>
                                                     #{b.available > 0 ? 'In Stock' : 'Out of Stock'}
                                                 </span>
+
                                             </div>
 
                                             <div class="d-flex gap-2 mt-3">

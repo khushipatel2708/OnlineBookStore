@@ -124,17 +124,19 @@
                     max-height: 300px;
                 }
             }
-
+            #jakarta_faces_developmentstage_messages {
+                display: none !important;
+            }
         </style>
     </h:head>
 
     <h:body>
-        <h:form>
-            <!-- Sticky Header -->
+        <!-- Header -->
+        <div class="sticky-header-wrapper">
+            <ui:include src="/header.xhtml"/>
+        </div>
 
-            <div class="sticky-header-wrapper">
-                <ui:include src="/header.xhtml" /> 
-            </div>  
+        <h:form>
             <!-- Book Details Container -->
             <div class="book-details-container">
                 <div class="row">
@@ -176,26 +178,26 @@
                         </p>
 
                         <div class="d-flex flex-wrap">
-    <h:commandLink value="Back to Books"
-                   action="UserBookList.xhtml?faces-redirect=true"
-                   styleClass="btn-back" />
+                            <h:commandLink value="Back to Books"
+                                           action="UserBookList.xhtml?faces-redirect=true"
+                                           styleClass="btn-back" />
 
-    <!-- Add to Cart: stay on same page -->
-    <h:commandButton value="Add to Cart"
-                     action="#{cartBean.addToCart}"
-                     styleClass="btn-cart">
-        <f:param name="bookId" value="#{bookBean.selectedBook.id}" />
-        <f:ajax render="@form" />
-    </h:commandButton>
+                            <!-- Add to Cart: stay on same page -->
+                            <h:commandButton value="Add to Cart"
+                                             styleClass="btn-cart"
+                                             action="#{cartBean.addToCart}"
+                                             disabled="#{bookBean.selectedBook.available == 0}">
+                                <f:param name="bookId" value="#{bookBean.selectedBook.id}" />
+                            </h:commandButton>
 
-    <!-- Buy Now: add and go to cart page -->
-    <h:commandButton value="Buy Now"
-                     action="#{cartBean.addToCartAndGoToCart}"
-                     styleClass="btn-buy">
-        <f:param name="bookId" value="#{bookBean.selectedBook.id}" />
-        <f:ajax render="@form" />
-    </h:commandButton>
-</div>
+
+                            <!-- Buy Now: add and go to cart page -->
+                            <h:commandButton value="Buy Now"
+                                             styleClass="btn-buy">
+                                <f:param name="bookId" value="#{bookBean.selectedBook.id}" />
+                                <f:ajax render="@form" />
+                            </h:commandButton>
+                        </div>
                     </div>
                 </div>
             </div>

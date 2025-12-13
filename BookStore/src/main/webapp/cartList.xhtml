@@ -99,6 +99,9 @@
                 color: #777;
             }
 
+            #jakarta_faces_developmentstage_messages {
+                display: none !important;
+            }
         </style>
     </h:head>
 
@@ -137,9 +140,30 @@
                         <h:dataTable value="#{cartBean.cartItems}" var="c" styleClass="table table-hover table-striped align-middle">
 
                             <h:column>
-                                <f:facet name="header">Book Name</f:facet>
-                                    #{c.bookId.bookname}
+                                <f:facet name="header">
+                                    <span class="text-center d-block">Book</span>
+                                </f:facet>
+
+                                <div style="display:flex; align-items:center; gap:10px;">
+
+                                    <!-- If cover image exists -->
+                                    <h:graphicImage value="/BookStore/BookStoreUploads/#{c.bookId.coverPhoto}"
+                                                    rendered="#{c.bookId.coverPhoto != null and c.bookId.coverPhoto != ''}"
+                                                    style="width:50px; height:70px; object-fit:cover; border-radius:6px;" />
+
+                                    <!-- If cover image NOT exists -->
+                                    <h:graphicImage value="images/b2.png"
+                                                    rendered="#{c.bookId.coverPhoto == null or c.bookId.coverPhoto == ''}"
+                                                    style="width:50px; height:70px; object-fit:cover; border-radius:6px;" />
+
+                                    <!-- Book Name -->
+                                    <span style="font-weight:600; color:#333;">
+                                        #{c.bookId.bookname}
+                                    </span>
+
+                                </div>
                             </h:column>
+
 
                             <h:column>
                                 <f:facet name="header">Price</f:facet>
