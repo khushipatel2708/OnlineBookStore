@@ -95,7 +95,7 @@
 
         <div class="form-panel col-12 col-md-7">
 
-            <h:form>
+              <h:form>
                 <div class="d-flex justify-content-center mb-3 fw-bold">
                     <h:outputLink value="login.jsf" styleClass="nav-link inactive-tab mx-3 text-decoration-none pb-1">
                         LOGIN
@@ -107,78 +107,177 @@
 
                 <h2 class="card-title text-center mb-3 text-dark fw-bold">Create Your Account</h2>
 
-                <div class="row mb-3">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
-                        <label for="fullnameInput" class="form-label text-muted small">Full Name <span class="text-danger">*</span></label>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-text input-group-text-primary"><i class="bi bi-person-fill"></i></span>
-                            <h:inputText id="fullnameInput" value="#{userBean.fullname}" required="true"
-                                         requiredMessage="Full Name is required." styleClass="form-control" />
-                        </div>
-                        <h:message for="fullnameInput" styleClass="text-danger small mt-1 d-block"/>
-                    </div>
+               <div class="row mb-3">
 
-                    <div class="col-sm-6">
-                        <label for="phoneInput" class="form-label text-muted small">Phone Number <span class="text-danger">*</span></label>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-text input-group-text-primary"><i class="bi bi-phone-fill"></i></span>
-                            <h:inputText id="phoneInput" value="#{userBean.phone}" required="true"
-                                         requiredMessage="Phone Number is required." styleClass="form-control" />
-                        </div>
-                        <h:message for="phoneInput" styleClass="text-danger small mt-1 d-block"/>
-                    </div>
-                </div>
+        <!-- FULL NAME -->
+        <div class="col-sm-6 mb-3 mb-sm-0">
+            <label class="form-label text-muted small">
+                Full Name  
+            </label>
 
-                <div class="row mb-3">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
-                        <label for="usernameInput" class="form-label text-muted small">Username (for login) <span class="text-danger">*</span></label>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-text input-group-text-primary"><i class="bi bi-person-badge-fill"></i></span>
-                            <h:inputText id="usernameInput" value="#{userBean.username}" required="true"
-                                         requiredMessage="Username is required." styleClass="form-control" />
-                        </div>
-                        <h:message for="usernameInput" styleClass="text-danger small mt-1 d-block"/>
-                    </div>
+            <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
 
-                    <div class="col-sm-6">
-                        <label for="emailInput" class="form-label text-muted small">Email Address <span class="text-danger">*</span></label>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-text input-group-text-primary"><i class="bi bi-envelope-fill"></i></span>
-                            <h:inputText id="emailInput" value="#{userBean.email}" required="true"
-                                         requiredMessage="Email Address is required." styleClass="form-control" />
-                        </div>
-                        <h:message for="emailInput" styleClass="text-danger small mt-1 d-block"/>
-                    </div>
-                </div>
+                <h:inputText id="fullname"
+                             value="#{userBean.fullname}"
+                             required="true"
+                             requiredMessage="Full Name is required"
+                             styleClass="form-control">
 
-                <div class="row mb-4">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
-                    <label for="passwordInput" class="form-label text-muted small">Password <span class="text-danger">*</span></label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text input-group-text-primary"><i class="bi bi-lock-fill"></i></span>
-                        <h:inputSecret id="passwordInput" value="#{userBean.password}" required="true"
-                                       requiredMessage="Password is required." styleClass="form-control" />
-                    </div>
-                    <h:message for="passwordInput" styleClass="text-danger small mt-1 d-block"/>
-                    </div>
-                    <div class="col-sm-6">
-                         
-                        <label class="form-label text-muted small">Default Status</label>
-                        <h:inputText value="#{userBean.status}" styleClass="form-control form-control-sm bg-light text-dark"/>
-                    </div>
-                </div>
+                    <f:ajax event="keyup" render="fullnameMsg"/>
+                </h:inputText>
+            </div>
 
-                <div class="row mb-4">
-                   
+            <h:message id="fullnameMsg"
+                       for="fullname"
+                       styleClass="invalid-feedback d-block text-danger"/>
+        </div>
 
-                    <div class="col-sm-6">
-                        <label class="form-label text-muted small">Access Group</label>
-                        <h:selectOneMenu value="#{userBean.groupId}" styleClass="form-select form-select-sm">
-                            <f:selectItems value="#{userBean.allGroups}" var="g"
-                                           itemValue="#{g.groupid}" itemLabel="#{g.groupname}" />
-                        </h:selectOneMenu>
-                    </div>
-                </div>
+        <!-- PHONE -->
+        <div class="col-sm-6">
+            <label class="form-label text-muted small">
+                Phone Number  
+            </label>
+
+            <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="bi bi-phone-fill"></i></span>
+
+                <h:inputText id="phone"
+                             value="#{userBean.phone}"
+                             required="true"
+                             requiredMessage="Phone number is required"
+                             validatorMessage="Phone number must be exactly 10 digits"
+                             styleClass="form-control">
+
+                    <f:validateRegex pattern="[0-9]{10}"/>
+                    <f:validateLength minimum="10" maximum="10"/>
+                    <f:ajax event="keyup" render="phoneMsg"/>
+                </h:inputText>
+            </div>
+
+            <h:message id="phoneMsg"
+                       for="phone"
+                       styleClass="invalid-feedback d-block text-danger"/>
+        </div>
+
+    </div>
+
+    <!-- USERNAME + EMAIL -->
+    <div class="row mb-3">
+
+        <!-- USERNAME -->
+        <div class="col-sm-6 mb-3 mb-sm-0">
+            <label class="form-label text-muted small">
+                Username  
+            </label>
+
+            <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="bi bi-person-badge-fill"></i></span>
+
+                <h:inputText id="username"
+                             value="#{userBean.username}"
+                             required="true"
+                             requiredMessage="Username is required"
+                             styleClass="form-control">
+
+                    <f:ajax event="keyup" render="usernameMsg"/>
+                </h:inputText>
+            </div>
+
+            <h:message id="usernameMsg"
+                       for="username"
+                       styleClass="invalid-feedback d-block text-danger"/>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="col-sm-6">
+            <label class="form-label text-muted small">
+                Email Address  
+            </label>
+
+            <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+
+                <h:inputText id="email"
+                             value="#{userBean.email}"
+                             required="true"
+                             requiredMessage="Email is required"
+                             validatorMessage="Enter a valid email address"
+                             styleClass="form-control">
+
+                    <f:validateRegex
+                        pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"/>
+
+                    <f:ajax event="keyup" render="emailMsg"/>
+                </h:inputText>
+            </div>
+
+            <h:message id="emailMsg"
+                       for="email"
+                       styleClass="invalid-feedback d-block text-danger"/>
+        </div>
+
+    </div>
+
+    <!-- PASSWORD + STATUS -->
+    <div class="row mb-4">
+
+        <!-- PASSWORD -->
+        <div class="col-sm-6">
+            <label class="form-label text-muted small">
+                Password  
+            </label>
+
+            <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+
+                <h:inputSecret id="password"
+                               value="#{userBean.password}"
+                               required="true"
+                               requiredMessage="Password is required"
+                               validatorMessage="Password must be at least 8 characters"
+                               styleClass="form-control">
+
+                    <f:validateRegex pattern=".{8,}"/>
+                    <f:ajax event="blur" render="passwordMsg"/>
+                </h:inputSecret>
+            </div>
+
+            <h:message id="passwordMsg"
+                       for="password"
+                       styleClass="invalid-feedback d-block text-danger"/>
+        </div>
+
+        <!-- STATUS (READ ONLY) -->
+        <div class="col-sm-6">
+            <label class="form-label text-muted small">Default Status</label>
+            <h:inputText value="#{userBean.status}"
+                        
+                         styleClass="form-control form-control-sm bg-light"/>
+        </div>
+
+    </div>
+
+    <!-- GROUP -->
+    <div class="mb-4">
+        <label class="form-label text-muted small">Access Group</label>
+
+        <h:selectOneMenu id="group"
+                         value="#{userBean.groupId}"
+                         required="true"
+                         requiredMessage="Group is required"
+                         styleClass="form-select form-select-sm">
+
+            <f:selectItem itemLabel="-- Select Group --" itemValue=""/>
+            <f:selectItems value="#{userBean.allGroups}"
+                           var="g"
+                           itemValue="#{g.groupid}"
+                           itemLabel="#{g.groupname}"/>
+        </h:selectOneMenu>
+
+        <h:message for="group"
+                   styleClass="invalid-feedback d-block text-danger"/>
+    </div>
 
                 <div class="d-grid gap-2 mt-5">
                     <h:commandButton value="Create Account" action="#{userBean.saveUser}"
