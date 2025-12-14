@@ -253,8 +253,11 @@
                                 </div>
 
                                 <h:form>
-                                    <h:commandButton value="Add to Cart" 
-                                                     styleClass="btn btn-primary btn-sm mt-2"/>
+                                    <h:commandButton value="View Details" 
+                                                     styleClass="btn btn-primary mt-2"
+                                                     action="#{bookBean.viewDetails}">
+                                        <f:param name="bookId" value="#{book.id}" />
+                                    </h:commandButton>
                                 </h:form>
 
                             </div>
