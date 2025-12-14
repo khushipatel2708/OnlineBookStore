@@ -20,63 +20,85 @@ public class ContactBean {
     @Inject
     private LoginBean loginBean; // get logged in user email
 
-    public String sendMessage() {
+public String sendMessage() {
 
-        String userEmail = loginBean.getLoggedInUser().getEmail();  // login user's email
-        String foundationEmail = "bookingonline40@gmail.com";       // main email (sender)
+    String userEmail = loginBean.getLoggedInUser().getEmail();
+    String foundationEmail = "bookingonline40@gmail.com";
 
-        try {
-            sendEmail(foundationEmail, userEmail, foundationEmail, subject, message);
+    try {
+        sendEmail(userEmail, foundationEmail, subject, message);
 
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Message sent successfully!", null));
+        // success flag pass karva
+        FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getFlash()
+                .put("contactSuccess", true);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Failed to send message.", null));
-        }
+        // same page reload
+         return null;
 
+    } catch (Exception e) {
+        e.printStackTrace();
         return null;
     }
+}
 
     // ---------------- EMAIL SENDING FUNCTION ------------------
     /**
      * @param senderEmail  -> foundation email (actual sender)
      * @param replyToEmail -> login user's email (reply-to)
      */
-    public void sendEmail(String senderEmail, String replyToEmail,
-                          String toEmail, String subject, String msg) throws Exception {
+   public void sendEmail(String replyToEmail,
+                      String toEmail,
+                      String subject,
+                      String msg) throws Exception {
 
-        // Mail server properties
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+    Properties props = new Properties();
+    props.put("mail.smtp.host", "smtp.gmail.com");
+    props.put("mail.smtp.port", "587");
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
 
-        // Foundation Gmail credentials
-        final String username = "bookingonline40@gmail.com"; // your Gmail
-        final String password = "bcidtabltwqbweup";        // Gmail App Password
+    final String username = "bookingonline40@gmail.com";
+    final String password = "bcidtabltwqbweup"; // App password
 
-        Session session = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
+    Session session = Session.getInstance(props, new Authenticator() {
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(username, password);
+        }
+    });
 
-        Message messageObj = new MimeMessage(session);
-        messageObj.setFrom(new InternetAddress(senderEmail)); // foundation email
-        messageObj.setReplyTo(new Address[]{new InternetAddress(replyToEmail)}); // user email
-        messageObj.setRecipients(Message.RecipientType.TO,
-                InternetAddress.parse(toEmail));
-        messageObj.setSubject(subject);
-        messageObj.setText(msg);
+    Message messageObj = new MimeMessage(session);
 
-        Transport.send(messageObj);
-    }
+    // Gmail requires FROM = same account
+    messageObj.setFrom(new InternetAddress(username));
+
+    // Reply will go to user
+    messageObj.setReplyTo(new Address[]{
+        new InternetAddress(replyToEmail)
+    });
+
+    // Mail will be received here
+    messageObj.setRecipients(
+        Message.RecipientType.TO,
+        InternetAddress.parse(toEmail)
+    );
+
+    messageObj.setSubject("Contact Us Form Submission");
+
+   messageObj.setText(
+    "Contact Us Form Submission\n"
+  + "----------------------------\n"
+  + "User Email: " + replyToEmail + "\n\n"
+  + "Subject:\n"
+  + subject + "\n\n"
+  + "Message:\n"
+  + msg
+);
+
+
+    Transport.send(messageObj);
+}
 
     // getters & setters
     public String getSubject() { return subject; }
