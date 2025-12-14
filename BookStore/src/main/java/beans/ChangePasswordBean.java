@@ -26,34 +26,50 @@ public class ChangePasswordBean {
     public String getNewPassword() { return newPassword; }
     public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
 
-    public String change() {
+   public String change() {
 
-        try {
-            MyAdminClient client = new MyAdminClient();
-            User u = new User();
-            u.setStatus(oldPassword);     // old password
-            u.setPassword(newPassword);   // new password
+    try {
+        MyAdminClient client = new MyAdminClient();
+        User u = new User();
+        u.setStatus(oldPassword);     // old password
+        u.setPassword(newPassword);   // new password
 
-            String userId = loginBean.getUserid().toString();
+        String userId = loginBean.getUserid().toString();
 
-            Response res = client.changePassword(u, userId);
+        Response res = client.changePassword(u, userId);
 
-            if (res.getStatus() == 200) {
-    FacesContext.getCurrentInstance().addMessage(null,
-        new FacesMessage(FacesMessage.SEVERITY_INFO, 
-        "Password changed successfully!", null));
-    return null; // stay on same page
-} else {
-    FacesContext.getCurrentInstance().addMessage(null,
-        new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-        "Failed to change password!", null));
-    return null;
+        if (res.getStatus() == 200) {
+
+            // SUCCESS MESSAGE (optional – redirect ma message store nathi thato)
+            FacesContext.getCurrentInstance().getExternalContext()
+                .getFlash().setKeepMessages(true);
+
+            FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO,
+                "Password changed successfully!", null));
+
+            // 👉 redirect to UserProfile.jsf
+            return "/UserProfile.xhtml?faces-redirect=true";
+
+        } else {
+
+            // FAIL MESSAGE
+            FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                "Password change failed. Please try again.", null));
+
+            return null; // same page
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+
+        FacesContext.getCurrentInstance().addMessage(null,
+            new FacesMessage(FacesMessage.SEVERITY_ERROR,
+            "Something went wrong. Please try again.", null));
+
+        return null;
+    }
 }
 
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }
