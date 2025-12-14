@@ -111,187 +111,194 @@
     </h:head>
 
     <h:body>
-        <div class="sticky-header-wrapper">
-            <ui:include src="/adminHeader.xhtml" /> 
-        </div>
+        <h:panelGroup rendered="#{not bookBean.admin}">
+            <div class="form-card">
+                <h2 style="color:#dc3545;">Access Denied! 🛑</h2>
+                <p>You must be an **Admin** to access Add or Edit Book functionalities.</p>
+                <h:link value="Go Back to User View" outcome="user.xhtml" />
+            </div>
+        </h:panelGroup>
+        <h:panelGroup rendered="#{bookBean.admin}">
+            <div class="sticky-header-wrapper">
+                <ui:include src="/adminHeader.xhtml" /> 
+            </div>
+            <div class="main-layout">
 
-        <div class="main-layout">
+                <ui:include src="sidebar.xhtml"/> 
+                <div class="main-content">
+                    <h:form>
 
-            <ui:include src="sidebar.xhtml"/> 
-            <div class="main-content">
-                <h:form>
-
-                    <div class="content-header">
-                        <h2 class="page-title">Manage Books</h2>
-                        <h:commandButton value="+ Add Book"
-                                         action="#{bookBean.goToAddPage}"
-                                         styleClass="btn-add-book" />
-                    </div>
-
-                    <div class="search-container">
-                        <h:panelGrid columns="8" cellpadding="5" styleClass="search-grid-panel">
-                            <h:outputLabel value="Book Name:" />
-                            <h:inputText value="#{bookBean.searchBookname}" >
-                                <f:passThroughAttribute name="placeholder" value="Search" />
-                            </h:inputText>
-
-
-                            <h:outputLabel value="Author:" />
-                            <h:inputText value="#{bookBean.searchAuthor}" >
-                                <f:passThroughAttribute name="placeholder" value="Search" />
-                            </h:inputText>
-
-                            <h:outputLabel value="Book Type:" />
-                            <h:inputText value="#{bookBean.searchBooktype}" >
-                                <f:passThroughAttribute name="placeholder" value="Search" />
-                            </h:inputText>
-
-                            <h:commandButton value="Search" action="#{bookBean.searchBooks}" styleClass="btn-search" />
-                            <h:commandButton value="Clear" action="#{bookBean.clearSearch}" styleClass="btn-clear" />
-                        </h:panelGrid>
-                    </div>
-
-                    <div class="data-table-container">
-                        <h:dataTable value="#{bookBean.pagedGroups}" var="b" styleClass="book-table"
-                                     rendered="#{not empty bookBean.pagedGroups}">
-
-                            <h:column>
-                                <f:facet name="header">ID</f:facet>
-                                    #{(bookBean.pageNumber - 1) * bookBean.pageSize + bookBean.pagedGroups.indexOf(b) + 1}
-                            </h:column>
-                            <h:column>
-                                <f:facet name="header">Book</f:facet>
-                                <div style="display:flex; align-items:center;">
-                                    <!-- If coverPhoto exists: show image -->
-                                    <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}"
-                                                    width="50"
-                                                    rendered="#{b.coverPhoto != null and b.coverPhoto != ''}"
-                                                    style="margin-right:10px; border-radius:4px;" />
-
-                                    <!-- If no image: show default -->
-                                    <h:graphicImage value="images/b2.png"
-                                                    width="50"
-                                                    rendered="#{b.coverPhoto == null or b.coverPhoto == ''}"
-                                                    style="margin-right:10px; border-radius:4px;" />
-
-                                    <div>
-                                        <div style="font-weight:600; color:#343a40;">#{b.bookname}</div>
-                                    </div>
-                                </div>
-                            </h:column>
-
-                            <h:column>
-                                <f:facet name="header">Author</f:facet>
-                                    #{b.authorname}
-                            </h:column>
-
-                            <h:column>
-                                <f:facet name="header">Category</f:facet>
-                                    #{b.booktypeId.type}
-                            </h:column>
-
-                            <h:column>
-                                <f:facet name="header">Price</f:facet>
-
-                                ₹ #{b.price} </h:column>
-
-                            <h:column>
-                                <f:facet name="header">Stock</f:facet>
-                                <span class="stock-in">#{b.available}</span>
-                            </h:column>
-
-
-                            <h:column>
-                                <f:facet name="header">Actions</f:facet>
-
-                                <!-- EDIT BUTTON -->
-                                <h:commandLink action="#{bookBean.editBook(b.id)}"
-                                               styleClass="btn btn-sm p-1"
-                                               title="Edit">
-                                    <i class="bi bi-pencil-square text-success fs-5"></i>
-                                </h:commandLink>
-
-                                <!-- DELETE BUTTON -->
-                                <h:commandLink action="#{bookBean.deleteBook(b.id)}"
-                                               onclick="return confirm('Delete this Book Type?')"
-                                               styleClass="btn btn-sm p-1"
-                                               title="Delete">
-                                    <i class="bi bi-trash text-danger fs-5"></i>
-                                </h:commandLink>
-                            </h:column>
-
-                        </h:dataTable>
-
-                        <!-- If no books, show a message -->
-                        <h:panelGroup rendered="#{empty bookBean.pagedGroups}" layout="block" styleClass="text-center p-4">
-                            <h:graphicImage value="images/b2.png" style="width:150px; margin-bottom:15px;" />
-                            <div style="font-size:18px; font-weight:600; color:#6c757d;">
-                                No books available
-                            </div>
-                        </h:panelGroup>
-                        <!-- Pagination Controls -->
-
-                        <div class="pagination-container d-flex justify-content-center mt-4">
-
-                            <ul class="premium-pagination">
-
-                                <!-- Previous -->
-                                <li class="#{bookBean.pageNumber == 1 ? 'disabled' : ''}">
-                                    <h:commandLink action="#{bookBean.previousPage}">
-                                        <f:ajax render="@form"/>
-                                        <i class="bi bi-chevron-left"></i> 
-                                    </h:commandLink>
-                                </li>
-
-                                <!-- Page Display -->
-                                <li class="active">
-                                    <span>
-                                        #{bookBean.pageNumber} / #{bookBean.totalPages}
-                                    </span>
-                                </li>
-
-                                <!-- Next -->
-                                <li class="#{bookBean.pageNumber == bookBean.totalPages ? 'disabled' : ''}">
-                                    <h:commandLink action="#{bookBean.nextPage}">
-                                        <f:ajax render="@form"/>
-                                        <i class="bi bi-chevron-right"></i>
-                                    </h:commandLink>
-                                </li>
-
-                            </ul>
-
+                        <div class="content-header">
+                            <h2 class="page-title">Manage Books</h2>
+                            <h:commandButton value="+ Add Book"
+                                             action="#{bookBean.goToAddPage}"
+                                             styleClass="btn-add-book" />
                         </div>
-                    </div>
 
-                </h:form>
+                        <div class="search-container">
+                            <h:panelGrid columns="8" cellpadding="5" styleClass="search-grid-panel">
+                                <h:outputLabel value="Book Name:" />
+                                <h:inputText value="#{bookBean.searchBookname}" >
+                                    <f:passThroughAttribute name="placeholder" value="Search" />
+                                </h:inputText>
+
+
+                                <h:outputLabel value="Author:" />
+                                <h:inputText value="#{bookBean.searchAuthor}" >
+                                    <f:passThroughAttribute name="placeholder" value="Search" />
+                                </h:inputText>
+
+                                <h:outputLabel value="Book Type:" />
+                                <h:inputText value="#{bookBean.searchBooktype}" >
+                                    <f:passThroughAttribute name="placeholder" value="Search" />
+                                </h:inputText>
+
+                                <h:commandButton value="Search" action="#{bookBean.searchBooks}" styleClass="btn-search" />
+                                <h:commandButton value="Clear" action="#{bookBean.clearSearch}" styleClass="btn-clear" />
+                            </h:panelGrid>
+                        </div>
+
+                        <div class="data-table-container">
+                            <h:dataTable value="#{bookBean.pagedGroups}" var="b" styleClass="book-table"
+                                         rendered="#{not empty bookBean.pagedGroups}">
+
+                                <h:column>
+                                    <f:facet name="header">ID</f:facet>
+                                        #{(bookBean.pageNumber - 1) * bookBean.pageSize + bookBean.pagedGroups.indexOf(b) + 1}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Book</f:facet>
+                                    <div style="display:flex; align-items:center;">
+                                        <!-- If coverPhoto exists: show image -->
+                                        <h:graphicImage value="/BookStore/BookStoreUploads/#{b.coverPhoto}"
+                                                        width="50"
+                                                        rendered="#{b.coverPhoto != null and b.coverPhoto != ''}"
+                                                        style="margin-right:10px; border-radius:4px;" />
+
+                                        <!-- If no image: show default -->
+                                        <h:graphicImage value="images/b2.png"
+                                                        width="50"
+                                                        rendered="#{b.coverPhoto == null or b.coverPhoto == ''}"
+                                                        style="margin-right:10px; border-radius:4px;" />
+
+                                        <div>
+                                            <div style="font-weight:600; color:#343a40;">#{b.bookname}</div>
+                                        </div>
+                                    </div>
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Author</f:facet>
+                                        #{b.authorname}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Category</f:facet>
+                                        #{b.booktypeId.type}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Price</f:facet>
+
+                                    ₹ #{b.price} </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Stock</f:facet>
+                                    <span class="stock-in">#{b.available}</span>
+                                </h:column>
+
+
+                                <h:column>
+                                    <f:facet name="header">Actions</f:facet>
+
+                                    <!-- EDIT BUTTON -->
+                                    <h:commandLink action="#{bookBean.editBook(b.id)}"
+                                                   styleClass="btn btn-sm p-1"
+                                                   title="Edit">
+                                        <i class="bi bi-pencil-square text-success fs-5"></i>
+                                    </h:commandLink>
+
+                                    <!-- DELETE BUTTON -->
+                                    <h:commandLink action="#{bookBean.deleteBook(b.id)}"
+                                                   onclick="return confirm('Delete this Book Type?')"
+                                                   styleClass="btn btn-sm p-1"
+                                                   title="Delete">
+                                        <i class="bi bi-trash text-danger fs-5"></i>
+                                    </h:commandLink>
+                                </h:column>
+
+                            </h:dataTable>
+
+                            <!-- If no books, show a message -->
+                            <h:panelGroup rendered="#{empty bookBean.pagedGroups}" layout="block" styleClass="text-center p-4">
+                                <h:graphicImage value="images/b2.png" style="width:150px; margin-bottom:15px;" />
+                                <div style="font-size:18px; font-weight:600; color:#6c757d;">
+                                    No books available
+                                </div>
+                            </h:panelGroup>
+                            <!-- Pagination Controls -->
+
+                            <div class="pagination-container d-flex justify-content-center mt-4">
+
+                                <ul class="premium-pagination">
+
+                                    <!-- Previous -->
+                                    <li class="#{bookBean.pageNumber == 1 ? 'disabled' : ''}">
+                                        <h:commandLink action="#{bookBean.previousPage}">
+                                            <f:ajax render="@form"/>
+                                            <i class="bi bi-chevron-left"></i> 
+                                        </h:commandLink>
+                                    </li>
+
+                                    <!-- Page Display -->
+                                    <li class="active">
+                                        <span>
+                                            #{bookBean.pageNumber} / #{bookBean.totalPages}
+                                        </span>
+                                    </li>
+
+                                    <!-- Next -->
+                                    <li class="#{bookBean.pageNumber == bookBean.totalPages ? 'disabled' : ''}">
+                                        <h:commandLink action="#{bookBean.nextPage}">
+                                            <f:ajax render="@form"/>
+                                            <i class="bi bi-chevron-right"></i>
+                                        </h:commandLink>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+                        </div>
+
+                    </h:form>
+                </div>
+
             </div>
 
-        </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                                                       function deleteConfirm(event, button) {
+                                                           event.preventDefault();
 
-        <script>
-                                                   function deleteConfirm(event, button) {
-                                                       event.preventDefault();
+                                                           Swal.fire({
+                                                               title: 'Are you sure?',
+                                                               text: "This book will be permanently deleted!",
+                                                               icon: 'warning',
+                                                               showCancelButton: true,
+                                                               confirmButtonColor: '#dc3545',
+                                                               cancelButtonColor: '#6c757d',
+                                                               confirmButtonText: 'Yes, delete it!',
+                                                               cancelButtonText: 'Cancel'
+                                                           }).then((result) => {
+                                                               if (result.isConfirmed) {
+                                                                   button.onclick = null;  // prevent loop
+                                                                   button.click();         // JSF submits properly
+                                                               }
+                                                           });
+                                                       }
+            </script>
 
-                                                       Swal.fire({
-                                                           title: 'Are you sure?',
-                                                           text: "This book will be permanently deleted!",
-                                                           icon: 'warning',
-                                                           showCancelButton: true,
-                                                           confirmButtonColor: '#dc3545',
-                                                           cancelButtonColor: '#6c757d',
-                                                           confirmButtonText: 'Yes, delete it!',
-                                                           cancelButtonText: 'Cancel'
-                                                       }).then((result) => {
-                                                           if (result.isConfirmed) {
-                                                               button.onclick = null;  // prevent loop
-                                                               button.click();         // JSF submits properly
-                                                           }
-                                                       });
-                                                   }
-        </script>
-
-    </h:body>
+        </h:panelGroup></h:body>
 </html>

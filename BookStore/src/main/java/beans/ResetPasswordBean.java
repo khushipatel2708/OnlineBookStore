@@ -31,7 +31,7 @@ public class ResetPasswordBean {
             Response res = client.resetPassword(u);
 
             if (res.getStatus() == 200) {
-                return "login.xhtml?faces-redirect=true";
+                return "resetPassword.xhtml?faces-redirect=true";
             } else {
                 return null;
             }
