@@ -113,7 +113,7 @@ public class PaymentBean implements Serializable {
 
         // 1️⃣ Save Payment → Update Stock → Remove Cart
         for (Cart c : getCartItems()) {
-
+            int bookId = c.getBookId().getId();
             BigDecimal price = c.getBookId().getPrice();
             BigDecimal qty = new BigDecimal(c.getQuantity());
             BigDecimal amount = price.multiply(qty);
@@ -128,7 +128,7 @@ public class PaymentBean implements Serializable {
                     "Pending"
             );
 
-            lastBookId = c.getBookId().getId();
+            lastBookId = bookId;
 
             // Update Stock
             int newStock = c.getBookId().getAvailable() - c.getQuantity();
@@ -367,12 +367,12 @@ public class PaymentBean implements Serializable {
     }
 
     public String clearSearch() {
-    searchPhone = "";
-    searchMethod = "All"; // default value
-    searchUser = "";
-    searchBook = "";
-    pageNumber = 1;       // reset pagination
-    return null;           // stay on same page
-}
+        searchPhone = "";
+        searchMethod = "All"; // default value
+        searchUser = "";
+        searchBook = "";
+        pageNumber = 1;       // reset pagination
+        return null;           // stay on same page
+    }
 
 }
