@@ -44,61 +44,81 @@ public class ShippingBean implements Serializable {
             isExisting = true;
         }
 
-        // ✅ Pre-fill cityId from saved shipping
         if (shipping.getCityid() != null) {
             cityId = shipping.getCityid().getId();
         } else {
-            cityId = null; // optional
+            cityId = null;
+        }
+    }
+
+    public void loadShipping() {
+        Integer userId = loginBean.getLoggedInUser() != null ? loginBean.getLoggedInUser().getId() : null;
+
+        if (userId != null) {
+            shipping = userSessionBean.getLatestShippingByUser(userId);
+        }
+
+        if (shipping == null) {
+            shipping = new Shipping();
+            isExisting = false;
+        } else {
+            isExisting = true;
+        }
+
+        cityId = (shipping.getCityid() != null) ? shipping.getCityid().getId() : null;
+
+        // Optional: initialize City object to avoid null pointer
+        if (shipping.getCityid() == null) {
+            shipping.setCityid(new City());
         }
     }
 
     public Collection<Shipping> getAllShippingList() {
-    return userSessionBean.getAllShippings();
-}
-    
+        return userSessionBean.getAllShippings();
+    }
+
     // -----------------------------
     // ⭐ SAVE or UPDATE SHIPPING
     // -----------------------------
-    public String saveShipping() {
-
-        // Attach selected city
-        if (cityId != null) {
-            City c = new City();
-            c.setId(cityId);
-            shipping.setCityid(c);
-        }
-
-        Integer selectedCityId = (shipping.getCityid() != null) ? shipping.getCityid().getId() : null;
-
-        if (shipping.getId() == null) {
-            // Add new shipping
-            userSessionBean.addShipping(
-                    loginBean.getLoggedInUser().getId(),
-                    selectedCityId,
-                    shipping.getName(),
-                    shipping.getPhone(),
-                    shipping.getAddress1(),
-                    shipping.getAddress2(),
-                    shipping.getLandmark(),
-                    shipping.getPincode()
-            );
-        } else {
-            // Update shipping
-            userSessionBean.updateShipping(
-                    shipping.getId(),
-                    loginBean.getLoggedInUser().getId(),
-                    selectedCityId,
-                    shipping.getName(),
-                    shipping.getPhone(),
-                    shipping.getAddress1(),
-                    shipping.getAddress2(),
-                    shipping.getLandmark(),
-                    shipping.getPincode()
-            );
-        }
-
-        return "UserBookList.xhtml?faces-redirect=true";
+public String saveShipping() {
+    if (cityId != null) {
+        City c = new City();
+        c.setId(cityId);
+        shipping.setCityid(c);
     }
+
+    Integer selectedCityId = (shipping.getCityid() != null) ? shipping.getCityid().getId() : null;
+
+    if (shipping.getId() == null) {
+        userSessionBean.addShipping(
+            loginBean.getLoggedInUser().getId(),
+            selectedCityId,
+            shipping.getName(),
+            shipping.getPhone(),
+            shipping.getAddress1(),
+            shipping.getAddress2(),
+            shipping.getLandmark(),
+            shipping.getPincode()
+        );
+    } else {
+        userSessionBean.updateShipping(
+            shipping.getId(),
+            loginBean.getLoggedInUser().getId(),
+            selectedCityId,
+            shipping.getName(),
+            shipping.getPhone(),
+            shipping.getAddress1(),
+            shipping.getAddress2(),
+            shipping.getLandmark(),
+            shipping.getPincode()
+        );
+    }
+
+    // ✅ Reload shipping to reflect saved data immediately
+    loadShipping();
+
+    return "UserBookList.xhtml?faces-redirect=true";
+}
 
     public Collection<City> getAllCities() {
         return adminClient.getAllCities(Collection.class);
@@ -154,21 +174,7 @@ public class ShippingBean implements Serializable {
     }
 
     public String goToShippingPage() {
-
-        shipping = loginBean.getLoggedUserShipping();
-
-        if (shipping == null) {
-            shipping = new Shipping();
-            isExisting = false;
-        } else {
-            isExisting = true;
-        }
-
-        // ⭐ IMPORTANT: initialize city object
-        if (shipping.getCityid() == null) {
-            shipping.setCityid(new City());
-        }
-
+        loadShipping();
         return "shippingForm.xhtml?faces-redirect=true";
     }
 
@@ -182,13 +188,14 @@ public class ShippingBean implements Serializable {
     // -----------------------------
 // ⭐ DELETE SHIPPING
 // -----------------------------
-public void deleteShipping(Integer shippingId) {
-    if (shippingId != null) {
-        userSessionBean.removeShipping(shippingId);
-    }
-}
 
-private int pageSize = 5;      // Number of rows per page
+    public void deleteShipping(Integer shippingId) {
+        if (shippingId != null) {
+            userSessionBean.removeShipping(shippingId);
+        }
+    }
+
+    private int pageSize = 5;      // Number of rows per page
     private int pageNumber = 1;    // Current page
 
     public int getPageSize() {
@@ -233,7 +240,5 @@ private int pageSize = 5;      // Number of rows per page
             pageNumber--;
         }
     }
-
-    
 
 }
