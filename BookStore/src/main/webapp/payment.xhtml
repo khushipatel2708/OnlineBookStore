@@ -2,109 +2,112 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
 
-<h:head>
-    <title>Online Payment</title>
+    <h:head>
+        <title>Online Payment</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
-            margin: 0;
-            padding: 0;
-        }
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background: #f4f6f9;
+                margin: 0;
+                padding: 0;
+            }
 
-        .payment-container {
-            width: 380px;
-            margin: 50px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
-        }
+            .payment-container {
+                width: 380px;
+                margin: 50px auto;
+                background: white;
+                padding: 25px;
+                border-radius: 12px;
+                box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+            }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
+            h2 {
+                text-align: center;
+                margin-bottom: 20px;
+                color: #333;
+            }
 
-        .form-row {
-            margin-bottom: 15px;
-        }
+            .form-row {
+                margin-bottom: 15px;
+            }
 
-        label {
-            font-weight: bold;
-            margin-bottom: 6px;
-            display: block;
-        }
+            label {
+                font-weight: bold;
+                margin-bottom: 6px;
+                display: block;
+            }
 
-        input[type="text"], 
-        input[type="email"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-        }
+            input[type="text"],
+            input[type="email"] {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+                font-size: 14px;
+            }
 
-        .amount-box {
-            background: #f1f1f1;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-        }
+            .amount-box {
+                background: #f1f1f1;
+                padding: 10px;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: bold;
+            }
 
-        .pay-btn {
-            width: 100%;
-            background: #28a745;
-            color: white;
-            padding: 12px;
-            border: none;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
+            .pay-btn {
+                width: 100%;
+                background: #28a745;
+                color: white;
+                padding: 12px;
+                border: none;
+                font-size: 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                margin-top: 15px;
+            }
 
-        .pay-btn:hover {
-            background: #218838;
-        }
-    </style>
-</h:head>
+            .pay-btn:hover {
+                background: #218838;
+            }
+            #jakarta_faces_developmentstage_messages {
+                display: none !important;
+            }
+        </style>
+    </h:head>
 
-<h:body>
+    <h:body>
 
-    <div class="payment-container">
+        <div class="payment-container">
 
-        <h2>Online Payment</h2>
+            <h2>Online Payment</h2>
 
-        <h:form>
+            <h:form>
 
-            <div class="form-row">
-                <label>Email:</label>
-                <h:inputText value="#{paymentBean.email}" />
-            </div>
-
-            <div class="form-row">
-                <label>Phone Number:</label>
-                <h:inputText value="#{paymentBean.phone}" required="true" />
-            </div>
-
-            <div class="form-row">
-                <label>Amount (₹):</label>
-                <div class="amount-box">
-                    <h:outputText value="#{paymentBean.totalAmount}" />
+                <div class="form-row">
+                    <label>Email:</label>
+                    <h:inputText value="#{paymentBean.email}" />
                 </div>
-            </div>
 
-            <h:commandButton value="Pay Now" 
-                             action="#{paymentBean.makePayment}" 
-                             styleClass="pay-btn" />
+                <div class="form-row">
+                    <label>Phone Number:</label>
+                    <h:inputText value="#{paymentBean.phone}" required="true" />
+                </div>
 
-        </h:form>
+                <div class="form-row">
+                    <label>Amount (₹):</label>
+                    <div class="amount-box">
+                        <h:outputText value="#{paymentBean.totalAmount}" />
+                    </div>
+                </div>
 
-    </div>
+                <h:commandButton value="Pay Now" 
+                                 action="#{paymentBean.makePayment}" 
+                                 styleClass="pay-btn" />
 
-</h:body>
+            </h:form>
+
+        </div>
+
+    </h:body>
 </html>

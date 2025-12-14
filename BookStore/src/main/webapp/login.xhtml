@@ -1,161 +1,163 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core">
 
-<h:head>
-    <title>Bookstore Login</title>
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <h:head>
+        <title>Bookstore Login</title>
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
 
-    <style>
-        /* Define a modern blue palette (consistent with RegUser.jsf) */
-        :root {
-            --bs-primary: #0066cc; /* A rich, slightly darker blue for main actions */
-            --bs-secondary: #6c757d;
-            --bs-light: #f8f9fa;
-            --bs-info: #0d6efd; /* Brighter blue for accents */
-        }
+        <style>
+            /* Define a modern blue palette (consistent with RegUser.jsf) */
+            :root {
+                --bs-primary: #0066cc; /* A rich, slightly darker blue for main actions */
+                --bs-secondary: #6c757d;
+                --bs-light: #f8f9fa;
+                --bs-info: #0d6efd; /* Brighter blue for accents */
+            }
 
-        /* Override Bootstrap variables */
-        .btn-primary {
-            --bs-btn-bg: var(--bs-primary);
-            --bs-btn-border-color: var(--bs-primary);
-            --bs-btn-hover-bg: #005bb5;
-            --bs-btn-hover-border-color: #005bb5;
-        }
+            /* Override Bootstrap variables */
+            .btn-primary {
+                --bs-btn-bg: var(--bs-primary);
+                --bs-btn-border-color: var(--bs-primary);
+                --bs-btn-hover-bg: #005bb5;
+                --bs-btn-hover-border-color: #005bb5;
+            }
 
-        /* Container for the new split design */
-        .split-container {
-            max-width: 1200px;
-            height: 70vh;
-            min-height: 500px;
-        }
+            /* Container for the new split design */
+            .split-container {
+                max-width: 1200px;
+                height: 70vh;
+                min-height: 500px;
+            }
 
-        /* Left side: Illustration/Branding Panel */
-        .illustration-panel {
-            background-color: var(--bs-primary);
-            background-image: linear-gradient(135deg, var(--bs-primary) 0%, #003366 100%);
-            color: white;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            /* Use rounded corners consistent with card style */
-            border-top-left-radius: 0.75rem;
-            border-bottom-left-radius: 0.75rem;
-        }
+            /* Left side: Illustration/Branding Panel */
+            .illustration-panel {
+                background-color: var(--bs-primary);
+                background-image: linear-gradient(135deg, var(--bs-primary) 0%, #003366 100%);
+                color: white;
+                padding: 40px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                /* Use rounded corners consistent with card style */
+                border-top-left-radius: 0.75rem;
+                border-bottom-left-radius: 0.75rem;
+            }
 
-        /* Right side: Form Panel */
-        .form-panel {
-            background-color: white;
-            padding: 40px 60px;
-            border-top-right-radius: 0.75rem;
-            border-bottom-right-radius: 0.75rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+            /* Right side: Form Panel */
+            .form-panel {
+                background-color: white;
+                padding: 40px 60px;
+                border-top-right-radius: 0.75rem;
+                border-bottom-right-radius: 0.75rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
 
-        /* Tab styles */
-        .nav-link.active-tab {
-            color: var(--bs-primary) !important;
-            border-bottom: 3px solid var(--bs-primary) !important;
-        }
-        .nav-link.inactive-tab {
-            color: var(--bs-secondary) !important;
-        }
+            /* Tab styles */
+            .nav-link.active-tab {
+                color: var(--bs-primary) !important;
+                border-bottom: 3px solid var(--bs-primary) !important;
+            }
+            .nav-link.inactive-tab {
+                color: var(--bs-secondary) !important;
+            }
 
-        /* Input field prefix style (consistent with RegUser.jsf) */
-        .input-group-text-primary {
-            background-color: var(--bs-info); /* A brighter accent blue */
-            color: white;
-            border-color: var(--bs-info);
-        }
+            /* Input field prefix style (consistent with RegUser.jsf) */
+            .input-group-text-primary {
+                background-color: var(--bs-info); /* A brighter accent blue */
+                color: white;
+                border-color: var(--bs-info);
+            }
 
-        /* Override the default JSF error message style for a cleaner look */
-        .text-danger {
-            font-size: 0.75rem !important; /* Smaller size for validation message */
-            margin-top: 0.25rem !important;
-        }
+            /* Override the default JSF error message style for a cleaner look */
+            .text-danger {
+                font-size: 0.75rem !important; /* Smaller size for validation message */
+                margin-top: 0.25rem !important;
+            }
+            #jakarta_faces_developmentstage_messages {
+                display: none !important;
+            }
+        </style>
+    </h:head>
 
-    </style>
-</h:head>
+    <h:body class="bg-light d-flex align-items-center justify-content-center vh-100">
 
-<h:body class="bg-light d-flex align-items-center justify-content-center vh-100">
+        <div class="card shadow-lg split-container d-flex flex-row p-0 border-0 rounded-4">
 
-    <div class="card shadow-lg split-container d-flex flex-row p-0 border-0 rounded-4">
-
-        <div class="illustration-panel col-md-5 d-none d-md-flex">
-            <i class="bi bi-book-half display-1 mb-3"></i>
-            <h2 class="fw-bolder mb-3">Welcome Back!</h2>
-            <p class="lead">
-                Dive back into the world of literature.
-            </p>
-            <div class="mt-4">
-                <i class="bi bi-star-fill fs-4"></i>
-                <p class="small fst-italic">Your next great read is waiting.</p>
+            <div class="illustration-panel col-md-5 d-none d-md-flex">
+                <i class="bi bi-book-half display-1 mb-3"></i>
+                <h2 class="fw-bolder mb-3">Welcome Back!</h2>
+                <p class="lead">
+                    Dive back into the world of literature.
+                </p>
+                <div class="mt-4">
+                    <i class="bi bi-star-fill fs-4"></i>
+                    <p class="small fst-italic">Your next great read is waiting.</p>
+                </div>
             </div>
+
+            <div class="form-panel col-12 col-md-7">
+
+                <h:form>
+                    <div class="d-flex justify-content-center mb-3 mt-4 fw-bold">
+                        <h:outputLink value="#" styleClass="nav-link active-tab mx-3 text-decoration-none pb-1">
+                            LOGIN
+                        </h:outputLink>
+                        <h:outputLink value="RegUser.jsf" styleClass="nav-link inactive-tab mx-3 text-decoration-none pb-1">
+                            REGISTER
+                        </h:outputLink>
+                    </div>
+
+                    <h4 class="card-title text-center mb-3 text-dark fw-bold">Sign In to Your Account</h4>
+
+                    <div class="mb-4">
+                        <label for="usernameInput" class="form-label text-muted small">Username</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text input-group-text-primary"><i class="bi bi-person-badge-fill"></i></span>
+                            <h:inputText id="usernameInput" value="#{loginBean.username}" required="true"
+                                         requiredMessage="Username is required" styleClass="form-control" />
+                        </div>
+                        <h:message for="usernameInput" styleClass="text-danger small mt-1 d-block"/>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="passwordInput" class="form-label text-muted small">Password</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text input-group-text-primary"><i class="bi bi-lock-fill"></i></span>
+                            <h:inputSecret id="passwordInput" value="#{loginBean.password}" required="true"
+                                           requiredMessage="Password is required" styleClass="form-control" />
+                        </div>
+                        <h:message for="passwordInput" styleClass="text-danger small mt-1 d-block"/>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <h:commandButton value="LOGIN" action="#{loginBean.login}"
+                                         styleClass="btn btn-primary btn-lg fw-bold"/>
+                    </div>
+
+                    <div class="mt-2 text-center">
+                        <h:outputText value="#{loginBean.errorStatus}" styleClass="text-danger fw-bold small"
+                                      rendered="#{not empty loginBean.errorStatus}" />
+                        <h:outputText value="#{loginBean.message}" styleClass="text-success fw-bold small"
+                                      rendered="#{not empty loginBean.message}" />
+                    </div>
+
+                    <h:commandButton value="Reset" type="reset" styleClass="d-none"/>
+
+                </h:form>
+            </div>
+
         </div>
 
-        <div class="form-panel col-12 col-md-7">
+        <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
 
-            <h:form>
-                <div class="d-flex justify-content-center mb-3 mt-4 fw-bold">
-                    <h:outputLink value="#" styleClass="nav-link active-tab mx-3 text-decoration-none pb-1">
-                        LOGIN
-                    </h:outputLink>
-                    <h:outputLink value="RegUser.jsf" styleClass="nav-link inactive-tab mx-3 text-decoration-none pb-1">
-                        REGISTER
-                    </h:outputLink>
-                </div>
-
-                <h4 class="card-title text-center mb-3 text-dark fw-bold">Sign In to Your Account</h4>
-
-                <div class="mb-4">
-                    <label for="usernameInput" class="form-label text-muted small">Username</label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text input-group-text-primary"><i class="bi bi-person-badge-fill"></i></span>
-                        <h:inputText id="usernameInput" value="#{loginBean.username}" required="true"
-                                     requiredMessage="Username is required" styleClass="form-control" />
-                    </div>
-                    <h:message for="usernameInput" styleClass="text-danger small mt-1 d-block"/>
-                </div>
-
-                <div class="mb-4">
-                    <label for="passwordInput" class="form-label text-muted small">Password</label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text input-group-text-primary"><i class="bi bi-lock-fill"></i></span>
-                        <h:inputSecret id="passwordInput" value="#{loginBean.password}" required="true"
-                                       requiredMessage="Password is required" styleClass="form-control" />
-                    </div>
-                    <h:message for="passwordInput" styleClass="text-danger small mt-1 d-block"/>
-                </div>
-
-                <div class="d-grid gap-2">
-                    <h:commandButton value="LOGIN" action="#{loginBean.login}"
-                                     styleClass="btn btn-primary btn-lg fw-bold"/>
-                </div>
-
-                <div class="mt-2 text-center">
-                    <h:outputText value="#{loginBean.errorStatus}" styleClass="text-danger fw-bold small"
-                                  rendered="#{not empty loginBean.errorStatus}" />
-                    <h:outputText value="#{loginBean.message}" styleClass="text-success fw-bold small"
-                                  rendered="#{not empty loginBean.message}" />
-                </div>
-
-                <h:commandButton value="Reset" type="reset" styleClass="d-none"/>
-
-            </h:form>
-        </div>
-
-    </div>
-
-    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
-
-</h:body>
+    </h:body>
 </html>

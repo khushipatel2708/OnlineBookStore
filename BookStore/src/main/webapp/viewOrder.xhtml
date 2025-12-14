@@ -103,9 +103,53 @@
                     display: none;
                 }
             }
+            .status-badge {
+                color: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                padding: 6px 16px;
+                font-weight: 600;
+                transition: transform 0.3s, box-shadow 0.3s;
+            }
+
+            .status-badge:hover {
+                transform: scale(1.1);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            }
+
+            .status-delivered {
+                background: linear-gradient(135deg,#28a745,#198754);
+            }
+
+            .status-pending {
+                background: linear-gradient(135deg,#f39c12,#e67e22);
+            }
+
             #jakarta_faces_developmentstage_messages {
                 display: none !important;
             }
+            .status-badge {
+                color: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                padding: 14px 21px;
+                font-weight: 600;
+                transition: transform 0.3s, box-shadow 0.3s;
+            }
+
+            .status-badge:hover {
+                transform: scale(1.1);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            }
+
+            .status-delivered {
+                background: linear-gradient(135deg,#28a745,#198754);
+            }
+
+            .status-pending {
+                background: linear-gradient(135deg,#f39c12,#e67e22);
+            }
+
         </style>
     </h:head>
 
@@ -122,11 +166,18 @@
 
                     <!-- Customer Details -->
                     <div class="customer-details">
-                        <span class="section-title">Customer Details</span>
+                        <span class="section-title" style="
+                              margin-right: 81%;
+                              ">Customer Details</span>
+                        <span class="ms-auto badge status-badge 
+                              #{orderBean.selectedOrder.status eq 'Delivered' ? 'status-delivered' : 'status-pending'}">
+                            #{orderBean.selectedOrder.status}
+                        </span>
                         <p><strong>Name:</strong> #{orderBean.selectedOrder.userId.fullname}</p>
                         <p><strong>Email:</strong> #{orderBean.selectedOrder.userId.email}</p>
                         <p><strong>Phone:</strong> #{orderBean.selectedOrder.userId.phone}</p>
                     </div>
+
 
                     <!-- Order Details -->
                     <div class="order-details">

@@ -41,6 +41,9 @@
                 padding: 12px 15px;
                 border-bottom: 1px solid #eee;
             }
+            #jakarta_faces_developmentstage_messages {
+                display: none !important;
+            }
         </style>
     </h:head>
 
@@ -54,100 +57,100 @@
         </h:panelGroup>
         <h:panelGroup rendered="#{bookBean.admin}">
 
-        <div class="sticky-header-wrapper">
-            <ui:include src="/adminHeader.xhtml"/>
-        </div>
-
-        <div class="main-layout">
-
-            <ui:include src="sidebar.xhtml"/>
-
-            <div class="main-content">
-                <h:form>
-
-                    <div class="content-header">
-                        <h2 class="page-title">Feedback List</h2>
-                    </div>
-
-                    <div class="data-table-container">
-
-                        <h:dataTable value="#{feedbackListBean.pagedFeedbacks}" 
-                                     var="f" 
-                                     styleClass="fb-table" rendered="#{not empty feedbackListBean.pagedFeedbacks}">
-
-                            <h:column>
-                                <f:facet name="header">ID</f:facet>
-                                    #{(feedbackListBean.pageNumber - 1) * feedbackListBean.pageSize 
-                                      + feedbackListBean.pagedFeedbacks.indexOf(f) + 1}
-                            </h:column>
-
-                            <h:column>
-                                <f:facet name="header">User Name</f:facet>
-                                    #{f.userId.fullname}
-                            </h:column>
-
-                            <h:column>
-                                <f:facet name="header">Book Name</f:facet>
-                                    #{f.bookId.bookname}
-                            </h:column>
-
-                            <h:column>
-                                <f:facet name="header">Rating</f:facet>
-                                    #{f.rating}
-                            </h:column>
-
-                            <h:column>
-                                <f:facet name="header">Comments</f:facet>
-                                    #{f.comments}
-                            </h:column>
-
-                        </h:dataTable>
-                        
-                         <!-- If no orders, show a message -->
-                        <h:panelGroup rendered="#{empty feedbackListBean.pagedFeedbacks}" layout="block" styleClass="text-center p-4">
-                            <h:graphicImage value="images/f.png" style="width:150px; margin-bottom:15px;" />
-                            <div style="font-size:18px; font-weight:600; color:#6c757d;">
-                                No Feedback available
-                            </div>
-                        </h:panelGroup>
-
-                        <div class="pagination-container d-flex justify-content-center mt-4">
-                            <ul class="premium-pagination">
-
-                                <!-- Previous -->
-                                <li class="#{feedbackListBean.pageNumber == 1 ? 'disabled' : ''}">
-                                    <h:commandLink action="#{feedbackListBean.previousPage}">
-                                        <f:ajax render="@form"/>
-                                        <i class="bi bi-chevron-left"></i>
-                                    </h:commandLink>
-                                </li>
-
-                                <!-- Page Display -->
-                                <li class="active">
-                                    <span>
-                                        #{feedbackListBean.pageNumber} / #{feedbackListBean.totalPages}
-                                    </span>
-                                </li>
-
-                                <!-- Next -->
-                                <li class="#{feedbackListBean.pageNumber == feedbackListBean.totalPages ? 'disabled' : ''}">
-                                    <h:commandLink action="#{feedbackListBean.nextPage}">
-                                        <f:ajax render="@form"/>
-                                        <i class="bi bi-chevron-right"></i>
-                                    </h:commandLink>
-                                </li>
-
-                            </ul>
-                        </div>
-
-
-                    </div>
-
-                </h:form>
+            <div class="sticky-header-wrapper">
+                <ui:include src="/adminHeader.xhtml"/>
             </div>
 
-        </div>
-         </h:panelGroup>
+            <div class="main-layout">
+
+                <ui:include src="sidebar.xhtml"/>
+
+                <div class="main-content">
+                    <h:form>
+
+                        <div class="content-header">
+                            <h2 class="page-title">Feedback List</h2>
+                        </div>
+
+                        <div class="data-table-container">
+
+                            <h:dataTable value="#{feedbackListBean.pagedFeedbacks}" 
+                                         var="f" 
+                                         styleClass="fb-table" rendered="#{not empty feedbackListBean.pagedFeedbacks}">
+
+                                <h:column>
+                                    <f:facet name="header">ID</f:facet>
+                                        #{(feedbackListBean.pageNumber - 1) * feedbackListBean.pageSize 
+                                          + feedbackListBean.pagedFeedbacks.indexOf(f) + 1}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">User Name</f:facet>
+                                        #{f.userId.fullname}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Book Name</f:facet>
+                                        #{f.bookId.bookname}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Rating</f:facet>
+                                        #{f.rating}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Comments</f:facet>
+                                        #{f.comments}
+                                </h:column>
+
+                            </h:dataTable>
+
+                            <!-- If no orders, show a message -->
+                            <h:panelGroup rendered="#{empty feedbackListBean.pagedFeedbacks}" layout="block" styleClass="text-center p-4">
+                                <h:graphicImage value="images/f.png" style="width:150px; margin-bottom:15px;" />
+                                <div style="font-size:18px; font-weight:600; color:#6c757d;">
+                                    No Feedback available
+                                </div>
+                            </h:panelGroup>
+
+                            <div class="pagination-container d-flex justify-content-center mt-4">
+                                <ul class="premium-pagination">
+
+                                    <!-- Previous -->
+                                    <li class="#{feedbackListBean.pageNumber == 1 ? 'disabled' : ''}">
+                                        <h:commandLink action="#{feedbackListBean.previousPage}">
+                                            <f:ajax render="@form"/>
+                                            <i class="bi bi-chevron-left"></i>
+                                        </h:commandLink>
+                                    </li>
+
+                                    <!-- Page Display -->
+                                    <li class="active">
+                                        <span>
+                                            #{feedbackListBean.pageNumber} / #{feedbackListBean.totalPages}
+                                        </span>
+                                    </li>
+
+                                    <!-- Next -->
+                                    <li class="#{feedbackListBean.pageNumber == feedbackListBean.totalPages ? 'disabled' : ''}">
+                                        <h:commandLink action="#{feedbackListBean.nextPage}">
+                                            <f:ajax render="@form"/>
+                                            <i class="bi bi-chevron-right"></i>
+                                        </h:commandLink>
+                                    </li>
+
+                                </ul>
+                            </div>
+
+
+                        </div>
+
+                    </h:form>
+                </div>
+
+            </div>
+        </h:panelGroup>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
