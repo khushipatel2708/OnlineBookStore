@@ -4,133 +4,200 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="jakarta.faces.facelets">
 
-<h:head>
-    <title>Shipping Address</title>
+    <h:head>
+        <title>Shipping Address</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-          rel="stylesheet" />
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+              rel="stylesheet" />
 
-    <!-- Optional: FontAwesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+        <!-- Optional: FontAwesome for icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .card {
-            border-radius: 15px;
-        }
-        .card:hover {
-            box-shadow: 0 0 20px rgba(0,0,0,0.15);
-        }
-        .form-label {
-            font-weight: 600;
-        }
-        .header-title {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .required-star::after {
-            content:" *";
-            color: red;
-        }
-    </style>
-</h:head>
+        <style>
+            body {
+                background-color: #f8f9fa;
+            }
+            .card {
+                border-radius: 15px;
+            }
+            .card:hover {
+                box-shadow: 0 0 20px rgba(0,0,0,0.15);
+            }
+            .form-label {
+                font-weight: 600;
+            }
+            .header-title {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+            .required-star::after {
+                content:" *";
+                color: red;
+            }
+            #jakarta_faces_developmentstage_messages {
+                display: none !important;
+            }
+        </style>
+    </h:head>
 
-<h:body>
+    <h:body>
 
-    <!-- Header -->
-    <div class="sticky-top bg-white shadow-sm">
-        <ui:include src="/header.xhtml" />
-    </div>
+        <!-- Header -->
+        <div class="sticky-top bg-white shadow-sm">
+            <ui:include src="/header.xhtml" />
+        </div>
 
-    <!-- Container -->
-    <div class="container mt-5 mb-5">
+        <!-- Container -->
+        <div class="container mt-5 mb-5">
 
-        <h2 class="text-center mb-4 header-title">Shipping Details</h2>
+            <h2 class="text-center mb-4 header-title">Shipping Details</h2>
 
-        <h:form>
-            <div class="card p-4 shadow-sm mx-auto" style="max-width: 600px;">
+            
 
-                <!-- Full Name -->
-                <div class="mb-3">
-                    <label class="form-label required-star">
-                        <i class="fa fa-user me-1"></i> Full Name
-                    </label>
-                    <h:inputText value="#{shippingBean.shipping.name}" 
-                                 styleClass="form-control" />
+            <h:form>
+
+                <div class="card p-4 shadow-sm mx-auto" style="max-width: 600px;">
+
+                    <!-- Full Name -->
+                    <div class="mb-3">
+                        <label class="form-label required-star">
+                            <i class="fa fa-user me-1"></i> Full Name
+                        </label>
+
+                        <h:inputText id="fullName"
+                                     value="#{shippingBean.shipping.name}"
+                                     required="true"
+                                     requiredMessage="Full name is required"
+                                     styleClass="form-control">
+                            <f:ajax event="blur" render="fullNameMsg"/>
+                        </h:inputText>
+
+                        <h:message id="fullNameMsg" for="fullName"
+                                   style="color:red; font-size:14px;"
+                                   styleClass="d-block"/>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="mb-3">
+                        <label class="form-label required-star">
+                            <i class="fa fa-phone me-1"></i> Phone
+                        </label>
+
+                        <h:inputText id="phone"
+                                     value="#{shippingBean.shipping.phone}"
+                                     required="true"
+                                     requiredMessage="Phone number is required"
+                                     styleClass="form-control">
+                            <f:ajax event="blur" render="phoneMsg"/>
+                        </h:inputText>
+
+                        <h:message id="phoneMsg" for="phone"
+                                   style="color:red; font-size:14px;"
+                                   styleClass="d-block"/>
+                    </div>
+
+                    <!-- Address Line 1 -->
+                    <div class="mb-3">
+                        <label class="form-label required-star">
+                            <i class="fa fa-address-card me-1"></i> Address Line 1
+                        </label>
+
+                        <h:inputText id="address1"
+                                     value="#{shippingBean.shipping.address1}"
+                                     required="true"
+                                     requiredMessage="Address Line 1 is required"
+                                     styleClass="form-control">
+                            <f:ajax event="blur" render="address1Msg"/>
+                        </h:inputText>
+
+                        <h:message id="address1Msg" for="address1"
+                                   style="color:red; font-size:14px;"
+                                   styleClass="d-block"/>
+                    </div>
+
+                    <!-- Address Line 2 -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fa fa-address-card me-1"></i> Address Line 2
+                        </label>
+
+                        <h:inputText value="#{shippingBean.shipping.address2}"
+                                     styleClass="form-control"/>
+                    </div>
+
+                    <!-- Landmark -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fa fa-map-marker-alt me-1"></i> Landmark
+                        </label>
+
+                        <h:inputText id="lankmark" value="#{shippingBean.shipping.landmark}"
+                                      required="true"
+                                     requiredMessage="landmark is required"
+                                     styleClass="form-control"><f:ajax event="blur" render="lankmarkMsg"/>
+                        </h:inputText>
+
+                        <h:message id="lankmarkMsg" for="lankmark"
+                                   style="color:red; font-size:14px;"
+                                   styleClass="d-block"/>
+                    </div>
+
+                    <!-- Pincode -->
+                    <div class="mb-3">
+                        <label class="form-label required-star">
+                            <i class="fa fa-mail-bulk me-1"></i> Pincode
+                        </label>
+
+                        <h:inputText id="pincode"
+                                     value="#{shippingBean.shipping.pincode}"
+                                     required="true"
+                                     requiredMessage="Pincode is required"
+                                     styleClass="form-control">
+                            <f:ajax event="blur" render="pincodeMsg"/>
+                        </h:inputText>
+
+                        <h:message id="pincodeMsg" for="pincode"
+                                   style="color:red; font-size:14px;"
+                                   styleClass="d-block"/>
+                    </div>
+
+                    <!-- City -->
+                    <div class="mb-3">
+                        <label class="form-label required-star">
+                            <i class="fa fa-city me-1"></i> City
+                        </label>
+
+                        <h:selectOneMenu id="city"
+                                         value="#{shippingBean.cityId}"
+                                         required="true"
+                                         requiredMessage="City is required"
+                                         styleClass="form-control">
+                            <f:selectItem itemLabel="-- Select City --" itemValue="" />
+                            <f:selectItems value="#{shippingBean.allCities}"
+                                           var="city"
+                                           itemValue="#{city.id}"
+                                           itemLabel="#{city.name}" />
+                            <f:ajax event="change" render="cityMsg"/>
+                        </h:selectOneMenu>
+
+                        <h:message id="cityMsg" for="city"
+                                   style="color:red; font-size:14px;"
+                                   styleClass="d-block"/>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <h:commandButton value="Save"
+                                     action="#{shippingBean.saveShipping}"
+                                     styleClass="btn btn-primary w-100 mt-3 fw-bold"/>
+
                 </div>
 
-                <!-- Phone -->
-                <div class="mb-3">
-                    <label class="form-label required-star">
-                        <i class="fa fa-phone me-1"></i> Phone
-                    </label>
-                    <h:inputText value="#{shippingBean.shipping.phone}" 
-                                 styleClass="form-control" />
-                </div>
+            </h:form>
 
-                <!-- Address Line 1 -->
-                <div class="mb-3">
-                    <label class="form-label required-star">
-                        <i class="fa fa-address-card me-1"></i> Address Line 1
-                    </label>
-                    <h:inputText value="#{shippingBean.shipping.address1}" 
-                                 styleClass="form-control" />
-                </div>
+        </div>
 
-                <!-- Address Line 2 -->
-                <div class="mb-3">
-                    <label class="form-label">
-                        <i class="fa fa-address-card me-1"></i> Address Line 2
-                    </label>
-                    <h:inputText value="#{shippingBean.shipping.address2}" 
-                                 styleClass="form-control"/>
-                </div>
+        <!-- Bootstrap JS Bundle (Optional for components) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-                <!-- Landmark -->
-                <div class="mb-3">
-                    <label class="form-label">
-                        <i class="fa fa-map-marker-alt me-1"></i> Landmark
-                    </label>
-                    <h:inputText value="#{shippingBean.shipping.landmark}" 
-                                 styleClass="form-control"/>
-                </div>
-
-                <!-- City Dropdown -->
-                
-                <!-- Pincode -->
-                <div class="mb-3">
-                    <label class="form-label required-star">
-                        <i class="fa fa-mail-bulk me-1"></i> Pincode
-                    </label>
-                    <h:inputText value="#{shippingBean.shipping.pincode}" 
-                                 styleClass="form-control" required="true"/>
-                </div>
-
-                <div class="form-field-group mb-3">
-                    <label class="form-label required-star">
-                        <i class="fa fa-mail-bulk me-1"></i> City
-                    </label>
-                    
-                <h:selectOneMenu value="#{shippingBean.cityId}" styleClass="form-control">
-    <f:selectItems value="#{shippingBean.allCities}" var="city"
-                   itemValue="#{city.id}" itemLabel="#{city.name}" />
-</h:selectOneMenu>
-
-
-            </div>
-                <!-- Submit Button -->
-                <h:commandButton value="Save"
-                                 action="#{shippingBean.saveShipping}" 
-                                 styleClass="btn btn-primary w-100 mt-3 fw-bold"/>
-            </div>
-        </h:form>
-
-    </div>
-
-    <!-- Bootstrap JS Bundle (Optional for components) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-</h:body>
+    </h:body>
 </html>
