@@ -195,8 +195,8 @@
                                 <f:facet name="header">Status</f:facet>
                                 <span class="status-badge
                                       #{p.status eq 'Pending' ? 'status-pending' : ''}
-                                      #{p.status eq 'Completed' ? 'status-completed' : ''}
-                                      #{p.status eq 'Failed' ? 'status-failed' : ''}">
+                                      #{p.status eq 'Paid' ? 'status-completed' : ''}
+                                      #{p.status eq 'Canceled' ? 'status-failed' : ''}">
                                     #{p.status}
                                 </span>
                             </h:column>
