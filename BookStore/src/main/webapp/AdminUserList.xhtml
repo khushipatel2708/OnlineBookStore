@@ -184,7 +184,7 @@
 
                                 <h:column>
                                     <f:facet name="header">ID</f:facet>
-                                        #{u.id}
+                                        #{(userBean.pageNumber - 1) * userBean.pageSize + userBean.pagedGroups.indexOf(u) + 1}
                                 </h:column>
 
                                 <h:column>
