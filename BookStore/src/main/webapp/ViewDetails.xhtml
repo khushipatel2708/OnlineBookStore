@@ -127,6 +127,94 @@
             #jakarta_faces_developmentstage_messages {
                 display: none !important;
             }
+            /* Stock Badge Styles */
+            .stock-badge {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                z-index: 10;
+            }
+
+            .stock-badge .badge {
+                padding: 0.6rem 1.2rem;
+                font-size: 1rem;
+                font-weight: 700;
+                border-radius: 50px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                transition: transform 0.3s, box-shadow 0.3s;
+            }
+
+            .stock-badge .badge.bg-success {
+                background: linear-gradient(135deg, #28a745, #71dd8a);
+                color: #fff;
+            }
+
+            .stock-badge .badge.bg-danger {
+                background: linear-gradient(135deg, #dc3545, #f87278);
+                color: #fff;
+            }
+
+            .stock-badge .badge:hover {
+                transform: scale(1.05);
+                box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+            }
+
+            /* Optional: animated pulse for in-stock badge */
+            .stock-badge .badge.bg-success {
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.08);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            /* Icons sizing */
+            .stock-badge .bi {
+                font-size: 1.2rem;
+            }
+
+            .book-details-container {
+                position: relative; /* 👈 REQUIRED */
+                max-width: 1000px;
+                margin: 120px auto 40px;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                padding: 30px;
+            }
+
+            /* Disabled buttons styling */
+            button:disabled,
+            .btn-cart:disabled,
+            .btn-buy:disabled {
+                background-color: #adb5bd !important; /* grey */
+                border-color: #adb5bd !important;
+                color: #ffffff !important;
+                cursor: not-allowed !important;
+                box-shadow: none !important;
+                transform: none !important;
+                opacity: 0.8;
+            }
+
+            /* Disable hover effect */
+            button:disabled:hover,
+            .btn-cart:disabled:hover,
+            .btn-buy:disabled:hover {
+                background-color: #adb5bd !important;
+                transform: none !important;
+            }
+
         </style>
     </h:head>
 
@@ -139,6 +227,20 @@
         <h:form>
             <!-- Book Details Container -->
             <div class="book-details-container">
+                <div class="stock-badge">
+                    <h:panelGroup rendered="#{bookBean.selectedBook.available gt 0}">
+                        <span class="badge bg-success fs-6 px-3 py-2">
+                            <i class="bi bi-check-circle"></i> In Stock
+                        </span>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{bookBean.selectedBook.available eq 0}">
+                        <span class="badge bg-danger fs-6 px-3 py-2">
+                            <i class="bi bi-x-circle"></i> Out of Stock
+                        </span>
+                    </h:panelGroup>
+                </div>
+
                 <div class="row">
                     <!-- Left: Carousel -->
                     <div class="col-md-6 mb-4">
@@ -177,6 +279,13 @@
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
                         </p>
 
+                        <p class="text-muted mb-2">
+                            <strong>Available Quantity:</strong>
+                            <span class="#{bookBean.selectedBook.available gt 0 ? 'text-success' : 'text-danger'}">
+                                #{bookBean.selectedBook.available}
+                            </span>
+                        </p>
+                        <br/>
                         <div class="d-flex flex-wrap">
                             <h:commandLink value="Back to Books"
                                            action="UserBookList.xhtml?faces-redirect=true"
@@ -186,17 +295,20 @@
                             <h:commandButton value="Add to Cart"
                                              styleClass="btn-cart"
                                              action="#{cartBean.addToCart}"
-                                             disabled="#{bookBean.selectedBook.available == 0}">
+                                             disabled="#{bookBean.selectedBook.available le 0}">
                                 <f:param name="bookId" value="#{bookBean.selectedBook.id}" />
                             </h:commandButton>
 
-
-                            <!-- Buy Now: add and go to cart page -->
                             <h:commandButton value="Buy Now"
-                                             styleClass="btn-buy">
+                                             styleClass="btn-buy"
+                                             action="#{cartBean.buyNow}"
+                                             disabled="#{bookBean.selectedBook.available le 0}">
                                 <f:param name="bookId" value="#{bookBean.selectedBook.id}" />
-                                <f:ajax render="@form" />
                             </h:commandButton>
+
+
+
+
                         </div>
                     </div>
                 </div>

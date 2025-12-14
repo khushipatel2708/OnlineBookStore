@@ -22,7 +22,7 @@ public class CartBean implements Serializable {
 
     @Inject
     private PaymentBean paymentBean;
-    
+
     @Inject
     private LoginBean loginBean; // must provide getLoggedInUser() or getUserid()
 
@@ -83,12 +83,10 @@ public class CartBean implements Serializable {
     public void removeFromCart(int cartId) {
         cartSession.removeFromCart(cartId);
     }
-    
-    public void deleteItem(int id) {
-     cartSession.removeFromCart(id);  // your delete logic
-}
 
-    
+    public void deleteItem(int id) {
+        cartSession.removeFromCart(id);  // your delete logic
+    }
 
     public void increaseQuantity(int cartId) {
         Cart c = cartSession.getCartById(cartId); // you need a method to get cart by id
@@ -164,9 +162,9 @@ public class CartBean implements Serializable {
 
             // Loop through cart items and create COD payment for each
             for (Cart c : items) {
-                
-                 paymentBean.setLastBookId(c.getBookId().getId());
-                 
+
+                paymentBean.setLastBookId(c.getBookId().getId());
+
                 java.math.BigDecimal price = c.getBookId().getPrice();
                 java.math.BigDecimal qty = java.math.BigDecimal.valueOf(c.getQuantity());
                 java.math.BigDecimal amount = price.multiply(qty);
@@ -194,6 +192,49 @@ public class CartBean implements Serializable {
             return null;
         }
     }
-    
+    // --- Buy Now: add selected book to cart and redirect to Cart page ---
+
+    public String buyNow() {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+        String bookIdStr = params.get("bookId");
+
+        if (bookIdStr == null || bookIdStr.trim().isEmpty()) {
+            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No book selected.", null));
+            return null;
+        }
+
+        try {
+            int bookId = Integer.parseInt(bookIdStr);
+
+            // Add to cart logic (reuse existing addToCart method logic)
+            User loggedUser = loginBean.getLoggedInUser();
+            Integer userId = null;
+            if (loggedUser != null) {
+                userId = loggedUser.getId();
+            } else if (loginBean.getUserid() != null) {
+                userId = loginBean.getUserid();
+            }
+
+            if (userId == null) {
+                fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Please login to continue.", null));
+                return null;
+            }
+
+            // Add to cart
+            cartSession.addToCart(userId, bookId);
+
+            // Redirect to Cart page
+            return "cartList.xhtml?faces-redirect=true";
+
+        } catch (NumberFormatException ex) {
+            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid book id.", null));
+            return null;
+        } catch (Exception ex) {
+            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Could not add to cart: " + ex.getMessage(), null));
+            ex.printStackTrace();
+            return null;
+        }
+    }
 
 }
